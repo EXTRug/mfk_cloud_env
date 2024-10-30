@@ -13,6 +13,7 @@
             justify-content: center;
             align-items: center;
             height: 100%;
+            background:blue;
         }
 
         /* Style the header with a background color */
