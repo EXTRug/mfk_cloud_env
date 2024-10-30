@@ -1,7 +1,7 @@
 <template>
 	<NcAppContent>
 		<div id="mfkdashboard">
-			<h1>Hello world!</h1>
+			<h1>Hello world! Test</h1>
 		</div>
 	</NcAppContent>
 </template>
