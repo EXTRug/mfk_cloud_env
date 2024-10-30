@@ -49,7 +49,7 @@
             // myMessage => "Hello World!👋"
             echo '<myHeader>Press the button!</myHeader>';
             // Display a "Click me" button
-            $submitGetParameter = 'Hello World!👋';
+            $submitGetParameter = 'Hello World!👋 test';
             $buttonText = 'Click Me';
         }
         ?>
