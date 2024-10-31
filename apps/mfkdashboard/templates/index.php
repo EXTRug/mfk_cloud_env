@@ -1,6 +1,6 @@
 <?php 
-//header('Location: /hr');
-echo 'hello';
+header('Location: '.__DIR__.'/hr');
+//echo 'hello';
 ?>
 
 
