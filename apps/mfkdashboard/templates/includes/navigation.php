@@ -1,29 +1,29 @@
 <nav class="navbar navbar-expand-lg p-0">
     <div class="container-fluid">
-        <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
         <!-- Left Links with Icons -->
             <a class="navbar-brand" href="#">
-            <img src="@/img/app.svg" alt="logo" class="img-fluid logo">
+            <img src="<?=$configurations['assets_path'] ?>/images/logo.png" alt="logo" class="img-fluid logo">
             </a>
         <ul class="navbar-nav nav-links-bar me-auto">
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/tabler_dashboard.png" alt="dashboard" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/tabler_dashboard.png" alt="dashboard" class="img-fluid" />
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/tabler_user-filled.png" alt="dashboard" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/tabler_user-filled.png" alt="dashboard" class="img-fluid" />
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/material-symbols_add-notes-rounded.png" alt="dashboard" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/material-symbols_add-notes-rounded.png" alt="dashboard" class="img-fluid" />
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/tabler_brand-react.png" alt="dashboard" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/tabler_brand-react.png" alt="dashboard" class="img-fluid" />
                 </a>
             </li>
         </ul>
@@ -33,12 +33,12 @@
         <ul class="navbar-nav ms-auto">
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/bell.png" alt="bell" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/bell.png" alt="bell" class="img-fluid" />
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <img src="/assets/images/watch.png" alt="search" class="img-fluid" />
+                    <img src="<?=$configurations['assets_path'] ?>/images/watch.png" alt="search" class="img-fluid" />
                 </a>
             </li>
 

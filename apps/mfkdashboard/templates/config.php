@@ -8,11 +8,15 @@ return [
         'password' => 'root',
         'database' => 'test',
     ],
-    'css' => [
-        'bootstrap' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css',
-        'theme' => '/assets/css/main.css',
+    'assets_path' => '/apps/mfkdashboard/assets',
+    'css_internal' => [
+        'bootstrap' => '/css/bootstrap/bootstrap.min.css',
+        'theme' => '/css/main.css',
+    ],
+    'css_external' => [
+        
     ],
     'js' => [
-        'bootstrap' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js',
+        'bootstrap' => '/js/bootstrap/bootstrap.bundle.min.js',
     ],
 ];

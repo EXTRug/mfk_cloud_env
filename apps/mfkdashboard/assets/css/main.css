@@ -19,7 +19,7 @@
 *{
     font-family: "Inria Sans", sans-serif !important;
 }
-body{
+.body-wrapper{
     background: var(--primary);
 }
 .main-content-area{
