@@ -26,4 +26,11 @@ class PageController extends Controller {
 			'index',
 		);
 	}
+	#[FrontpageRoute(verb: 'GET',url: '/hr')]
+	public function hr(): TemplateResponse {
+		return new TemplateResponse(
+			Application::APP_ID,
+			'/hr/index'
+		);
+	}
 }

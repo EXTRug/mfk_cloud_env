@@ -1,6 +1,6 @@
 <?php ?>
-//header('Location: /hr');
-//exit;
+<!-- //header('Location: /hr');
+//exit; -->
 
 <?php
 $page_title = 'HR';
