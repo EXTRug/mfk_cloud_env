@@ -15,6 +15,7 @@
     --orange-shadow:0px 0px 0px 4px #FF7A5C1A;
     --green-shadow:0px 0px 0px 4px #00FF0A29;
     --blue-shadow:0px 0px 0px 4px #3498DB29;
+    --gray-shadow:0px 0px 0px 4px #95A5A629;
 }
 *{
     font-family: "Inria Sans", sans-serif !important;
@@ -63,4 +64,34 @@
 }
 .nav-links-bar li{
     margin:0px 24px;
+}
+.status-dot{
+    width: 14px;
+    height: 14px;
+    margin-right: 15px;
+    background-color: var(--sixth);
+    box-shadow: var(--gray-shadow);
+    border-radius: 50%;
+}
+.status-dot.active{
+    background-color: var(--green);
+    box-shadow: var(--green-shadow);
+}
+table thead tr th{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.18px;
+    text-align: left;
+    color: var(--primary);
+    
+}
+table tbody tr td{
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16.79px;
+    text-align: left;
+    color: var(--primary);
+}
+table thead, table thead tr, .table-header{
+    background: var(--fourth) !important;
 }
