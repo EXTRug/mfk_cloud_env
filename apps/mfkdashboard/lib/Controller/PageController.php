@@ -26,6 +26,9 @@ class PageController extends Controller {
 			'index',
 		);
 	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET',url: '/hr')]
 	public function hr(): TemplateResponse {
 		return new TemplateResponse(
