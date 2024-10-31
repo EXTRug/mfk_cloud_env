@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center">
         <!-- Left Links with Icons -->
             <a class="navbar-brand" href="#">
-            <img src="@/src/assets/images/logo.png" alt="logo" class="img-fluid logo">
+            <img src="/src/assets/images/logo.png" alt="logo" class="img-fluid logo">
             </a>
         <ul class="navbar-nav nav-links-bar me-auto">
             <li class="nav-item">
