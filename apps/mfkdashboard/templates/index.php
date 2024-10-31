@@ -1,5 +1,5 @@
 <?php 
-header('Location: '.__DIR__.'/hr');
+header('Location: '._DIR_.'/hr');
 exit;
 ?>
 
