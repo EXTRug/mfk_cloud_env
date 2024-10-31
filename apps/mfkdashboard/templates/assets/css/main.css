@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+:root{
+    --blue:#3498DB;
+    --primary:#20284D;
+    --secondary:#fff;
+    --tertiary:#F8F9FF;
+    --fourth:#95A5A6;
+    --sixth:#8C9499;
+    --black:#1E1E1E;
+    --red:#FB4343;
+    --orange:#FF7A5C;
+    --golden:#F7B017;
+    --green:#00FF0A;
+    --dark-green:#00AC07;
+    --orange-shadow:0px 0px 0px 4px #FF7A5C1A;
+    --green-shadow:0px 0px 0px 4px #00FF0A29;
+    --blue-shadow:0px 0px 0px 4px #3498DB29;
+}
+*{
+    font-family: "Inria Sans", sans-serif !important;
+}
+body{
+    background: var(--primary);
+}
+.main-content-area{
+    background: var(--secondary);
+    color: var(--black);
+    margin: 8px 24px;
+    margin-top: 0px;
+    margin-left: 0px;
+    border-radius: 24px;
+}
+.sidebar-list{
+    padding: 0px;
+    padding-left: 10px !important;
+    margin-top: 35px;
+}
+.sidebar-item{
+    background: var(--secondary);
+    height: 47px;
+    width: 190px;
+    color: var(--primary);
+    border-radius: 10px 0px 0px 10px;
+}
+.sidebar-item a{
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.18px;
+    text-align: left;
+    color: var(--primary);
+}
+.dashboard-title{
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 38.37px;
+    text-align: center;
+    color: var(--secondary);
+    margin-top: 35px;
+}
+.nav-links-bar{
+    margin-left: 38px;
+}
+.nav-links-bar li{
+    margin:0px 24px;
+}
