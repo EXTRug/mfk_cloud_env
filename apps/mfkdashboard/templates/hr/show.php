@@ -24,6 +24,7 @@ include_once(__DIR__ . '/../includes/header.php');
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
         </div>
+        <script>console.log("I am working!");</script>
     </div>
     <table class="table rounded">
         <thead class="table-header">

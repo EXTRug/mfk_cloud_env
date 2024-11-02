@@ -15,33 +15,41 @@ use OCP\AppFramework\Http\TemplateResponse;
 /**
  * @psalm-suppress UnusedClass
  */
-class PageController extends Controller {
+class PageController extends Controller
+{
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET',url: '/hr')]
-	public function hr(): TemplateResponse {
+	#[FrontpageRoute(verb: 'GET', url: '/hr')]
+	public function hr(): TemplateResponse
+	{
 		return new TemplateResponse(
 			Application::APP_ID,
 			'/hr/index'
 		);
 	}
 	#[NoCSRFRequired]
-    #[NoAdminRequired]
-    #[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-    #[FrontpageRoute(verb: 'GET', url: '/show')]
-    public function demo(): TemplateResponse {
-        // Hier kannst du die Logik für die Demo-Route hinzufügen
-        return new TemplateResponse(
-            Application::APP_ID,
-            'hr/show'       // Ersetze 'demo' mit dem Template-Dateinamen, der gerendert werden soll
-        );
-    }
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/show')]
+	public function demo(): TemplateResponse
+	{
+		// Add the JavaScript file from the js/ folder
+		\OCP\Util::addScript('mfkdashboard', 'test');
+
+		// Return the template response
+		return new TemplateResponse(
+			Application::APP_ID,
+			'hr/show'
+		);
+	}
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/')]
-	public function index(): TemplateResponse {
+	public function index(): TemplateResponse
+	{
 		return new TemplateResponse(
 			Application::APP_ID,
 			'index',
