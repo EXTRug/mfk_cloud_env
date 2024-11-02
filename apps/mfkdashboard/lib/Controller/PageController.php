@@ -36,4 +36,14 @@ class PageController extends Controller {
 			'/hr/index'
 		);
 	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET',url: '/view')]
+	public function hr_view(): TemplateResponse {
+		return new TemplateResponse(
+			Application::APP_ID,
+			'/hr/show'
+		);
+	}
 }

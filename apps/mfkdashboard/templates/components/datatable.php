@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table rounded">
     <thead class="table-header">
         <tr background="#000">
             <th>Firemenname</th>
