@@ -19,16 +19,6 @@ class PageController extends Controller {
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/')]
-	public function index(): TemplateResponse {
-		return new TemplateResponse(
-			Application::APP_ID,
-			'index',
-		);
-	}
-	#[NoCSRFRequired]
-	#[NoAdminRequired]
-	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET',url: '/hr')]
 	public function hr(): TemplateResponse {
 		return new TemplateResponse(
@@ -37,13 +27,24 @@ class PageController extends Controller {
 		);
 	}
 	#[NoCSRFRequired]
+    #[NoAdminRequired]
+    #[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+    #[FrontpageRoute(verb: 'GET', url: '/show')]
+    public function demo(): TemplateResponse {
+        // Hier kannst du die Logik für die Demo-Route hinzufügen
+        return new TemplateResponse(
+            Application::APP_ID,
+            'hr/show'       // Ersetze 'demo' mit dem Template-Dateinamen, der gerendert werden soll
+        );
+    }
+	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET',url: '/view')]
-	public function hr_view(): TemplateResponse {
+	#[FrontpageRoute(verb: 'GET', url: '/')]
+	public function index(): TemplateResponse {
 		return new TemplateResponse(
 			Application::APP_ID,
-			'/hr/show'
+			'index',
 		);
 	}
 }
