@@ -4,9 +4,9 @@ include_once(__DIR__ . '/../includes/header.php');
 ?>
 <!-- Main Content -->
 <div class="container-fluid p-5 main-content-area">
-    <div class="d-flex align-items-center">
-        <button class="return-button"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button>
-        <h2 class="main-content-heading">Übersicht Firmen</h2>
+    <div class="d-flex align-items-center mb-3">
+        <button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button>
+        <h2 class="main-content-heading mb-0 pb-0">Max Mustermann Gmbh</h2>
     </div>
     <div class="d-flex align-items-center filter-area">
         <div class="search-field d-flex align-items-center">

@@ -31,6 +31,8 @@
     margin-top: 0px;
     margin-left: 0px;
     border-radius: 24px;
+    max-height: 84vh;
+    overflow-y: auto;
 }
 .sidebar-list{
     padding: 0px;
@@ -77,6 +79,10 @@
 .status-dot.active{
     background-color: var(--green);
     box-shadow: var(--green-shadow);
+}
+.status-dot.info{
+    background-color: var(--blue);
+    box-shadow: var(--blue-shadow);
 }
 table{
     border: 1px solid var(--seventh) !important;
@@ -159,11 +165,76 @@ table tbody tr, table thead tr{
     border: 1px solid var(--seventh);
 
 }
-.return-button{
+.return-button-x{
     width: 40px;
     height: 40px;
-    padding: 8px 14px 8px 14px;
-    border-radius: 25px;
+    display: flex;
+    align-items: center;
     border: 1px solid var(--seventh) !important;
+    background: var(--secondary) !important;
+    border-radius: 50px !important;
     outline: none !important;
+}
+.heading-tagline{
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 16.79px;
+    text-align: left;
+    color:var(--sixth);
+    margin-top: 8px;
+}
+.card-box{
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid var(--seventh);
+}
+.card-box .title{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.18px;
+    text-align: left;
+    color:var(--black);
+}
+.card-box .mini-taglines{
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 16.79px;
+    text-align: left;
+    color:var(--sixth);
+}
+.card-box .title.heading{
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28.78px;
+    text-align: left;
+    color: var(--black);
+}
+.card-box .sub-heading{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23.98px;
+    text-align: left;
+    color:var(--black);
+}
+.card-box .divider{
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    align-self: center;
+    height: 2px;
+}
+.card-box .paragraph{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+    color: var(--sixth);
+}
+.text-input{
+height: 45px !important;
+padding: 14px 10px 14px 10px !important;
+border-radius: 10px !important;
+border: 1px solid var(--sixth) !important;
+margin-top: 5px;
+
 }

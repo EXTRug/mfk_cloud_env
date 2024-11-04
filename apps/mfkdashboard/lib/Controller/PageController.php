@@ -44,6 +44,21 @@ class PageController extends Controller
 			'hr/show'
 		);
 	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/details')]
+	public function details(): TemplateResponse
+	{
+		// Add the JavaScript file from the js/ folder
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
+
+		// Return the template response
+		return new TemplateResponse(
+			Application::APP_ID,
+			'hr/details'
+		);
+	}
 
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
