@@ -23,6 +23,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/hr')]
 	public function hr(): TemplateResponse
 	{
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
 		return new TemplateResponse(
 			Application::APP_ID,
 			'/hr/index'
@@ -35,7 +36,7 @@ class PageController extends Controller
 	public function demo(): TemplateResponse
 	{
 		// Add the JavaScript file from the js/ folder
-		\OCP\Util::addScript('mfkdashboard', 'test');
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
 
 		// Return the template response
 		return new TemplateResponse(
