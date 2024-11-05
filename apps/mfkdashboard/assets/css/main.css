@@ -23,6 +23,7 @@
 }
 .body-wrapper{
     background: var(--primary);
+    padding-top: 10px;
 }
 .main-content-area{
     background: var(--secondary);
@@ -31,7 +32,7 @@
     margin-top: 0px;
     margin-left: 0px;
     border-radius: 24px;
-    max-height: 84vh;
+    max-height: 90vh;
     overflow-y: auto;
 }
 .sidebar-list{
@@ -55,9 +56,9 @@
     color: var(--primary);
 }
 .dashboard-title{
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 38.37px;
+    font-size: 32px !important;
+    font-weight: 400 !important;
+    line-height: 38.37px !important;
     text-align: center;
     color: var(--secondary);
     margin-top: 35px;
@@ -89,17 +90,17 @@ table{
     border-radius: 8px !important;
 }
 table thead tr th{
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19.18px;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 19.18px !important;
     text-align: left;
     color: var(--primary);
     
 }
 table tbody tr td{
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16.79px;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 16.79px !important;
     text-align: left;
     color: var(--primary);
 }
@@ -126,9 +127,9 @@ table tbody tr, table thead tr{
     padding-right: 0px !important;
 }
 .main-content-heading{
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 38.37px;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    line-height: 38.37px !important;
     text-align: left;
     margin-bottom: 16px;
 }
@@ -155,9 +156,9 @@ table tbody tr, table thead tr{
 .filter-area .dropdown a{
     padding: 15px 20px 15px 20px;
     font-family: Inria Sans;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19.18px;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 19.18px !important;
     text-align: center;
     background: var(--secondary);
     color:var(--primary);
@@ -176,9 +177,9 @@ table tbody tr, table thead tr{
     outline: none !important;
 }
 .heading-tagline{
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 16.79px;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    line-height: 16.79px !important;
     text-align: left;
     color:var(--sixth);
     margin-top: 8px;
@@ -189,30 +190,30 @@ table tbody tr, table thead tr{
     border: 1px solid var(--seventh);
 }
 .card-box .title{
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 19.18px;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 19.18px !important;
     text-align: left;
     color:var(--black);
 }
 .card-box .mini-taglines{
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 16.79px;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    line-height: 16.79px !important;
     text-align: left;
     color:var(--sixth);
 }
 .card-box .title.heading{
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 28.78px;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 28.78px !important;
     text-align: left;
     color: var(--black);
 }
 .card-box .sub-heading{
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 23.98px;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    line-height: 23.98px !important;
     text-align: left;
     color:var(--black);
 }
@@ -224,17 +225,145 @@ table tbody tr, table thead tr{
     height: 2px;
 }
 .card-box .paragraph{
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 24px !important;
     text-align: left;
     color: var(--sixth);
 }
 .text-input{
-height: 45px !important;
-padding: 14px 10px 14px 10px !important;
-border-radius: 10px !important;
-border: 1px solid var(--sixth) !important;
-margin-top: 5px;
+    padding: 14px 10px 14px 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--seventh) !important;
+    margin-top: 7px;
+    min-height: 40px !important;
+    color: var(--primary) !important;
 
+}
+.form-group .input-label{
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 19.18px !important;
+    text-align: left;
+    color: var(--black);
+    padding-bottom: 6px !important;
+}
+.text-editor-area{
+    height: 250px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border:1px solid var(--seventh) !important;
+    padding: 2px;
+    margin-top: 7px !important;
+}
+.text-editor-area .ql-editor{
+    height: 96%;
+    width: 100%;
+    border:none;
+    outline: none;
+    margin-top: 4px !important;
+}
+.ql-toolbar{
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border:1px solid var(--seventh) !important;
+    display: flex;
+    align-items: center;
+}
+.text-input:active, .text-input:focus{
+    border:2px solid var(--sixth) !important;
+    box-shadow: var(--gray-shadow) !important;
+}
+.drag-drop-button{
+    width: 100% !important;
+    border: 2px dashed var(--orange) !important;
+    padding: 35px !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 19.18px !important;
+    text-align: left;
+    color: var(--orange) !important;
+    background: #FF7A5C0D !important;
+    text-align: center;
+}
+.img-remove-button{
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    border-left: 1px solid var(--seventh) !important;
+    border-radius: 0 !important;
+}
+.image-title{
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 16.79px !important;
+    text-align: left;
+    color:var(--primary) !important;
+    padding-left: 5px !important;
+}
+.image-title .image-size{
+    color: var(--sixth) !important;
+}
+.image-title .image-progress{
+    color: var(--orange) !important;
+}
+.relative-position-input{
+    position: relative !important;
+}
+.relative-position-input .text-input{
+    padding-left: 30px !important;
+}
+.absolute-icon-text{
+    position:absolute !important;
+    top: 35px;
+    left:20px;
+}
+select.text-input{
+    padding: 0 !important;
+    padding-left: 10px !important;
+}
+.benifit-item{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--seventh);
+    border-radius: 10px;
+    padding-left: 15px !important;
+}
+.benifit-title{
+    font-family: Inria Sans;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    line-height: 16.79px !important;
+    text-align: left;
+    color:var(--primary) !important;
+
+}
+.add-benifit-button{
+    width: 94px;
+    height: 44px;
+    padding: 12px 20px 12px 20px !important;
+    border-radius: 100px !important;
+    border: 1px solid var(--primary) !important;
+    background: transparent !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 16.79px !important;
+    margin: 20px 0px 20px 0px !important;
+}
+.submit-btn{
+    width: 100% !important;
+    height: 51px;
+    padding: 16px 10px 16px 10px;
+    border-radius: 50px !important;
+    background: var(--primary) !important;
+    color: var(--secondary) !important;
+    font-family: Inria Sans;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 19.18px !important;
+    text-align: center;
 }

@@ -21,7 +21,9 @@ $configurations = require_once __DIR__ . '/../config.php';
 <body>
     <div class="w-100 body-wrapper">
         <!-- Navigation -->
-        <?php include_once __DIR__ . '/navigation.php'; ?>
+        <?php 
+        //include_once __DIR__ . '/navigation.php'; 
+        ?>
         <!-- Container with Sidebar and Main Content -->
         <div class="d-flex">
             <!-- Sidebar -->

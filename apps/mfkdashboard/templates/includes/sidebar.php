@@ -1,4 +1,4 @@
-<div style="width: 200px;height: 84vh">
+<div style="width: 200px;height: 94vh">
     <div class="">
         <h4 class="text-center dashboard-title">Ansichten</h4>
         <ul class="flex-column sidebar-list">

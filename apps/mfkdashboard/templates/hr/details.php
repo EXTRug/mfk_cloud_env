@@ -83,13 +83,133 @@ include_once(__DIR__ . '/../includes/header.php');
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
                 </div>
                 <div class="form-group mb-3">
-                    <label>Stellenbezeichnung</label>
-                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
+                    <label>Stellenbeschreibung Text (professionell):</label>
+                    <div id="editor_area" class="text-editor-area"></div>
+                    <div id="toolbar1">
+                        <select class="ql-size">
+                            <option value="small"></option>
+                            <option selected></option>
+                            <option value="large"></option>
+                            <option value="huge"></option>
+                        </select>
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Stellenbeschreibung Text (persönlicher):</label>
+                    <div id="editor_area_2" class="text-editor-area"></div>
+                    <div id="toolbar2">
+                        <select class="ql-size">
+                            <option value="small"></option>
+                            <option selected></option>
+                            <option value="large"></option>
+                            <option value="huge"></option>
+                        </select>
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Bilderauswahl</label>
+                    <button class="drag-drop-button">
+                        <img src="<?=$configurations['assets_path'] ?>/images/img.png">
+                        Upload Image
+                    </button>
+                    <div class="selected-images p-2 mb-5">
+                        <div class="selected-image d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="<?=$configurations['assets_path'] ?>/images/imgdark.png">
+                                <div class="image-title">Image1.png <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
+                            </div>
+                            <button class="img-remove-button">
+                                <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
+                            </button>
+                        </div>
+                        <div class="selected-image d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="<?=$configurations['assets_path'] ?>/images/imgdark.png">
+                                <div class="image-title">Image1.png <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
+                            </div>
+                            <button class="img-remove-button">
+                                <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col mb-3">
+                        <label>Postleitzahl Ausstrahlung</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="https://" value="https://">
+                    </div>
+                    <div class="form-group col mb-3">
+                        <label>&nbsp;</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col mb-3 relative-position-input">
+                        <label>Postleitzahl Ausstrahlung</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="text">
+                        <img src="<?=$configurations['assets_path'] ?>/images/tabler_coin-euro.png" class="absolute-icon-text">
+                    </div>
+                    <div class="form-group col mb-3 relative-position-input">
+                        <label>Postleitzahl Ausstrahlung</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="text">
+                        <img src="<?=$configurations['assets_path'] ?>/images/tabler_coin-euro.png" class="absolute-icon-text">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col mb-3">
+                        <label>Ebay - Kategorie</label>
+                        <select class="form-control rounded-0 border-secondary outline-0 text-input">
+                            <option>Select</option>
+                        </select>
+                    </div>
+                    <div class="form-group col mb-3">
+                        <label>&nbsp;</label>
+                        <select class="form-control rounded-0 border-secondary outline-0 text-input p-1">
+                            <option>Select</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label>Stellenbezeichnung</label>
+                    <label>Link Stellenauschreibung</label>
+                    <div class="benfit-section mb-3 mt-3">
+                        <div class="benifit-item">
+                            <div class="benifit-title">Flexible Enivornemnt</div>
+                            <button class="img-remove-button">
+                                <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
+                            </button>
+                        </div>
+                    </div>
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Benifit">
+                    <button class="add-benifit-button"><img src="<?=$configurations['assets_path'] ?>/images/formkit_add.png">&nbsp;&nbsp; Add</button>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Ansprechpartner</label>
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
                 </div>
+                <button type="button" class="submit-btn">Zur Kundenrevision freigeben</button>
             </div>
         </div>
     </div>

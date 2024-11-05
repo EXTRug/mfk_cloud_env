@@ -23,7 +23,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/hr')]
 	public function hr(): TemplateResponse
 	{
-		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		return new TemplateResponse(
 			Application::APP_ID,
 			'/hr/index'
@@ -36,7 +36,7 @@ class PageController extends Controller
 	public function demo(): TemplateResponse
 	{
 		// Add the JavaScript file from the js/ folder
-		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 
 		// Return the template response
 		return new TemplateResponse(
@@ -50,8 +50,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/details')]
 	public function details(): TemplateResponse
 	{
-		// Add the JavaScript file from the js/ folder
-		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min.js');
+
+		\OCP\Util::addStyle('mfkdashboard', 'quill');
+
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'main');
 
 		// Return the template response
 		return new TemplateResponse(
@@ -59,7 +63,25 @@ class PageController extends Controller
 			'hr/details'
 		);
 	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/add-applicant')]
+	public function applicant(): TemplateResponse
+	{
 
+		\OCP\Util::addStyle('mfkdashboard', 'quill');
+
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'main');
+
+		// Return the template response
+		return new TemplateResponse(
+			Application::APP_ID,
+			'hr/applicant'
+		);
+	}
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
