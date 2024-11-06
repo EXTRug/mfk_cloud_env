@@ -313,10 +313,20 @@ table tbody tr, table thead tr{
 .relative-position-input .text-input{
     padding-left: 30px !important;
 }
+.relative-position-input .slot-input{
+    padding-left: 45px !important;
+}
 .absolute-icon-text{
     position:absolute !important;
     top: 35px;
     left:20px;
+}
+.absolute-icon-text.slot-label{
+    top:15px;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    line-height: 16.79px !important;
+    color:var(--sixth) !important;
 }
 select.text-input{
     padding: 0 !important;
@@ -366,4 +376,52 @@ select.text-input{
     font-weight: 700 !important;
     line-height: 19.18px !important;
     text-align: center;
+}
+.header-with-between{
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+}
+.header-buttons button{
+    padding:20px !important;
+    color:var(--primary) !important;
+    background: var(--tertiary) !important;
+}
+.service-title{
+    margin-top: 16px !important;
+}
+.service-list{
+    list-style-type: disc;
+}
+.service-list::marker{
+    font-size: 18px !important; 
+}
+.divider-heading{
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    line-height: 23.98px !important;
+    text-align: left;
+}
+.heading-divider{
+    margin-bottom: 20px !important;
+}
+.timeslot{
+    position:relative;
+    border:1px solid var(--seventh) !important;
+    border-radius: 10px !important;
+    margin-top: 15px;
+    padding: 14px 8px;
+    padding-left: 19px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+.time-slot-heading{
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 16.79px !important;
+    position: absolute;
+    top:-10px;
+    left:15px;
+    background: var(--secondary) !important;
+    padding: 3px 8px;
 }
