@@ -104,6 +104,25 @@ class PageController extends Controller
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/muster-job')]
+	public function muster(): TemplateResponse
+	{
+
+		\OCP\Util::addStyle('mfkdashboard', 'quill');
+
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'main');
+
+		// Return the template response
+		return new TemplateResponse(
+			Application::APP_ID,
+			'hr/muster-job'
+		);
+	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/')]
 	public function index(): TemplateResponse
 	{

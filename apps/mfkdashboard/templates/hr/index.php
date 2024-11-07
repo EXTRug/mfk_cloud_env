@@ -11,9 +11,9 @@ include_once(__DIR__ . '/../includes/header.php');
             <input type="search">
         </div>
         <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown link
-            </a>
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Filter
+            </button>
 
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Action</a></li>
