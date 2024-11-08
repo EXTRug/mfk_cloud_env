@@ -25,6 +25,15 @@
     background: var(--primary);
     padding-top: 10px;
 }
+
+a:link {
+    text-decoration: none;
+}
+
+#body-user{
+    background-color: #20284D !important;
+}
+
 .main-content-area{
     background: var(--secondary);
     color: var(--black);
