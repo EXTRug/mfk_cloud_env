@@ -24,6 +24,8 @@ class PageController extends Controller
 	public function hr(): TemplateResponse
 	{
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+
 		return new TemplateResponse(
 			Application::APP_ID,
 			'/hr/index'
@@ -37,6 +39,10 @@ class PageController extends Controller
 	{
 		// Add the JavaScript file from the js/ folder
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
+
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+
 
 		// Return the template response
 		return new TemplateResponse(
@@ -52,10 +58,13 @@ class PageController extends Controller
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
+
 
 		// Return the template response
 		return new TemplateResponse(
@@ -71,10 +80,13 @@ class PageController extends Controller
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
+
 
 		// Return the template response
 		return new TemplateResponse(
@@ -90,10 +102,13 @@ class PageController extends Controller
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
+
 
 		// Return the template response
 		return new TemplateResponse(
@@ -109,9 +124,11 @@ class PageController extends Controller
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
 
 		// Return the template response

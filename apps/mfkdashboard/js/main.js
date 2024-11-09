@@ -15,3 +15,10 @@ var quill2 = new Quill('#editor_area_2', {
         }
     }
 });
+
+
+// new TomSelect("#tom-select", {
+//     create: false, // Allow user to create new options
+//     sortField: "text", // Sort options by text
+//     searchField: "text", // Enable search by text
+//   });
