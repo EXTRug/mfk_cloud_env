@@ -438,3 +438,27 @@
     c(t)?(i=e.render("loading_more",{query:t}))&&(i.setAttribute("data-selectable",""),o=i):t in r&&!n.querySelector(".no-results")&&(i=e.render("no_more_results",{query:t})),i&&(D(i,e.settings.optionClass),n.append(i))})),e.on("initialize",(()=>{a=Object.keys(e.options),n=e.dropdown_content,e.settings.render=Object.assign({},{loading_more:()=>'<div class="loading-more-results">Loading more results ... </div>',no_more_results:()=>'<div class="no-more-results">No more results</div>'},e.settings.render),n.addEventListener("scroll",(()=>{e.settings.shouldLoadMore.call(e)&&c(e.lastValue)&&(l||(l=!0,e.load.call(e,e.lastValue)))}))}))})),de}))
     var tomSelect=function(e,t){return new TomSelect(e,t)}
     //# sourceMappingURL=tom-select.complete.min.js.map
+
+    /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+document.getElementById("job-dropdown").addEventListener("click", myFunction);
+document.getElementById("job-dropdown-search").addEventListener("input", filterFunction);
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+  }
+  
+  function filterFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("job-dropdown-search");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("myDropdown");
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
+  }

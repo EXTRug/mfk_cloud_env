@@ -4,7 +4,7 @@ include_once(__DIR__ . '/../includes/header.php');
 ?>
 <!-- Main Content -->
 <div class="container-fluid p-5 main-content-area">
-            <h2 class="main-content-heading mb-2 pb-0">Bewerber manuell hinzufügen</h2>
+    <h2 class="main-content-heading mb-2 pb-0">Bewerber manuell hinzufügen</h2>
 
 
     <div class="row">
@@ -24,10 +24,19 @@ include_once(__DIR__ . '/../includes/header.php');
                 </div>
                 <div class="row">
                     <div class="form-group col mb-4">
-                        <label>Ebay - Kategorie</label>
-                        <select id="tom-select" class="form-control rounded-0 border-secondary outline-0 text-input">
-                            <option>Select</option>
-                        </select>
+                        <div class="dropdown">
+                            <button id="job-dropdown" class="dropbtn">Funnel Auswählen</button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <input type="text" placeholder="Search.." id="job-dropdown-search">
+                                <a href="#about">About</a>
+                                <a href="#base">Base</a>
+                                <a href="#blog">Blog</a>
+                                <a href="#contact">Contact</a>
+                                <a href="#custom">Custom</a>
+                                <a href="#support">Support</a>
+                                <a href="#tools">Tools</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -44,26 +53,26 @@ include_once(__DIR__ . '/../includes/header.php');
                     <div class="form-group col">
                         <label>Bilderauswahl</label>
                         <button class="drag-drop-button">
-                            <img src="<?=$configurations['assets_path'] ?>/images/img.png">
+                            <img src="<?= $configurations['assets_path'] ?>/images/img.png">
                             Drag & Drop or <u>Upload</u>
                         </button>
                         <div class="selected-images p-2 mb-5">
                             <div class="selected-image d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center">
-                                    <img src="<?=$configurations['assets_path'] ?>/images/pencil.png">
+                                    <img src="<?= $configurations['assets_path'] ?>/images/pencil.png">
                                     <div class="image-title">document.pdf <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
                                 </div>
                                 <button class="img-remove-button">
-                                    <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
+                                    <img src="<?= $configurations['assets_path'] ?>/images/delete-btn.png">
                                 </button>
                             </div>
                             <div class="selected-image d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center">
-                                    <img src="<?=$configurations['assets_path'] ?>/images/imgdark.png">
+                                    <img src="<?= $configurations['assets_path'] ?>/images/imgdark.png">
                                     <div class="image-title">Image1.png <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
                                 </div>
                                 <button class="img-remove-button">
-                                    <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
+                                    <img src="<?= $configurations['assets_path'] ?>/images/delete-btn.png">
                                 </button>
                             </div>
                         </div>
