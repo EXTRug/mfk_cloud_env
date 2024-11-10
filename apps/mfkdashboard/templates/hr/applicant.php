@@ -25,7 +25,7 @@ include_once(__DIR__ . '/../includes/header.php');
                 <div class="row">
                     <div class="form-group col mb-4">
                         <label>Ebay - Kategorie</label>
-                        <select class="form-control rounded-0 border-secondary outline-0 text-input">
+                        <select id="tom-select" class="form-control rounded-0 border-secondary outline-0 text-input">
                             <option>Select</option>
                         </select>
                     </div>
