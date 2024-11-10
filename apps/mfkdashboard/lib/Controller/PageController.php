@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace OCA\MFKDashboard\Controller;
+use OCA\MFKDashboard\Service\DatabaseService;
 
 use OCA\MFKDashboard\AppInfo\Application;
 use OCP\AppFramework\Controller;
@@ -11,12 +12,23 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IUserSession;
+use OCP\IGroupManager;
 
 /**
  * @psalm-suppress UnusedClass
  */
 class PageController extends Controller
 {
+	private $dbService;
+	private $userSession;
+    private $groupManager;
+	public function __construct(IUserSession $userSession, IGroupManager $groupManager) {
+        $this->dbService = new DatabaseService();
+		$this->userSession = $userSession;
+        $this->groupManager = $groupManager;
+    }
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
@@ -24,9 +36,14 @@ class PageController extends Controller
 	public function hr(): TemplateResponse
 	{
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		$data = [
+            'title' => 'Hello from Nextcloud',
+			"groups" => $this->getUserGroups(),
+        ];
 		return new TemplateResponse(
 			Application::APP_ID,
-			'/hr/index'
+			'/hr/index',
+			$data,
 		);
 	}
 	#[NoCSRFRequired]
@@ -131,4 +148,21 @@ class PageController extends Controller
 			'index',
 		);
 	}
+
+	 /**
+     * @NoAdminRequired
+     */
+    private function getUserGroups() {
+        $user = $this->userSession->getUser();
+        if ($user) {
+            $groups = $this->groupManager->getUserGroups($user);
+            $groupNames = array_map(function($group) {
+                return $group->getGID();
+            }, $groups);
+
+            return $groupNames;
+        }
+        
+        return[];
+    }
 }

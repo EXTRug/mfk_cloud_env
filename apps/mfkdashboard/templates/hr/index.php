@@ -5,6 +5,8 @@ include_once(__DIR__ . '/../includes/header.php');
 <!-- Main Content -->
 <div class="container-fluid p-5 main-content-area">
     <h2 class="main-content-heading">Übersicht Firmen</h2>
+    <!-- <p><?php p($title); ?></p> -->
+     <!-- <p><?php var_dump($groups); ?></p> -->
     <div class="d-flex align-items-center filter-area">
         <div class="search-field d-flex align-items-center">
             <img src="<?=$configurations['assets_path'] ?>/images/iconamoon_search-light.png">
