@@ -32,7 +32,7 @@ include_once(__DIR__ . '/../includes/header.php');
         <tbody>
             <?php
             foreach ($companies as $key => $company) {
-                echo('<tr> <td><a href="company-jobs/'.$company["companyID"].'">'.$company["name"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div> Active</td> </tr>');
+                echo('<tr> <td><a href="/index.php/apps/mfkdashboard/company-jobs/'.$mode."/".$company["companyID"].'">'.$company["name"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div> Active</td> </tr>');
             }
             ?>
         </tbody>

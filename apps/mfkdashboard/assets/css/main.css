@@ -55,6 +55,7 @@ a:link {
     width: 190px;
     color: var(--primary);
     border-radius: 10px 0px 0px 10px;
+    margin-bottom: 15px;
 }
 .sidebar-item a{
     padding: 14px 20px;

@@ -36,7 +36,7 @@ class PageController extends Controller
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/company-overview')]
-	public function companiesOverview(): TemplateResponse
+	public function companiesOverview($mode="hr"): TemplateResponse
 	{
 		if(!$this->simpleAccessControl("companyOverview")){
 			return new TemplateResponse(
@@ -50,6 +50,7 @@ class PageController extends Controller
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'companies' => $this->dbService->getCompanies(["companyID","name"]),
+			'mode' => $mode,
         ];
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -60,8 +61,24 @@ class PageController extends Controller
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/{id}')]
-	public function companyJobs(int $id): TemplateResponse
+	#[FrontpageRoute(verb: 'GET', url: '/company-overview/hr')]
+	public function companiesOverviewHR(): TemplateResponse
+	{
+		return $this->companiesOverview("hr");
+	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/company-overview/kb')]
+	public function companiesOverviewKB(): TemplateResponse
+	{
+		return $this->companiesOverview("kb");
+	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/{mode}/{id}')]
+	public function companyJobs(string $mode="hr",int $id): TemplateResponse
 	{
 		if(!$this->simpleAccessControl("companyJobs")){
 			return new TemplateResponse(
@@ -74,12 +91,17 @@ class PageController extends Controller
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+		if($mode == "hr"){
+			$link = "edit-job";
+		}else{
+			$link = "job-activity";
+		}
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'company' => $this->dbService->getCompany(["name"],$id),
 			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status"], $id),
-			'followingLink' => "job-activity"
+			'followingLink' => $link,
         ];
 		// Return the template response
 		return new TemplateResponse(
@@ -264,7 +286,10 @@ class PageController extends Controller
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 		}
 		if(strpos(json_encode($groups),'MFK intern')){
-			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview"));
+			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
+		}
+		if(strpos(json_encode($groups),'MFK intern')){
+			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
 		}
 		return $links;
 	}
