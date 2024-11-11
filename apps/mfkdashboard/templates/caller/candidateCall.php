@@ -1,11 +1,15 @@
 <?php
 $page_title = 'HR';
 include_once(__DIR__ . '/../includes/header.php');
+$campaign = json_decode($job["campaign"]);
 ?>
 <!-- Main Content -->
+ <?php 
+    if($applicant["applicant"] != null && $applicant["progress"] != null && $job != null){
+ ?>
 <div class="container-fluid p-5 main-content-area">
     <div class="d-flex align-items-center header-with-between mb-3">
-        <h2 class="main-content-heading mb-0 pb-0">Max Mustermann Gmbh - Servicetechniker...</h2>
+        <h2 class="main-content-heading mb-0 pb-0"><?php echo($job["funnel_name"]);?></h2>
         <div class="d-flex align-items-center header-buttons">
             <button class="service-btn me-2">Lebenslauf anfordern</button>
             <button class="service-btn">Job Informationen senden</button>
@@ -16,34 +20,38 @@ include_once(__DIR__ . '/../includes/header.php');
             <div class="card-box">
                 <div class="title heading mb-1 d-flex align-items-center">Allgemeine Job Informationen</div>
                 <hr class="divider" align="center">
-                <div class="title service-title mb-1">Job Formular wurde ausgefullt</div>
+                <div class="title service-title mb-1"><?php echo($job["title"]);?></div>
                 <div class="mini-taglines d-flex align-items-center">    
                     Jobtitel
                 </div>
-                <div class="title service-title mb-1">20095, Hamburg  69115, Heidelberg  10117, Berlin  </div>
+                <div class="title service-title mb-1"><?php $loc = json_decode($job["location"])[0];echo($loc->plz.", ".$loc->city);?></div>
                 <div class="mini-taglines d-flex align-items-center">    
-                    Jobtitel
+                    PLZ
                 </div>
-                <div class="title service-title mb-1">Vollzeit</div>
+                <div class="title service-title mb-1"><?php echo($campaign->working_hours);?></div>
                 <div class="mini-taglines d-flex align-items-center">    
                     Beschäftigungsform
                 </div>
-                <div class="title service-title mb-1">Mit Berufserfahrung</div>
+                <div class="title service-title mb-1"><?php echo($campaign->work_experience);?></div>
                 <div class="mini-taglines d-flex align-items-center mb-1">    
                     Erfahrung
                 </div>
                 <ul class="service-list">
-                    <li>Premium Lage</li>
-                    <li>Dienstwagen</li>
-                    <li>geiles Team</li>
+                    <?php 
+                        foreach ($campaign->benefits as $key => $benefit) {
+                           echo("<li>".$benefit."</li>");
+                        }
+                    ?>
                 </ul>
                 <div class="mini-taglines d-flex align-items-center mb-1">    
                 Benefits
                 </div>
                 <ul class="service-list">
-                    <li>Aufgabe 1</li>
-                    <li>Aufgabe 1</li>
-                    <li>Aufgabe 1</li>
+                    <?php 
+                        foreach ($campaign->tasks as $key => $task) {
+                           echo("<li>".$task."</li>");
+                        }
+                    ?>
                 </ul>
                 <div class="mini-taglines d-flex align-items-center">    
                 Aufgabenbereich
@@ -52,35 +60,39 @@ include_once(__DIR__ . '/../includes/header.php');
             <div class="card-box mt-3">
                 <div class="title heading mb-1 d-flex align-items-center">Bewerber Informationen</div>
                 <hr class="divider" align="center">
-                <div class="title service-title mb-1">Peter Brechtl</div>
+                <div class="title service-title mb-1"><?php echo($applicant["applicant"]["firstname"]." ".$applicant["applicant"]["lastname"]);?></div>
                 <div class="mini-taglines d-flex align-items-center">    
                     Name
                 </div>
-                <div class="title service-title mb-1">nur generierter Lebenslauf vorhanden</div>
+                <div class="title service-title mb-1"><?php 
+                    if(strpos($applicant["applicant"]["cv"], "mfkgen") !== false){
+                        echo("⚠️ nur generierter Lebenslauf vorhanden.");
+                    }else{
+                        echo("persönlicher Lebenslauf vorhanden.");
+                    }
+                ?></div>
                 <div class="mini-taglines d-flex align-items-center">    
                     Lebenslauf
                 </div>
-                <div class="title service-title mb-1">11.10.2001</div>
+                <div class="title service-title mb-1"><?php echo($applicant["progress"]["joined"]);?></div>
                 <div class="mini-taglines d-flex align-items-center">    
                     Bewerbungsdatum
                 </div>
-                <div class="title service-title mb-1">Mit Berufserfahrung</div>
-                <div class="mini-taglines d-flex align-items-center">    
-                    Erfahrung
-                </div>
-                <div class="title service-title mb-1">97859</div>
-                <div class="mini-taglines d-flex align-items-center">    
-                    PLZ
-                </div>
+                <?php 
+                    $qs = json_decode($applicant["progress"]["interviewQS"]);
+                    foreach ($qs as $key => $question) {
+                        echo('<div class="title service-title mb-1">'.$question->answer.'</div> <div class="mini-taglines d-flex align-items-center"> '.$question->question.' </div>');
+                    }
+                ?>
             </div>
             <div class="card-box mt-3">
                 <div class="title heading mb-1 d-flex align-items-center">Firmen Informationen</div>
                 <hr class="divider" align="center">
-                <div class="title service-title mb-1">Max Mustermann Gmbh</div>
+                <div class="title service-title mb-1"><?php echo($company["name"]);?></div>
                 <div class="mini-taglines d-flex align-items-center mb-1">    
                     Unternehmensnamen
                 </div>
-                <div class="title mb-1 d-flex align-items-center" style="margin-top:15px">Website <a><img height="19px" class="ms-2" src="<?=$configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
+                <div class="title mb-1 d-flex align-items-center" style="margin-top:15px">Website <a href="https://www.<?php echo($company["website"]);?>" target="_blank"><img height="19px" class="ms-2" src="<?=$configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
                 <div class="mini-taglines d-flex align-items-center">  
                     Unternehmensnamen
                 </div>
@@ -204,5 +216,8 @@ include_once(__DIR__ . '/../includes/header.php');
 </div>
 
 <?php
+    }else{
+        echo("<h3 style='color: white;'>Hier ging etwas schief! Überprüfe deine Anfrage!</h3>");
+    }
 include_once(__DIR__ . '/../includes/footer.php');
 ?>

@@ -48,7 +48,7 @@ class DatabaseService {
     }
 
     public function getCompany(array $fields, int $id) {
-        $allowedFields = ['companyID', 'name', 'jobs'];
+        $allowedFields = ['companyID', 'name', 'jobs', 'website'];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
@@ -80,7 +80,7 @@ class DatabaseService {
     }
 
     public function getJob(array $fields, int $id) {
-        $allowedFields = ["title","id", "funnel_name", "company", "status", "location"];
+        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign"];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
@@ -93,6 +93,31 @@ class DatabaseService {
         $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE id = ?");
         $stmt->execute(array($id));
         return $stmt->fetchAll()[0];
+    }
+
+    public function getApplicant(array $fields, string $email, string $funnel_name) {
+        $allowedFields = ["firstname","lastname", "cv", "joined", "interviewQS"];
+        $applicantTableFields = ["firstname","lastname", "cv"];
+        $progressTableFields = ["joined", "interviewQS"];
+    
+        $filteredFields = array_intersect($fields, $allowedFields);
+        $applicantFields = array_intersect($filteredFields, $applicantTableFields);
+        $progressFields = array_intersect($filteredFields, $progressTableFields);
+    
+        $applicantFields = implode(", ", $applicantFields);
+        $progressFields = implode(", ", $progressFields);
+
+        $response = array("applicant"=>null, "proress"=>null);
+    
+        $stmt = $this->pdo->prepare("SELECT $applicantFields FROM applicants.applicant WHERE email = ?");
+        $stmt->execute(array($email));
+        $response["applicant"] = $stmt->fetchAll()[0];
+
+        $stmt = $this->pdo->prepare("SELECT $progressFields FROM applicants.progress WHERE applicant = ? and job = ?");
+        $stmt->execute(array($email, $funnel_name));
+        $response["progress"] = $stmt->fetchAll()[0];
+
+        return $response;
     }
     
 }

@@ -65,7 +65,7 @@ class PageController extends Controller
 		$data = [
             'company' => $this->dbService->getCompany(["name"],$id),
 			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status"], $id),
-			'followingLink' => "edit-job"
+			'followingLink' => "job-activity"
         ];
 		// Return the template response
 		return new TemplateResponse(
@@ -103,6 +103,31 @@ class PageController extends Controller
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/job-activity/{id}')]
+	public function jobActivity(int $id): TemplateResponse
+	{
+
+		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
+
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+		\OCP\Util::addScript('mfkdashboard', 'main');
+
+		$data = [
+            'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status"],$id),
+        ];
+		// Return the template response
+		return new TemplateResponse(
+			Application::APP_ID,
+			'kb/jobActivity',
+			$data
+		);
+	}
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/add-applicant')]
 	public function applicant(): TemplateResponse
 	{
@@ -119,14 +144,14 @@ class PageController extends Controller
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
-			'hr/applicant'
+			'misc/addApplicant'
 		);
 	}
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/service-details')]
-	public function service(): TemplateResponse
+	#[FrontpageRoute(verb: 'GET', url: '/candidate-call/{id}/{email}')]
+	public function service(int $id, string $email): TemplateResponse
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
@@ -137,32 +162,17 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
 
-
+		$job = $this->dbService->getJob(["title","location", "company", "funnel_name", "campaign"],$id);
+		$data = [
+            'job' => $job,
+			'company' => $this->dbService->getCompany(["name","website"],$job["company"]),
+			'applicant' => $this->dbService->getApplicant(["firstname","lastname", "cv", "joined", "interviewQS"],$email, $job["funnel_name"]),
+        ];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
-			'hr/service'
-		);
-	}
-	#[NoCSRFRequired]
-	#[NoAdminRequired]
-	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/muster-job')]
-	public function muster(): TemplateResponse
-	{
-
-		\OCP\Util::addStyle('mfkdashboard', 'quill');
-		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
-
-		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
-		\OCP\Util::addScript('mfkdashboard', 'quill');
-		\OCP\Util::addScript('mfkdashboard', 'tom-select');
-		\OCP\Util::addScript('mfkdashboard', 'main');
-
-		// Return the template response
-		return new TemplateResponse(
-			Application::APP_ID,
-			'hr/muster-job'
+			'caller/candidateCall',
+			$data
 		);
 	}
 	#[NoCSRFRequired]
