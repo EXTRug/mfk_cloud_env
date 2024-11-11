@@ -38,10 +38,17 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/company-overview')]
 	public function companiesOverview(): TemplateResponse
 	{
+		if(!$this->simpleAccessControl("companyOverview")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 
 		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
             'companies' => $this->dbService->getCompanies(["companyID","name"]),
         ];
 		return new TemplateResponse(
@@ -56,6 +63,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/{id}')]
 	public function companyJobs(int $id): TemplateResponse
 	{
+		if(!$this->simpleAccessControl("companyJobs")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		// Add the JavaScript file from the js/ folder
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
@@ -63,6 +76,7 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 
 		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
             'company' => $this->dbService->getCompany(["name"],$id),
 			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status"], $id),
 			'followingLink' => "job-activity"
@@ -80,7 +94,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/edit-job/{id}')]
 	public function jobSetup(int $id): TemplateResponse
 	{
-
+		if(!$this->simpleAccessControl("editJob")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
@@ -91,6 +110,7 @@ class PageController extends Controller
 
 
 		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status"],$id),
         ]; 
 		// Return the template response
@@ -106,7 +126,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/job-activity/{id}')]
 	public function jobActivity(int $id): TemplateResponse
 	{
-
+		if(!$this->simpleAccessControl("jobActivity")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
@@ -116,6 +141,7 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 
 		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status"],$id),
         ];
 		// Return the template response
@@ -131,7 +157,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/add-applicant')]
 	public function applicant(): TemplateResponse
 	{
-
+		if(!$this->simpleAccessControl("addApplicant")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
@@ -151,9 +182,14 @@ class PageController extends Controller
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/candidate-call/{id}/{email}')]
-	public function service(int $id, string $email): TemplateResponse
+	public function candidateCall(int $id, string $email): TemplateResponse
 	{
-
+		if(!$this->simpleAccessControl("candidateCall")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
@@ -164,6 +200,7 @@ class PageController extends Controller
 
 		$job = $this->dbService->getJob(["title","location", "company", "funnel_name", "campaign"],$id);
 		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $job,
 			'company' => $this->dbService->getCompany(["name","website"],$job["company"]),
 			'applicant' => $this->dbService->getApplicant(["firstname","lastname", "cv", "joined", "interviewQS"],$email, $job["funnel_name"]),
@@ -190,17 +227,45 @@ class PageController extends Controller
 	 /**
      * @NoAdminRequired
      */
-    private function getUserGroups() {
+    private function simpleAccessControl($page) {
         $user = $this->userSession->getUser();
-        if ($user) {
-            $groups = $this->groupManager->getUserGroups($user);
-            $groupNames = array_map(function($group) {
-                return $group->getGID();
-            }, $groups);
-
-            return $groupNames;
-        }
-        
-        return[];
+        $groups = $this->groupManager->getUserGroups($user);
+		switch ($page) {
+			case 'candidateCall':
+				return strpos(json_encode($groups),'Caller');
+				break;
+			case 'addApplicant':
+				return strpos(json_encode($groups),'MFK intern');
+				break;
+			case 'jobActivity':
+				return strpos(json_encode($groups),'MFK intern');
+				break;
+			case 'editJob':
+				return strpos(json_encode($groups),'MFK intern');
+				break;
+			case 'companyJobs':
+				return strpos(json_encode($groups),'MFK intern');
+				break;
+			case 'companyOverview':
+				return strpos(json_encode($groups),'MFK intern');
+				break;
+			default:
+				return false;
+				break;
+		}
+		return false;
     }
+
+	private function getAllowedNavbarLinks(){
+		$user = $this->userSession->getUser();
+        $groups = $this->groupManager->getUserGroups($user);
+		$links = array();
+		if(strpos(json_encode($groups),'Caller')){
+			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
+		}
+		if(strpos(json_encode($groups),'MFK intern')){
+			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview"));
+		}
+		return $links;
+	}
 }
