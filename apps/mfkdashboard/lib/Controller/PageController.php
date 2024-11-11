@@ -64,7 +64,8 @@ class PageController extends Controller
 
 		$data = [
             'company' => $this->dbService->getCompany(["name"],$id),
-			'jobs' => $this->dbService->getCompanyJobs(["title","status","id"], $id)
+			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status"], $id),
+			'followingLink' => "edit-job"
         ];
 		// Return the template response
 		return new TemplateResponse(
@@ -76,8 +77,8 @@ class PageController extends Controller
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/details')]
-	public function details(): TemplateResponse
+	#[FrontpageRoute(verb: 'GET', url: '/edit-job/{id}')]
+	public function jobSetup(int $id): TemplateResponse
 	{
 
 		\OCP\Util::addStyle('mfkdashboard', 'quill');
@@ -89,10 +90,14 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 
 
+		$data = [
+            'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status"],$id),
+        ]; 
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
-			'hr/details'
+			'hr/jobEdit',
+			$data
 		);
 	}
 	#[NoCSRFRequired]

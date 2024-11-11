@@ -78,5 +78,21 @@ class DatabaseService {
         $stmt->execute(array($companyID));
         return $stmt->fetchAll();
     }
+
+    public function getJob(array $fields, int $id) {
+        $allowedFields = ["title","id", "funnel_name", "company", "status", "location"];
+    
+        $filteredFields = array_intersect($fields, $allowedFields);
+    
+        if (empty($filteredFields)) {
+            return null;
+        }
+    
+        $fieldsList = implode(", ", $filteredFields);
+    
+        $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE id = ?");
+        $stmt->execute(array($id));
+        return $stmt->fetchAll()[0];
+    }
     
 }

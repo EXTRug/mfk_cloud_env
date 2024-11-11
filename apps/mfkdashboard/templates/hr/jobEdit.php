@@ -5,16 +5,16 @@ include_once(__DIR__ . '/../includes/header.php');
 <!-- Main Content -->
 <div class="container-fluid p-5 main-content-area">
     <div class="d-flex align-items-center mb-3">
-        <button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button>
+        <a href="/index.php/apps/mfkdashboard/company-jobs/<?php echo($job["company"]);?>"><button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button></a>
         <div>
-            <h2 class="main-content-heading mb-0 pb-0">Max Mustermann Gmbh</h2>
-            <div class="heading-tagline">(ID: Funnelname | 765432)</div>
+            <h2 class="main-content-heading mb-0 pb-0"><?php echo($job["title"]);?></h2>
+            <div class="heading-tagline"><?php echo('(ID: '.$job["funnel_name"].' | '.$job["id"].')');?></div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
             <div class="card-box">
-                <div class="title mb-1">Drehbahn 7, 97555 Hamburg</div>
+                <div class="title mb-1"><?php $loc = json_decode($job["location"])[0];echo($loc->plz.", ".$loc->city);?></div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?=$configurations['assets_path'] ?>/images/ep_location.png">    
                     Adresse
@@ -41,7 +41,7 @@ include_once(__DIR__ . '/../includes/header.php');
         </div>
         <div class="col-md-6 mt-3">
             <div class="card-box">
-                <div class="title mb-1 d-flex align-items-center"><div class="status-dot info"></div> In Bearbeitung</div>
+                <div class="title mb-1 d-flex align-items-center"><div class="status-dot info"></div> <?php echo($job["status"])?></div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?=$configurations['assets_path'] ?>/images/iconamoon_link-light.png">    
                     Status des Jobs

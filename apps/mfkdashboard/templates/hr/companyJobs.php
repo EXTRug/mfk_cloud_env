@@ -36,9 +36,9 @@ include_once(__DIR__ . '/../includes/header.php');
             <?php
                 foreach ($jobs as $key => $job) {
                     if($job["status"] == "active"){
-                        echo('<tr><td>'.$job["title"].'</td> <td class="d-flex align-items-center"><div class="status-dot active"></div>aktiv</td> </tr>');
+                        echo('<tr><td><a href="/index.php/apps/mfkdashboard/'.$followingLink.'/'.$job['id'].'">'.$job["title"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div>aktiv</td> </tr>');
                     }else{
-                        echo('<tr><td>'.$job["title"].'</td> <td class="d-flex align-items-center"><div class="status-dot"></div>'.$job["status"].'</td> </tr>');
+                        echo('<tr><td><a href="/index.php/apps/mfkdashboard/'.$followingLink.'/'.$job['id'].'">'.$job["title"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot"></div>'.$job["status"].'</td> </tr>');
                     }
                 }
             ?>
