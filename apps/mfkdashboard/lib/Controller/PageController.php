@@ -14,6 +14,7 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IUserSession;
 use OCP\IGroupManager;
+use OCP\IURLGenerator;
 
 /**
  * @psalm-suppress UnusedClass
@@ -23,36 +24,37 @@ class PageController extends Controller
 	private $dbService;
 	private $userSession;
     private $groupManager;
-	public function __construct(IUserSession $userSession, IGroupManager $groupManager) {
+	private $urlGenerator;
+	public function __construct(IUserSession $userSession, IGroupManager $groupManager,IURLGenerator $urlGenerator) {
         $this->dbService = new DatabaseService();
 		$this->userSession = $userSession;
         $this->groupManager = $groupManager;
+		$this->urlGenerator = $urlGenerator;
     }
 
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/hr')]
-	public function hr(): TemplateResponse
+	#[FrontpageRoute(verb: 'GET', url: '/company-overview')]
+	public function companiesOverview(): TemplateResponse
 	{
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 
 		$data = [
-            'title' => 'Hello from Nextcloud',
-			"groups" => $this->getUserGroups(),
+            'companies' => $this->dbService->getCompanies(["companyID","name"]),
         ];
 		return new TemplateResponse(
 			Application::APP_ID,
-			'/hr/index',
+			'/hr/companiesList',
 			$data,
 		);
 	}
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
-	#[FrontpageRoute(verb: 'GET', url: '/show')]
-	public function demo(): TemplateResponse
+	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/{id}')]
+	public function companyJobs(int $id): TemplateResponse
 	{
 		// Add the JavaScript file from the js/ folder
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
@@ -60,11 +62,15 @@ class PageController extends Controller
 
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 
-
+		$data = [
+            'company' => $this->dbService->getCompany(["name"],$id),
+			'jobs' => $this->dbService->getCompanyJobs(["title","status","id"], $id)
+        ];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
-			'hr/show'
+			'hr/companyJobs',
+			$data
 		);
 	}
 	#[NoCSRFRequired]

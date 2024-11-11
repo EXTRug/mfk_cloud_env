@@ -5,8 +5,6 @@ include_once(__DIR__ . '/../includes/header.php');
 <!-- Main Content -->
 <div class="container-fluid p-5 main-content-area">
     <h2 class="main-content-heading">Übersicht Firmen</h2>
-    <!-- <p><?php p($title); ?></p> -->
-     <!-- <p><?php var_dump($groups); ?></p> -->
     <div class="d-flex align-items-center filter-area">
         <div class="search-field d-flex align-items-center">
             <img src="<?=$configurations['assets_path'] ?>/images/iconamoon_search-light.png">
@@ -32,14 +30,11 @@ include_once(__DIR__ . '/../includes/header.php');
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Max Musterman Gmbh</td>
-                <td class="d-flex align-items-center"><div class="status-dot active"></div> Active</td>
-            </tr>
-            <tr>
-                <td>Max Musterman Gmbh</td>
-                <td class="d-flex align-items-center"><div class="status-dot"></div> Offline</td>
-            </tr>
+            <?php
+            foreach ($companies as $key => $company) {
+                echo('<tr> <td><a href="company-jobs/'.$company["companyID"].'">'.$company["name"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div> Active</td> </tr>');
+            }
+            ?>
         </tbody>
     </table>
 </div>
