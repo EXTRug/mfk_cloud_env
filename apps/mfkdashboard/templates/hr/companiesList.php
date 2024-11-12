@@ -8,9 +8,9 @@ include_once(__DIR__ . '/../includes/header.php');
     <div class="d-flex align-items-center filter-area">
         <div class="search-field d-flex align-items-center">
             <img src="<?=$configurations['assets_path'] ?>/images/iconamoon_search-light.png">
-            <input type="search">
+            <input id="searchbar" type="search">
         </div>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Filter
             </button>
@@ -20,19 +20,18 @@ include_once(__DIR__ . '/../includes/header.php');
                 <li><a class="dropdown-item" href="#">Another action</a></li>
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
-        </div>
+        </div> -->
     </div>
     <table class="table rounded">
         <thead class="table-header">
             <tr background="#000">
-                <th>Firemenname</th>
-                <th>Status</th>
+                <th>Firmenname</th>
             </tr>
         </thead>
         <tbody>
             <?php
             foreach ($companies as $key => $company) {
-                echo('<tr> <td><a href="/index.php/apps/mfkdashboard/company-jobs/'.$mode."/".$company["companyID"].'">'.$company["name"].'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div> Active</td> </tr>');
+                echo('<tr> <td><a href="/index.php/apps/mfkdashboard/company-jobs/'.$mode."/".$company["companyID"].'">'.$company["name"].'</a></td></tr>');
             }
             ?>
         </tbody>

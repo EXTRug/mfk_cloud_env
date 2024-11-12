@@ -14,7 +14,6 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IUserSession;
 use OCP\IGroupManager;
-use OCP\IURLGenerator;
 
 /**
  * @psalm-suppress UnusedClass
@@ -24,12 +23,10 @@ class PageController extends Controller
 	private $dbService;
 	private $userSession;
     private $groupManager;
-	private $urlGenerator;
-	public function __construct(IUserSession $userSession, IGroupManager $groupManager,IURLGenerator $urlGenerator) {
+	public function __construct(IUserSession $userSession, IGroupManager $groupManager) {
         $this->dbService = new DatabaseService();
 		$this->userSession = $userSession;
         $this->groupManager = $groupManager;
-		$this->urlGenerator = $urlGenerator;
     }
 
 	#[NoCSRFRequired]
@@ -46,6 +43,7 @@ class PageController extends Controller
 		}
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+		\OCP\Util::addScript('mfkdashboard', 'pages/companiesOverview');
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
@@ -91,6 +89,7 @@ class PageController extends Controller
 		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
 
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+		\OCP\Util::addScript('mfkdashboard', 'pages/jobsOverview');
 		if($mode == "hr"){
 			$link = "edit-job";
 		}else{

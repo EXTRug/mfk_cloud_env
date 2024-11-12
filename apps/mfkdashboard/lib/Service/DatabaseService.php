@@ -31,7 +31,7 @@ class DatabaseService {
     }
 
     
-    public function getCompanies(array $fields) {
+    public function getCompanies(array $fields, array $filters=[]) {
         $allowedFields = ['companyID', 'name'];
     
         $filteredFields = array_intersect($fields, $allowedFields);
@@ -41,8 +41,11 @@ class DatabaseService {
         }
     
         $fieldsList = implode(", ", $filteredFields);
-    
-        $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.company");
+        if($filters["searchTerm"] != ""){
+            $stmt = $this->pdo->prepare('SELECT '.$fieldsList.' FROM companies.company WHERE name LIKE "%'.$filters["searchTerm"].'%"');
+        }else{
+            $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.company");
+        }
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -63,7 +66,7 @@ class DatabaseService {
         return $stmt->fetchAll()[0];
     }
 
-    public function getCompanyJobs(array $fields, int $companyID) {
+    public function getCompanyJobs(array $fields, int $companyID, array $filters=[]) {
         $allowedFields = ['title', 'id', 'status'];
     
         $filteredFields = array_intersect($fields, $allowedFields);
@@ -73,8 +76,17 @@ class DatabaseService {
         }
     
         $fieldsList = implode(", ", $filteredFields);
+
+        if($filters != []){
+            $queryFilters = "";
+            if($filters["searchTerm"] != ""){
+                $queryFilters .= '& title LIKE "%'.$filters["searchTerm"].'%"';
+            }
+            $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE company = ? ".$queryFilters);
+        }else{
+            $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE company = ?");
+        }
     
-        $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE company = ?");
         $stmt->execute(array($companyID));
         return $stmt->fetchAll();
     }

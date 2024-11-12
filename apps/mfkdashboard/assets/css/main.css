@@ -30,6 +30,10 @@ a:link {
     text-decoration: none;
 }
 
+a{
+    color: black !important;
+}
+
 #body-user{
     background-color: #20284D !important;
 }
