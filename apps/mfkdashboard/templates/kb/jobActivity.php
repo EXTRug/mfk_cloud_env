@@ -6,7 +6,7 @@ include_once(__DIR__ . '/../includes/header.php');
 <div class="container-fluid p-5 main-content-area">
     <div class="spacer-header">
         <div class="d-flex align-items-center mb-3">
-        <a href="/index.php/apps/mfkdashboard/company-jobs/<?php echo($job["company"]);?>"><button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button></a>
+        <a href="/index.php/apps/mfkdashboard/company-jobs/kb/<?php echo($job["company"]);?>"><button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button></a>
             <div>
                 <h2 class="main-content-heading mb-0 pb-0"><?php echo($job["title"]);?></h2>
                 <div class="heading-tagline d-flex align-items-center"><?php echo('(ID: '.$job["funnel_name"].' | '.$job["id"].')');?> &nbsp;&nbsp;&nbsp;<div class="d-flex align-items-center"><div class="status-dot active"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo($job["status"]);?></span>&nbsp;&nbsp;&nbsp; (? Tage verbleibend)</div></div>
