@@ -218,6 +218,7 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'quill');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
+		\OCP\Util::addScript('mfkdashboard', 'pages/candidateCall');
 
 		$job = $this->dbService->getJob(["title","location", "company", "funnel_name", "campaign"],$id);
 		$data = [

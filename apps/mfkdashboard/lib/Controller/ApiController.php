@@ -47,6 +47,70 @@ class ApiController extends OCSController
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
+    #[ApiRoute(verb: 'GET', url: 'api/sendJobData')]
+    public function sendJobData(): DataResponse {
+        $email = $_GET['email'] ?? ''; 
+        $id = $_GET['id'] ?? '';
+
+        $url = 'https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax';
+        $data = ['test1' => $email, 'test2' => $id];
+
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
+            ],
+        ];
+
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        if ($result === false) {
+            return new DataResponse(
+                ["data" => "coulnd't process request"],
+                Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+        }
+        return new DataResponse(
+            ["data" => "ok"],
+            Http::STATUS_OK,
+        );
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'GET', url: 'api/requestCV')]
+    public function requestCV(): DataResponse {
+        $email = $_GET['email'] ?? ''; 
+        $id = $_GET['id'] ?? '';
+
+        $url = 'https://hook.eu1.make.com/sc76d4srs1hjapho4ead6w8ogoadgqn7';
+        $data = ['email' => $email, 'job' => $this->dbService->getJob(["funnel_name"], intval($id))["funnel_name"]];
+
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
+            ],
+        ];
+
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        if ($result === false) {
+            return new DataResponse(
+                ["data" => "couldn't process request"],
+                Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+        }
+        return new DataResponse(
+            ["data" => "ok"],
+            Http::STATUS_OK,
+        );
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/queryJobs')]
     public function queryJobs(): DataResponse {
         $searchTerm = $_GET['searchTerm'] ?? '';
@@ -61,7 +125,7 @@ class ApiController extends OCSController
             "searchTerm" => $searchTerm,
         );
     
-        $companies = $this->dbService->getCompanyJobs(["title", "status", "id"],$id, $filters);
+        $companies = $this->dbService->getCompanyJobs(["title", "status", "id"], intval($id), $filters);
     
         return new DataResponse(
             ["data" => json_encode($companies)],

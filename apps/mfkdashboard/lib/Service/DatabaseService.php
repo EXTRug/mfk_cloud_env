@@ -80,7 +80,7 @@ class DatabaseService {
         if($filters != []){
             $queryFilters = "";
             if($filters["searchTerm"] != ""){
-                $queryFilters .= '& title LIKE "%'.$filters["searchTerm"].'%"';
+                $queryFilters .= 'and title LIKE "%'.$filters["searchTerm"].'%"';
             }
             $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE company = ? ".$queryFilters);
         }else{

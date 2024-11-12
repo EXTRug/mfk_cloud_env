@@ -11,8 +11,8 @@ $campaign = json_decode($job["campaign"]);
     <div class="d-flex align-items-center header-with-between mb-3">
         <h2 class="main-content-heading mb-0 pb-0"><?php echo($job["funnel_name"]);?></h2>
         <div class="d-flex align-items-center header-buttons">
-            <button class="service-btn me-2">Lebenslauf anfordern</button>
-            <button class="service-btn">Job Informationen senden</button>
+            <button id="requestCV" class="service-btn me-2">Lebenslauf anfordern</button>
+            <button id="requestJobInformation" class="service-btn">Job Informationen senden</button>
         </div>
     </div>
     <div class="row">

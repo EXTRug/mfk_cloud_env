@@ -5,7 +5,7 @@ var currentFilters = {
 
 
 function updateJobsList(searchterm){
-    fetch(window.location.origin+"/ocs/v2.php/apps/mfkdashboard/api/queryJobs?searchTerm="+searchterm+"&id="+window.location.pathname.split("/")[6])
+    fetch(window.location.origin+"/ocs/v2.php/apps/mfkdashboard/api/queryJobs?searchTerm="+searchterm+"&compID="+window.location.pathname.split("/")[6])
     .then(response => response.text())
     .then(data => {
         const parser = new DOMParser();
@@ -41,6 +41,11 @@ function queryJobs() {
 function updateTable(data){
     let tbody = document.querySelector("tbody");
     let mode = window.location.pathname.split("/")[5];
+    if(mode == "hr"){
+        mode = "edit-job";
+    }else{
+        mode = "job-activity";
+    }
     tbody.innerHTML = "";
     children = "";
     console.log(data);
@@ -48,7 +53,7 @@ function updateTable(data){
         if(job.status == "active"){
             children += '<tr><td><a href="/index.php/apps/mfkdashboard/'+mode+'/'+job.id+'">'+job.title+'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div>aktiv</td> </tr>';
         }else{
-            children += '<tr><td><a href="/index.php/apps/mfkdashboard/'+mode+'/'+job.id+'">'+job.title+'</a></td> <td class="d-flex align-items-center"><div class="status-dot"></div>aktiv</td> </tr>';
+            children += '<tr><td><a href="/index.php/apps/mfkdashboard/'+mode+'/'+job.id+'">'+job.title+'</a></td> <td class="d-flex align-items-center"><div class="status-dot"></div>'+job.status+'</td> </tr>';
         }
     });
     tbody.innerHTML = children;
