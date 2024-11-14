@@ -1,5 +1,6 @@
 <?php
 namespace OCA\MFKDashboard\Service;
+use Psr\Log\LoggerInterface;
 
 class DatabaseService {
     private $pdo;
@@ -51,7 +52,7 @@ class DatabaseService {
     }
 
     public function getCompany(array $fields, int $id) {
-        $allowedFields = ['companyID', 'name', 'jobs', 'website'];
+        $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction'];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
@@ -92,7 +93,7 @@ class DatabaseService {
     }
 
     public function getJob(array $fields, int $id) {
-        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign"];
+        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign", "duration"];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
@@ -104,7 +105,12 @@ class DatabaseService {
     
         $stmt = $this->pdo->prepare("SELECT $fieldsList FROM companies.jobs WHERE id = ?");
         $stmt->execute(array($id));
-        return $stmt->fetchAll()[0];
+        $response = $stmt->fetchAll()[0];
+
+        if(in_array("history",$fields)){
+            $response["history"] = $this->getJobHistory($id);
+        }
+        return $response;
     }
 
     public function getApplicant(array $fields, string $email, string $funnel_name) {
@@ -130,6 +136,39 @@ class DatabaseService {
         $response["progress"] = $stmt->fetchAll()[0];
 
         return $response;
+    }
+
+    public function saveEvent(int $job, $title): bool{
+        $stmt = $this->pdo->prepare("INSERT INTO companies.history (title, job) VALUES (?,?)");
+        if ($stmt->execute(array($title, $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function changeCompanySatisfaction(int $company, int $satisfaction): bool{
+        // TO DO: check satisfaction range.
+        $stmt = $this->pdo->prepare("UPDATE companies.company SET satisfaction = ? WHERE companyID = ?");
+        if ($stmt->execute(array($satisfaction, $company))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private function getJobHistory(int $job){
+        $stmt = $this->pdo->prepare("SELECT * FROM companies.history WHERE job = ? ORDER BY timestamp DESC");
+        $stmt->execute(array($job));
+        return $stmt->fetchAll();
     }
     
 }

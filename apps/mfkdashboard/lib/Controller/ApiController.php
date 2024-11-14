@@ -30,15 +30,16 @@ class ApiController extends OCSController
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/queryCompanies')]
-    public function queryCompanies(): DataResponse {
-        $searchTerm = $_GET['searchTerm'] ?? ''; 
-    
+    public function queryCompanies(): DataResponse
+    {
+        $searchTerm = $_GET['searchTerm'] ?? '';
+
         $filters = array(
             "searchTerm" => $searchTerm,
         );
-    
+
         $companies = $this->dbService->getCompanies(["companyID", "name"], $filters);
-    
+
         return new DataResponse(
             ["data" => json_encode($companies)],
             Http::STATUS_OK,
@@ -48,8 +49,9 @@ class ApiController extends OCSController
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/sendJobData')]
-    public function sendJobData(): DataResponse {
-        $email = $_GET['email'] ?? ''; 
+    public function sendJobData(): DataResponse
+    {
+        $email = $_GET['email'] ?? '';
         $id = $_GET['id'] ?? '';
 
         $url = 'https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax';
@@ -80,8 +82,9 @@ class ApiController extends OCSController
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/requestCV')]
-    public function requestCV(): DataResponse {
-        $email = $_GET['email'] ?? ''; 
+    public function requestCV(): DataResponse
+    {
+        $email = $_GET['email'] ?? '';
         $id = $_GET['id'] ?? '';
 
         $url = 'https://hook.eu1.make.com/sc76d4srs1hjapho4ead6w8ogoadgqn7';
@@ -112,24 +115,47 @@ class ApiController extends OCSController
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/queryJobs')]
-    public function queryJobs(): DataResponse {
+    public function queryJobs(): DataResponse
+    {
         $searchTerm = $_GET['searchTerm'] ?? '';
         $id = $_GET['compID'] ?? '';
-        if($id == ''){
+        if ($id == '') {
             return new DataResponse(
                 Http::STATUS_BAD_REQUEST,
             );
         }
-    
+
         $filters = array(
             "searchTerm" => $searchTerm,
         );
-    
+
         $companies = $this->dbService->getCompanyJobs(["title", "status", "id"], intval($id), $filters);
-    
+
         return new DataResponse(
             ["data" => json_encode($companies)],
             Http::STATUS_OK,
         );
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/setSatisfaction')]
+    public function setSatisfaction(): DataResponse
+    {
+        // Parameter aus dem POST-Body abrufen
+        $satisfaction = $_POST['satisfaction'] ?? '';
+        $id = $_POST['compID'] ?? '';
+
+        if ($id === '') {
+            return new DataResponse(
+                Http::STATUS_BAD_REQUEST
+            );
+        }
+
+        if ($this->dbService->changeCompanySatisfaction(intval($id), intval($satisfaction))) {
+            return new DataResponse(Http::STATUS_OK);
+        }
+
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 }
