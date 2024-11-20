@@ -133,7 +133,7 @@ class PageController extends Controller
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range"],$id),
+            'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput"],$id),
         ]; 
 		// Return the template response
 		return new TemplateResponse(

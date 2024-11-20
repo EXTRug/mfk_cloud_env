@@ -1,15 +1,16 @@
-window.onload = function(){
-    LoadDescriptions();
-    LoadBenefits();
+window.onload = function () {
+    loadDescriptions();
+    loadBenefits();
+    loadEbayJob();
     document.querySelector("#ebay1").addEventListener("change", updateEbayFilter);
 }
 
-function LoadDescriptions(){
+function loadDescriptions() {
     quill.setText(document.querySelector("#desc_prof").value);
     quill2.setText(document.querySelector("#desc_social").value);
 }
 
-function updateEbayFilter(){
+function updateEbayFilter() {
     let category = document.querySelector("#ebay1").value;
     let ebay2 = document.querySelector("#ebay2");
 
@@ -88,16 +89,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function LoadBenefits(){
-    let benefits = JSON.parse(document.querySelector("#benefit_list").value);
-    content = "";
-    benefits.forEach(benefit => {
-        content += '<div class="benifit-item"><div class="benifit-title">'+benefit+'</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png"></button></div>';
-    });
-    document.getElementById('benefits').innerHTML = content;
+function loadEbayJob(){
+    let category = document.querySelector("#ebay_data").value.split("#")[0];
+    let sub_category = document.querySelector("#ebay_data").value.split("#")[1];
+
+    const cat = document.getElementById("ebay1");
+    for (let option of cat.options) {
+        if (option.text === category) {
+            option.selected = true;
+            break;
+        }
+    }
+    updateEbayFilter();
+    const scat = document.getElementById("ebay2");
+    for (let option of scat.options) {
+        if (option.text === sub_category) {
+            option.selected = true;
+            break;
+        }
+    }
 }
 
-function loadFormData(){
+function loadBenefits() {
+    let benefits = JSON.parse(document.querySelector("#benefit_list").value);
+    content = "";
+    if (benefits != '') {
+        benefits.forEach(benefit => {
+            content += '<div class="benifit-item"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png"></button></div>';
+        });
+        document.getElementById('benefits').innerHTML = content;
+    }
+}
+
+function loadFormData() {
     let title = document.querySelector("#title").value;
     let desc_prof = quill.getText();
     let desc_social = quill2.getText();

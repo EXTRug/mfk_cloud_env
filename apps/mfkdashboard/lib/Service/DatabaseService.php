@@ -93,7 +93,7 @@ class DatabaseService {
     }
 
     public function getJob(array $fields, int $id) {
-        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign", "duration", "funnel_url", "salary_range"];
+        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign", "duration", "funnel_url", "salary_range", "customerInput"];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     

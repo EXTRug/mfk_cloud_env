@@ -3,13 +3,17 @@ $page_title = 'HR';
 include_once(__DIR__ . '/../includes/header.php');
 $campaign = json_decode($job["campaign"]);
 if($job["salary_range"] != null){
-$salary = json_decode($job["salary_range"]);
+    $salary = json_decode($job["salary_range"]);
+}
+if($job["customerInput"] != null){
+    $customerInput = json_decode($job["customerInput"]);
 }
 ?>
 <!-- Main Content -->
 <input type="text" name="" id="desc_prof" style="display: none;" value='<?php echo(json_encode($campaign->desc_job));?>'>
 <input type="text" name="" id="desc_social" style="display: none;" value='<?php echo(json_encode($campaign->display_text));?>'>
 <input type="text" name="" id="benefit_list" style="display: none;" value='<?php echo(json_encode($campaign->benefits));?>'>
+<input type="text" name="" id="ebay_data" style="display: none;" value='<?php echo($campaign->ebay->sub_category."#".$campaign->ebay->job);?>'>
 <div class="container-fluid p-5 main-content-area">
     <div class="d-flex align-items-center mb-3">
         <a href="/index.php/apps/mfkdashboard/company-jobs/hr/<?php echo($job["company"]);?>"><button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button></a>
@@ -63,21 +67,21 @@ $salary = json_decode($job["salary_range"]);
                     Anforderungen:
                 </div>
                 <div class="paragraph">
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et.
+                <?php if(isset($customerInput)){echo($customerInput->requirements);}?>
                 </div>
                 <hr class="divider" align="center">
                 <div class="sub-heading mb-2">
-                    Anforderungen:
+                    Aufgabengebiet:
                 </div>
                 <div class="paragraph">
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et.
+                <?php if(isset($customerInput)){echo($customerInput->tasks);}?>
                 </div>
                 <hr class="divider" align="center">
                 <div class="sub-heading mb-2">
-                    Anforderungen:
+                    Benefits:
                 </div>
                 <div class="paragraph">
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et.
+                <?php if(isset($customerInput)){echo($customerInput->benefits);}?>
                 </div>
             </div>
         </div>
@@ -202,7 +206,6 @@ $salary = json_decode($job["salary_range"]);
                             <option>Sozialer Sektor & Pflege</option>
                             <option>Transport, Logistik & Verkehr</option>
                             <option>Vertrieb, Einkauf & Verkauf</option>
-                            <option>Weitere Jobs</option>
                         </select>
                     </div>
                     <div class="form-group col mb-3">
@@ -215,7 +218,7 @@ $salary = json_decode($job["salary_range"]);
                     <label>Benefits</label>
                     <div class="benfit-section mb-3 mt-3" id="benefits">
                     </div>
-                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Benifit" id="newBenefit">
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Benefit" id="newBenefit">
                     <button class="add-benifit-button"><img src="<?=$configurations['assets_path'] ?>/images/formkit_add.png">&nbsp;&nbsp; Add</button>
                 </div>
                 <div class="form-group mb-3">
