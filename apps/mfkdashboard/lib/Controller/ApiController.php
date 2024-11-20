@@ -114,6 +114,92 @@ class ApiController extends OCSController
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/logCall')]
+    public function logCall(): DataResponse
+    {
+        $url = 'https://hook.eu1.make.com/0fq1q3k6u9mpy5rdxvk6wu5iy5tb4xpv';
+        $data = [
+            "q25_email" => $_POST['email'],
+            "q3_wurdeDer" => $_POST['reached'],
+            "q31_Erreichbarkeitsanmerkungen" => $_POST['additional_notices'] ?? "",
+            "q4_recruiter" => $_POST['recruiter'] ?? "",
+            "q7_abgeschlosseneAusbildung" => $_POST['education'] ?? "",
+            "q29_wannWurde" => $_POST['education_complete'] ?? "",
+            "q30_wechselmotivation" => $_POST['change_motivation'] ?? "",
+            "q24_aktuellerBerufsstatus" => $_POST['professional_status'] ?? "",
+            "q9_nachstmoglichesWechseldatum" => [
+                "month" => explode("-",$_POST['next_possible_change'])[1] ?? "",
+                "day" => explode("-",$_POST['next_possible_change'])[2] ?? "",
+                "year" => explode("-",$_POST['next_possible_change'])[0] ?? "",
+            ],
+            "q19_gehaltsrange" => $_POST['salary_range'] ?? "",
+            "q20_reisebereitschaft" => "",
+            "q21_sprachniveau" => $_POST['german_level'] ?? "",
+            "q36_timeslots" => [
+                "shorttext-1" => $_POST['reachability'][0]["day"] ?? "",
+                "time-2" => [
+                    "timeInput" => $_POST['reachability'][0]["start"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][0]["start"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][1]["start"])[0] ?? "",
+                ],
+                "time-3" => [
+                    "timeInput" => $_POST['reachability'][0]["end"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][0]["end"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][0]["end"])[1] ?? "",
+                ],
+                "shorttext-4" => $_POST['reachability'][1]["day"] ?? "",
+                "time-5" => [
+                    "timeInput" => $_POST['reachability'][1]["start"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][1]["start"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][1]["start"])[1] ?? "",
+                ],
+                "time-6" => [
+                    "timeInput" => $_POST['reachability'][1]["end"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][1]["end"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][1]["end"])[1] ?? "",
+                ],
+                "shorttext-7" => $_POST['reachability'][2]["day"] ?? "",
+                "time-8" => [
+                    "timeInput" => $_POST['reachability'][2]["start"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][2]["start"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][2]["start"])[1] ?? "",
+                ],
+                "time-9" => [
+                    "timeInput" => $_POST['reachability'][2]["end"] ?? "",
+                    "hourSelect" => explode(":",$_POST['reachability'][2]["end"])[0] ?? "",
+                    "minuteSelect" => explode(":",$_POST['reachability'][2]["end"])[1] ?? "",
+                ]
+            ],
+            "q50_customer_question" => "",
+            "q23_notizen" => $_POST['notes'] ?? "",
+            "q49_requestCV" => "Nein",
+            "successfullCC" => $_POST['successfullCC'] ?? ""
+        ];
+
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
+            ],
+        ];
+
+        $context = stream_context_create($options);
+        // $result = file_get_contents($url, false, $context);
+        // if ($result === false) {
+        //     return new DataResponse(
+        //         ["data" => "couldn't process request"],
+        //         Http::STATUS_INTERNAL_SERVER_ERROR,
+        //     );
+        // }
+        return new DataResponse(
+            ["data" => "ok"],
+            Http::STATUS_OK,
+        );
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/createApplicant')]
     public function createApplicant(): DataResponse
     {
@@ -161,75 +247,75 @@ class ApiController extends OCSController
     }
 
     #[NoAdminRequired]
-#[NoCSRFRequired]
-#[ApiRoute(verb: 'POST', url: 'api/uploadCV')]
-public function uploadCV(): DataResponse
-{
-    // Prüfen, ob eine Datei hochgeladen wurde
-    if (!isset($_FILES['cv']) || $_FILES['cv']['error'] !== UPLOAD_ERR_OK) {
-        return new DataResponse(
-            ["data" => "No file uploaded or an error occurred."],
-            Http::STATUS_BAD_REQUEST
-        );
-    }
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/uploadCV')]
+    public function uploadCV(): DataResponse
+    {
+        // Prüfen, ob eine Datei hochgeladen wurde
+        if (!isset($_FILES['cv']) || $_FILES['cv']['error'] !== UPLOAD_ERR_OK) {
+            return new DataResponse(
+                ["data" => "No file uploaded or an error occurred."],
+                Http::STATUS_BAD_REQUEST
+            );
+        }
 
-    // Datei-Daten und Ziel-URL vorbereiten
-    $file = $_FILES['cv'];
-    $email = $_POST['email'] ?? null;
+        // Datei-Daten und Ziel-URL vorbereiten
+        $file = $_FILES['cv'];
+        $email = $_POST['email'] ?? null;
 
-    if (!$email) {
-        return new DataResponse(
-            ["data" => "Email is required."],
-            Http::STATUS_BAD_REQUEST
-        );
-    }
+        if (!$email) {
+            return new DataResponse(
+                ["data" => "Email is required."],
+                Http::STATUS_BAD_REQUEST
+            );
+        }
 
-    $url = 'https://hook.eu1.make.com/2w49uy6uxrspcz5dh1mffjfek5yin1qd';
+        $url = 'https://hook.eu1.make.com/2w49uy6uxrspcz5dh1mffjfek5yin1qd';
 
-    // cURL-Initialisierung
-    $ch = curl_init();
+        // cURL-Initialisierung
+        $ch = curl_init();
 
-    // Daten für die multipart/form-data-Anfrage erstellen
-    $postData = [
-        'email' => $email,
-        'cv' => new \CURLFile($file['tmp_name'], $file['type'], $file['name'])
-    ];
+        // Daten für die multipart/form-data-Anfrage erstellen
+        $postData = [
+            'email' => $email,
+            'cv' => new \CURLFile($file['tmp_name'], $file['type'], $file['name'])
+        ];
 
-    // cURL-Optionen setzen
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        // cURL-Optionen setzen
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 
-    // Anfrage ausführen
-    $result = curl_exec($ch);
+        // Anfrage ausführen
+        $result = curl_exec($ch);
 
-    // Fehlerbehandlung
-    if (curl_errno($ch)) {
-        $error = curl_error($ch);
+        // Fehlerbehandlung
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return new DataResponse(
+                ["data" => "File upload failed: $error"],
+                Http::STATUS_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        // Überprüfung des HTTP-Statuscodes
+        if ($httpCode !== 200) {
+            return new DataResponse(
+                ["data" => "File upload failed with status code $httpCode."],
+                Http::STATUS_INTERNAL_SERVER_ERROR
+            );
+        }
+
         return new DataResponse(
-            ["data" => "File upload failed: $error"],
-            Http::STATUS_INTERNAL_SERVER_ERROR
+            ["data" => "File uploaded successfully."],
+            Http::STATUS_OK
         );
     }
-
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    // Überprüfung des HTTP-Statuscodes
-    if ($httpCode !== 200) {
-        return new DataResponse(
-            ["data" => "File upload failed with status code $httpCode."],
-            Http::STATUS_INTERNAL_SERVER_ERROR
-        );
-    }
-
-    return new DataResponse(
-        ["data" => "File uploaded successfully."],
-        Http::STATUS_OK
-    );
-}
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
