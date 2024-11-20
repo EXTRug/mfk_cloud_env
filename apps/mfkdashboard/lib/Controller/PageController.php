@@ -195,9 +195,11 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'quill');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'main');
+		\OCP\Util::addScript('mfkdashboard', 'pages/addApplicant');
 
 		$data = [
-			'navLinks' => $this->getAllowedNavbarLinks()
+			'navLinks' => $this->getAllowedNavbarLinks(),
+			'jobs' => $this->dbService->getJobsList(["id", "funnel_name"])
         ];
 
 		// Return the template response

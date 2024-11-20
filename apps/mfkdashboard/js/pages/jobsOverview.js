@@ -48,7 +48,6 @@ function updateTable(data){
     }
     tbody.innerHTML = "";
     children = "";
-    console.log(data);
     data.forEach(job => {
         if(job.status == "active"){
             children += '<tr><td><a href="/index.php/apps/mfkdashboard/'+mode+'/'+job.id+'">'+job.title+'</a></td> <td class="d-flex align-items-center"><div class="status-dot active"></div>aktiv</td> </tr>';

@@ -114,27 +114,146 @@ class ApiController extends OCSController
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
+    #[ApiRoute(verb: 'GET', url: 'api/createApplicant')]
+    public function createApplicant(): DataResponse
+    {
+        $url = 'https://hook.eu1.make.com/6tj1h88mmdo949uybal7rt2bb6ugq8xu';
+        $data = [
+            "personal_data" => [
+                "firstname" => $_GET['firstname'] ?? '',
+                "plz" => "",
+                "lastname" => $_GET['lastname'] ?? '',
+                "email" => $_GET['email'] ?? '',
+                "LeadID" => "",
+                "phone" => $_GET['phone'] ?? '',
+                "cv" => "pending",
+                "questions" => "W10="
+            ],
+            "general" => [
+                "funnel" => $_GET['funnel'] ?? '',
+                "origin" => "KI Recruiting",
+                "source" => "onepage",
+                "utm" => "eyJ1dG1fY2FtcGFpZ24iOiIiLCJ1dG1fY29udGVudCI6IiIsInV0bV9tZWRpdW0iOiIiLCJ1dG1fc291cmNlIjoiIiwidXRtX3Rlcm0iOiIifQ==",
+                "status" => "create"
+            ]
+        ];
+
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
+            ],
+        ];
+
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        if ($result === false) {
+            return new DataResponse(
+                ["data" => "couldn't process request"],
+                Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+        }
+        return new DataResponse(
+            ["data" => "ok"],
+            Http::STATUS_OK,
+        );
+    }
+
+    #[NoAdminRequired]
+#[NoCSRFRequired]
+#[ApiRoute(verb: 'POST', url: 'api/uploadCV')]
+public function uploadCV(): DataResponse
+{
+    // Prüfen, ob eine Datei hochgeladen wurde
+    if (!isset($_FILES['cv']) || $_FILES['cv']['error'] !== UPLOAD_ERR_OK) {
+        return new DataResponse(
+            ["data" => "No file uploaded or an error occurred."],
+            Http::STATUS_BAD_REQUEST
+        );
+    }
+
+    // Datei-Daten und Ziel-URL vorbereiten
+    $file = $_FILES['cv'];
+    $email = $_POST['email'] ?? null;
+
+    if (!$email) {
+        return new DataResponse(
+            ["data" => "Email is required."],
+            Http::STATUS_BAD_REQUEST
+        );
+    }
+
+    $url = 'https://hook.eu1.make.com/2w49uy6uxrspcz5dh1mffjfek5yin1qd';
+
+    // cURL-Initialisierung
+    $ch = curl_init();
+
+    // Daten für die multipart/form-data-Anfrage erstellen
+    $postData = [
+        'email' => $email,
+        'cv' => new \CURLFile($file['tmp_name'], $file['type'], $file['name'])
+    ];
+
+    // cURL-Optionen setzen
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+
+    // Anfrage ausführen
+    $result = curl_exec($ch);
+
+    // Fehlerbehandlung
+    if (curl_errno($ch)) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return new DataResponse(
+            ["data" => "File upload failed: $error"],
+            Http::STATUS_INTERNAL_SERVER_ERROR
+        );
+    }
+
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    // Überprüfung des HTTP-Statuscodes
+    if ($httpCode !== 200) {
+        return new DataResponse(
+            ["data" => "File upload failed with status code $httpCode."],
+            Http::STATUS_INTERNAL_SERVER_ERROR
+        );
+    }
+
+    return new DataResponse(
+        ["data" => "File uploaded successfully."],
+        Http::STATUS_OK
+    );
+}
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
     #[ApiRoute(verb: 'GET', url: 'api/queryJobs')]
     public function queryJobs(): DataResponse
     {
         $searchTerm = $_GET['searchTerm'] ?? '';
         $id = $_GET['compID'] ?? '';
-        if ($id == '') {
-            return new DataResponse(
-                Http::STATUS_BAD_REQUEST,
-            );
-        }
-
         $filters = array(
             "searchTerm" => $searchTerm,
         );
-
-        $companies = $this->dbService->getCompanyJobs(["title", "status", "id"], intval($id), $filters);
-
-        return new DataResponse(
-            ["data" => json_encode($companies)],
-            Http::STATUS_OK,
-        );
+        if ($id == '') {
+            $jobs = $this->dbService->getJobsList(["funnel_name", "id"], $filters);
+            return new DataResponse(
+                ["data" => json_encode($jobs)],
+                Http::STATUS_OK,
+            );
+        } else {
+            $jobs = $this->dbService->getCompanyJobs(["title", "status", "id"], intval($id), $filters);
+            return new DataResponse(
+                ["data" => json_encode($jobs)],
+                Http::STATUS_OK,
+            );
+        }
     }
 
     #[NoAdminRequired]

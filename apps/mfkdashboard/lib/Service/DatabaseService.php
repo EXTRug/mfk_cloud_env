@@ -51,6 +51,25 @@ class DatabaseService {
         return $stmt->fetchAll();
     }
 
+    public function getJobsList(array $fields, array $filters=[]) {
+        $allowedFields = ['funnel_name', 'id'];
+    
+        $filteredFields = array_intersect($fields, $allowedFields);
+    
+        if (empty($filteredFields)) {
+            return null;
+        }
+    
+        $fieldsList = implode(", ", $filteredFields);
+        if($filters["searchTerm"] != ""){
+            $stmt = $this->pdo->prepare('SELECT '.$fieldsList.' FROM companies.jobs WHERE funnel_name LIKE "%'.$filters["searchTerm"].'%" AND status="active"');
+        }else{
+            $stmt = $this->pdo->prepare('SELECT '.$fieldsList.' FROM companies.jobs WHERE status="archieved"');
+        }
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getCompany(array $fields, int $id) {
         $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction'];
     
