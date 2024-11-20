@@ -1,8 +1,15 @@
 <?php
 $page_title = 'HR';
 include_once(__DIR__ . '/../includes/header.php');
+$campaign = json_decode($job["campaign"]);
+if($job["salary_range"] != null){
+$salary = json_decode($job["salary_range"]);
+}
 ?>
 <!-- Main Content -->
+<input type="text" name="" id="desc_prof" style="display: none;" value='<?php echo(json_encode($campaign->desc_job));?>'>
+<input type="text" name="" id="desc_social" style="display: none;" value='<?php echo(json_encode($campaign->display_text));?>'>
+<input type="text" name="" id="benefit_list" style="display: none;" value='<?php echo(json_encode($campaign->benefits));?>'>
 <div class="container-fluid p-5 main-content-area">
     <div class="d-flex align-items-center mb-3">
         <a href="/index.php/apps/mfkdashboard/company-jobs/hr/<?php echo($job["company"]);?>"><button class="return-button-x me-3"><img src="<?=$configurations['assets_path'] ?>/images/weui_arrow-filled.png"></button></a>
@@ -32,7 +39,7 @@ include_once(__DIR__ . '/../includes/header.php');
         </div>
         <div class="col-md-6 mt-3">
             <div class="card-box">
-                <div class="title mb-1">Handwerk</div>
+                <div class="title mb-1"><?php echo($campaign->industry);?></div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?=$configurations['assets_path'] ?>/images/ep_location.png">    
                     Job - Kategorie
@@ -80,7 +87,7 @@ include_once(__DIR__ . '/../includes/header.php');
                 <hr class="divider" align="center">
                 <div class="form-group mb-3">
                     <label>Stellenbezeichnung</label>
-                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" id="title" type="text" value="<?php echo($job["title"]);?>">
                 </div>
                 <div class="form-group mb-3">
                     <label>Stellenbeschreibung Text (professionell):</label>
@@ -129,6 +136,10 @@ include_once(__DIR__ . '/../includes/header.php');
                         <button class="ql-list" value="bullet"></button>
                     </div>
                 </div>
+                <div class="form-group mb-3">
+                    <label>Link zur Stellenauschreibung</label>
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" id="posting_link" value="<?php echo($job["funnel_url"])?>">
+                </div>
                 <div class="form-group">
                     <label>Bilderauswahl</label>
                     <button class="drag-drop-button">
@@ -158,56 +169,58 @@ include_once(__DIR__ . '/../includes/header.php');
                 </div>
                 <div class="row">
                     <div class="form-group col mb-3">
-                        <label>Postleitzahl Ausstrahlung</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="https://" value="https://">
+                        <label>PLZ</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="number" value="?">
                     </div>
                     <div class="form-group col mb-3">
                         <label>&nbsp;</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="number" placeholder="Radius km">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col mb-3 relative-position-input">
-                        <label>Postleitzahl Ausstrahlung</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="text">
+                        <label>Gehaltsrange</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="number" id="salaryMin" value="<?php if(isset($salary)){echo($salary->start);}?>">
                         <img src="<?=$configurations['assets_path'] ?>/images/tabler_coin-euro.png" class="absolute-icon-text">
                     </div>
                     <div class="form-group col mb-3 relative-position-input">
-                        <label>Postleitzahl Ausstrahlung</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="text">
+                        <label></label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input ps-5" type="number" id="salaryMax" value="<?php if(isset($salary)){echo($salary->stop);}?>">
                         <img src="<?=$configurations['assets_path'] ?>/images/tabler_coin-euro.png" class="absolute-icon-text">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col mb-3">
                         <label>Ebay - Kategorie</label>
-                        <select class="form-control rounded-0 border-secondary outline-0 text-input">
-                            <option>Select</option>
+                        <select class="form-control rounded-0 border-secondary outline-0 text-input" id="ebay1">
+                            <option>Ausbildung</option>
+                            <option>Bau, Handwerk & Produktion</option>
+                            <option>Büroarbeit & Verwaltung</option>
+                            <option>Gastronomie & Tourismus</option>
+                            <option>Kundenservice & Call Center</option>
+                            <option>Praktika</option>
+                            <option>Sozialer Sektor & Pflege</option>
+                            <option>Transport, Logistik & Verkehr</option>
+                            <option>Vertrieb, Einkauf & Verkauf</option>
+                            <option>Weitere Jobs</option>
                         </select>
                     </div>
                     <div class="form-group col mb-3">
                         <label>&nbsp;</label>
-                        <select class="form-control rounded-0 border-secondary outline-0 text-input p-1">
-                            <option>Select</option>
+                        <select class="form-control rounded-0 border-secondary outline-0 text-input p-1" id="ebay2">
                         </select>
                     </div>
                 </div>
                 <div class="form-group mb-3">
-                    <label>Link Stellenauschreibung</label>
-                    <div class="benfit-section mb-3 mt-3">
-                        <div class="benifit-item">
-                            <div class="benifit-title">Flexible Enivornemnt</div>
-                            <button class="img-remove-button">
-                                <img src="<?=$configurations['assets_path'] ?>/images/delete-btn.png">
-                            </button>
-                        </div>
+                    <label>Benefits</label>
+                    <div class="benfit-section mb-3 mt-3" id="benefits">
                     </div>
-                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Benifit">
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Benifit" id="newBenefit">
                     <button class="add-benifit-button"><img src="<?=$configurations['assets_path'] ?>/images/formkit_add.png">&nbsp;&nbsp; Add</button>
                 </div>
                 <div class="form-group mb-3">
                     <label>Ansprechpartner</label>
-                    <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text">
+                    <input class="form-control rounded-0 border-secondary outline-0 text-input" id="asp" type="text">
                 </div>
                 <button type="button" class="submit-btn">Zur Kundenrevision freigeben</button>
             </div>
