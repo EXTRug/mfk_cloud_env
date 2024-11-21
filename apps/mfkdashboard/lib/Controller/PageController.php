@@ -163,11 +163,13 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobActivity');
 
-		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "history", "duration"],$id);
+		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "history", "duration", "manager"],$id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $job,
-			'company' => $this->dbService->getCompany(["satisfaction"],intval($job["company"]))
+			'company' => $this->dbService->getCompany(["satisfaction","manager"],intval($job["company"])),
+			'topApplicants' => $this->dbService->getTopBewerber(['firstname', 'lastname', 'progress.score', 'cv', 'joined'], $job["funnel_name"]),
+			'calls' => $this->dbService->getCallHistory($id),
         ];
 		// Return the template response
 		return new TemplateResponse(

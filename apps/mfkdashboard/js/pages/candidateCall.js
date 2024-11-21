@@ -2,6 +2,7 @@ window.onload = function () {
     document.querySelector("#requestJobInformation").onclick = requestJobInformation;
     document.querySelector("#requestCV").onclick = requestCV;
     document.querySelector(".submit-btn").onclick = submit;
+    document.getElementById("reached").value = "Nein";
 }
 
 document.addEventListener("DOMContentLoaded", () => {

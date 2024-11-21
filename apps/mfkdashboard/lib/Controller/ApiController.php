@@ -118,80 +118,82 @@ class ApiController extends OCSController
     public function logCall(): DataResponse
     {
         $url = 'https://hook.eu1.make.com/0fq1q3k6u9mpy5rdxvk6wu5iy5tb4xpv';
-        $data = [
-            "q25_email" => $_POST['email'],
-            "q3_wurdeDer" => $_POST['reached'],
-            "q31_Erreichbarkeitsanmerkungen" => $_POST['additional_notices'] ?? "",
-            "q4_recruiter" => $_POST['recruiter'] ?? "",
-            "q7_abgeschlosseneAusbildung" => $_POST['education'] ?? "",
-            "q29_wannWurde" => $_POST['education_complete'] ?? "",
-            "q30_wechselmotivation" => $_POST['change_motivation'] ?? "",
-            "q24_aktuellerBerufsstatus" => $_POST['professional_status'] ?? "",
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $data_res = [
+            "q25_email" => $data["email"],
+            "q3_wurdeDer" => $data['reached'],
+            "q31_Erreichbarkeitsanmerkungen" => $data['additional_notices'] ?? "",
+            "q4_recruiter" => $data['recruiter'] ?? "",
+            "q7_abgeschlosseneAusbildung" => $data['education'] ?? "",
+            "q29_wannWurde" => $data['education_complete'] ?? "",
+            "q30_wechselmotivation" => $data['change_motivation'] ?? "",
+            "q24_aktuellerBerufsstatus" => $data['professional_status'] ?? "",
             "q9_nachstmoglichesWechseldatum" => [
-                "month" => explode("-",$_POST['next_possible_change'])[1] ?? "",
-                "day" => explode("-",$_POST['next_possible_change'])[2] ?? "",
-                "year" => explode("-",$_POST['next_possible_change'])[0] ?? "",
+                "month" => explode("-",$data['next_possible_change'] ?? "")[1],
+                "day" => explode("-",$data['next_possible_change']?? "")[2],
+                "year" => explode("-",$data['next_possible_change']?? "")[0],
             ],
-            "q19_gehaltsrange" => $_POST['salary_range'] ?? "",
+            "q19_gehaltsrange" => $data['salary_change'] ?? "",
             "q20_reisebereitschaft" => "",
-            "q21_sprachniveau" => $_POST['german_level'] ?? "",
+            "q21_sprachniveau" => $data['german_level'] ?? "",
             "q36_timeslots" => [
-                "shorttext-1" => $_POST['reachability'][0]["day"] ?? "",
+                "shorttext-1" => $data['reachability'][0]["day"] ?? "",
                 "time-2" => [
-                    "timeInput" => $_POST['reachability'][0]["start"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][0]["start"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][1]["start"])[0] ?? "",
+                    "timeInput" => $data['reachability'][0]["start"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][0]["start"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][1]["start"]?? "")[0],
                 ],
                 "time-3" => [
-                    "timeInput" => $_POST['reachability'][0]["end"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][0]["end"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][0]["end"])[1] ?? "",
+                    "timeInput" => $data['reachability'][0]["end"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][0]["end"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][0]["end"]?? "")[1],
                 ],
-                "shorttext-4" => $_POST['reachability'][1]["day"] ?? "",
+                "shorttext-4" => $data['reachability'][1]["day"] ?? "",
                 "time-5" => [
-                    "timeInput" => $_POST['reachability'][1]["start"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][1]["start"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][1]["start"])[1] ?? "",
+                    "timeInput" => $data['reachability'][1]["start"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][1]["start"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][1]["start"]?? "")[1],
                 ],
                 "time-6" => [
-                    "timeInput" => $_POST['reachability'][1]["end"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][1]["end"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][1]["end"])[1] ?? "",
+                    "timeInput" => $data['reachability'][1]["end"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][1]["end"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][1]["end"]?? "")[1],
                 ],
-                "shorttext-7" => $_POST['reachability'][2]["day"] ?? "",
+                "shorttext-7" => $data['reachability'][2]["day"] ?? "",
                 "time-8" => [
-                    "timeInput" => $_POST['reachability'][2]["start"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][2]["start"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][2]["start"])[1] ?? "",
+                    "timeInput" => $data['reachability'][2]["start"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][2]["start"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][2]["start"]?? "")[1],
                 ],
                 "time-9" => [
-                    "timeInput" => $_POST['reachability'][2]["end"] ?? "",
-                    "hourSelect" => explode(":",$_POST['reachability'][2]["end"])[0] ?? "",
-                    "minuteSelect" => explode(":",$_POST['reachability'][2]["end"])[1] ?? "",
+                    "timeInput" => $data['reachability'][2]["end"] ?? "",
+                    "hourSelect" => explode(":",$data['reachability'][2]["end"]?? "")[0],
+                    "minuteSelect" => explode(":",$data['reachability'][2]["end"]?? "")[1],
                 ]
             ],
             "q50_customer_question" => "",
-            "q23_notizen" => $_POST['notes'] ?? "",
+            "q23_notizen" => $data['notes'] ?? "",
             "q49_requestCV" => "Nein",
-            "successfullCC" => $_POST['successfullCC'] ?? ""
+            "successfullCC" => $data['successfullCC'] ?? ""
         ];
 
         $options = [
             'http' => [
                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                 'method' => 'POST',
-                'content' => http_build_query($data),
+                'content' => http_build_query($data_res),
             ],
         ];
 
         $context = stream_context_create($options);
-        // $result = file_get_contents($url, false, $context);
-        // if ($result === false) {
-        //     return new DataResponse(
-        //         ["data" => "couldn't process request"],
-        //         Http::STATUS_INTERNAL_SERVER_ERROR,
-        //     );
-        // }
+        $result = file_get_contents($url, false, $context);
+        if ($result === false) {
+            return new DataResponse(
+                ["data" => "couldn't process request"],
+                Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+        }
         return new DataResponse(
             ["data" => "ok"],
             Http::STATUS_OK,

@@ -16,19 +16,42 @@ if ($job["duration"] != null) {
             <div>
                 <h2 class="main-content-heading mb-0 pb-0"><?php echo ($job["title"]); ?></h2>
                 <div class="heading-tagline d-flex align-items-center"><?php echo ('(ID: ' . $job["funnel_name"] . ' | ' . $job["id"] . ')'); ?> &nbsp;&nbsp;&nbsp;<div class="d-flex align-items-center">
-                        <div class="status-dot active"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
+                        <div class="status-dot <?php
+                                                if ($job["status"] == "active") {
+                                                    echo ("active");
+                                                } elseif ($job["status"] == "In preperation") {
+                                                    echo ("info");
+                                                }
+                                                ?>"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
                     </div>
                 </div>
             </div>
         </div>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle header-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Zufriedenheit: <span class="header-dropdown-active"><?php echo ($company["satisfaction"]); ?></span>
+                Zufriedenheit: <span><?php if ($company["satisfaction"] == 2) {
+                                            echo ("Sehr zufrieden");
+                                        } elseif ($company["satisfaction"] == 1) {
+                                            echo ("zufrieden");
+                                        } elseif ($company["satisfaction"] == 0) {
+                                            echo ("neutral");
+                                        } elseif ($company["satisfaction"] == -1) {
+                                            echo ("Handlungsbedarf");
+                                        } ?></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 2) {
+                                                    echo ("selected");
+                                                } ?>>Sehr zufrieden</a></li>
+                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 1) {
+                                                    echo ("selected");
+                                                } ?>>zufrieden</a></li>
+                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 0) {
+                                                    echo ("selected");
+                                                } ?>>neutral</a></li>
+                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == -1) {
+                                                    echo ("selected");
+                                                } ?>>Handlungsbedarf</a></li>
             </ul>
         </div>
     </div>
@@ -97,53 +120,26 @@ if ($job["duration"] != null) {
         <div class="col-md-12 mt-3">
             <div class="card-box">
                 <div class="card-heading-small">Angebots - Historie</div>
-                <div class="condition-divider-heading pt-3 mt-3">(27.06.2024)</div>
-                <div class="row">
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Upsell</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Testimonial</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Emphfehlung</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="padding-left:24px">
-                        <div class="condition-title">Cross Sell</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                </div>
-                <hr class="divider" align="center">
-                <div class="condition-divider-heading mt-3">(27.06.2024)</div>
-                <div class="row">
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Upsell</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Testimonial</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Emphfehlung</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                    <div class="col" style="padding-left:24px">
-                        <div class="condition-title">Cross Sell</div>
-                        <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/no.png"></label>
-                    </div>
-                </div>
+                <?php 
+                // var_dump($calls);
+                foreach ($calls as $key => $call) {
+                    $timestamp = strtotime($call["timestamp"]);
+                    $time = date('d.m.Y',$timestamp);
+                    $upsell = json_decode($call["upsell"]);
+                    $testimonial = json_decode($call["testimonial"]);
+                    $recommendation = json_decode($call["recommendation"]);
+                    $crossSell = json_decode($call["crossSell"]);
+                    if($upsell->pitched){$upsell_pitched = "yes";}else{$upsell_pitched = "no";};
+                    if($upsell->sold){$upsell_sold = "yes";}else{$upsell_sold = "no";};
+                    if($testimonial->pitched){$testimonial_pitched = "yes";}else{$testimonial_pitched = "no";};
+                    if($testimonial->sold){$testimonial_sold = "yes";}else{$testimonial_sold = "no";};
+                    if($recommendation->pitched){$recommendation_pitched = "yes";}else{$recommendation_pitched = "no";};
+                    if($recommendation->sold){$recommendation_sold = "yes";}else{$recommendation_sold = "no";};
+                    if($crossSell->pitched){$crossSell_pitched = "yes";}else{$crossSell_pitched = "no";};
+                    if($crossSell->sold){$crossSell_sold = "yes";}else{$crossSell_sold = "no";};
+                    echo('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">('.$time.')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Emphfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_sold.'.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_sold.'.png"></label> </div> </div>');
+                }
+                ?>
             </div>
         </div>
         <div class="col-md-12 mt-3">
@@ -159,83 +155,58 @@ if ($job["duration"] != null) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Max Musterman</td>
-                        <td><span class="badge rounded-pill text-bg-success">100%</span></td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>
-                        </td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">27.08.1999:</label>
-                        </td>
-                        <td>
-                            <div class="title mb-1 d-flex align-items-center">Zum Portal <a><img height="19px" class="ms-2" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Max Musterman</td>
-                        <td><span class="badge rounded-pill text-bg-success">87%</span></td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="<?= $configurations['assets_path'] ?>/images/yes.png"></label>
-                        </td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">27.08.1999:</label>
-                        </td>
-                        <td>
-                            <div class="title mb-1 d-flex align-items-center">Zum Portal <a><img height="19px" class="ms-2" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Max Musterman</td>
-                        <td><span class="badge rounded-pill text-bg-warning">65%</span></td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">nur gen. Lebenslauf</label>
-                        </td>
-                        <td>
-                            <lable class="d-flex align-items-center condition-label">27.08.1999:</label>
-                        </td>
-                        <td>
-                            <div class="title mb-1 d-flex align-items-center">Zum Portal <a><img height="19px" class="ms-2" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
-                        </td>
-                    </tr>
+                    <?php 
+                    foreach ($topApplicants as $key => $applicant) {
+                        if($applicant["score"] == null){
+                            $score = 0;
+                        }else{
+                            $score = intval($applicant["score"]);
+                        }
+                        if(str_contains($applicant["cv"], "mfkgen_")){
+                            $cv = "generiert";
+                            $cv_img = "yes";
+                        }else{
+                            $cv = "eigener";
+                            $cv_img = "yes";
+                        }
+                        if($applicant["cv"] == null){
+                            $cv = "fehlt";
+                            $cv_img = "no";
+                        }
+                        if($score < 25){
+                            $bg_color = "text-bg-danger";
+                        }elseif($score < 76){
+                            $bg_color = "text-bg-warning";
+                        }else{
+                            $bg_color = "text-bg-success";
+                        }
+                        echo('<tr><td>'.$applicant["firstname"].' '.$applicant["lastname"].'</td> <td><span class="badge rounded-pill '.$bg_color.'">'.$score.'%</span></td> <td> <lable class="d-flex align-items-center condition-label">'.$cv.'&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$cv_img.'.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">'.$applicant["joined"].':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
         <div class="col-md-12 mt-3">
             <div class="card-heading-small mt-3 pt-3 pb-3">Kunden Benachrichtigungen Konsole</div>
-            <div style="font-size:20px line-height:24px; margin-bottom:15px">Bewerber Benachrichtigungen:</div>
             <table class="table rounded" style="width: 100%; border-collapse: collapse;">
                 <thead style="background: #000; color: #fff;">
                     <tr>
                         <th style="padding: 10px !important; text-align: left;">Jobs</th>
-                        <th style="padding: 10px; text-align: center;">Manager 1</th>
-                        <th style="padding: 10px; text-align: center;">Manager 2</th>
-                        <th style="padding: 10px; text-align: center;">Manager 3</th>
-                        <th style="padding: 10px; text-align: center;">Manager 4</th>
+                        <th style="padding: 10px; text-align: center;">Benachrichtigungsstatus</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">Job 1</td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">Job 2</td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/no.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">Job 2</td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/no.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                        <td style="padding: 10px; text-align: center;"><img src="<?= $configurations['assets_path'] ?>/images/yes.png"></td>
-                    </tr>
+                    <?php
+                    $active_manager = json_decode($job["manager"])->manager;
+                    $company_manager = json_decode($company["manager"]);
+                    foreach ($company_manager as $key => $manager) {
+                        if (in_array($manager, $active_manager)) {
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
+                        } else {
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
 

@@ -70,8 +70,29 @@ class DatabaseService {
         return $stmt->fetchAll();
     }
 
+    public function getTopBewerber(array $fields, $funnel, $count = 3) {
+        $allowedFields = ['firstname', 'lastname', 'progress.score', 'cv', 'joined'];
+    
+        $filteredFields = array_intersect($fields, $allowedFields);
+    
+        if (empty($filteredFields)) {
+            return null;
+        }
+    
+        $fieldsList = implode(", ", $filteredFields);
+        $stmt = $this->pdo->prepare('SELECT '.$fieldsList.' FROM applicants.applicant JOIN applicants.progress ON applicants.applicant.email = applicants.progress.applicant WHERE job="'.$funnel.'" ORDER BY progress.score LIMIT '.$count);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getCallHistory($id) {
+        $stmt = $this->pdo->prepare('SELECT * FROM companies.kbCalls WHERE job = '.$id);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getCompany(array $fields, int $id) {
-        $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction'];
+        $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction', 'manager'];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
@@ -112,7 +133,7 @@ class DatabaseService {
     }
 
     public function getJob(array $fields, int $id) {
-        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign", "duration", "funnel_url", "salary_range", "customerInput"];
+        $allowedFields = ["title","id", "funnel_name", "company", "status", "location", "campaign", "duration", "funnel_url", "salary_range", "customerInput", "manager"];
     
         $filteredFields = array_intersect($fields, $allowedFields);
     
