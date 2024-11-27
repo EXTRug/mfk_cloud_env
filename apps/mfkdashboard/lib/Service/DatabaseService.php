@@ -205,6 +205,46 @@ class DatabaseService {
         }
     }
 
+    public function logNewKBCall(int $job, $selection){
+        $stmt = $this->pdo->prepare("INSERT INTO companies.kbCalls (job, upsellPitched, upsellSold, testimonialPitched, testimonialSold, recommendationPitched, recommendationSold, crossSellPitched, crossSellSold) VALUES (?,?,?,?,?,?,?,?,?)");
+        if ($stmt->execute(array($job, $selection["upsell"][0], $selection["upsell"][1], $selection["testimonial"][0], $selection["testimonial"][1], $selection["recommendation"][0],$selection["recommendation"][1], $selection["crossSell"][0],$selection["crossSell"][1]))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function changeJobNotification(int $job, string $manager, string $mode){
+        $managerDB = json_decode($this->getJob(["manager"], $job)["manager"]);
+        if($mode == "on"){
+            array_push($managerDB->manager, $manager);
+        }else{
+            $match = -1;
+            for ($i=0; $i < count($managerDB->manager); $i++) { 
+                echo($managerDB->manager[$i]."\n");
+                if($managerDB->manager[$i] === $manager){
+                    $match = $i;
+                    break;
+                }
+            }
+            unset($managerDB->manager[$match]);
+        }
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET manager = ? WHERE id = ?");
+        if ($stmt->execute(array(json_encode($managerDB), $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     private function getJobHistory(int $job){
         $stmt = $this->pdo->prepare("SELECT * FROM companies.history WHERE job = ? ORDER BY timestamp DESC");
         $stmt->execute(array($job));

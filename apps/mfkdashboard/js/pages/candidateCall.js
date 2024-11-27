@@ -90,8 +90,6 @@ function submit() {
     data["recruiter"] = document.getElementById("recruiter").value;
     data["email"] = window.location.pathname.split("/")[6];
     data["additional_notices"] = document.getElementById("additional_reach_notes").value;
-    console.log(data);
-    console.log(JSON.stringify(data));
     fetch('/ocs/v2.php/apps/mfkdashboard/api/logCall', {
         method: 'POST',
         headers: {

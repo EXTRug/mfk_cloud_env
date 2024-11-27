@@ -130,9 +130,9 @@ class ApiController extends OCSController
             "q30_wechselmotivation" => $data['change_motivation'] ?? "",
             "q24_aktuellerBerufsstatus" => $data['professional_status'] ?? "",
             "q9_nachstmoglichesWechseldatum" => [
-                "month" => explode("-",$data['next_possible_change'] ?? "")[1],
-                "day" => explode("-",$data['next_possible_change']?? "")[2],
-                "year" => explode("-",$data['next_possible_change']?? "")[0],
+                "month" => explode("-", $data['next_possible_change'] ?? "")[1],
+                "day" => explode("-", $data['next_possible_change'] ?? "")[2],
+                "year" => explode("-", $data['next_possible_change'] ?? "")[0],
             ],
             "q19_gehaltsrange" => $data['salary_change'] ?? "",
             "q20_reisebereitschaft" => "",
@@ -141,35 +141,35 @@ class ApiController extends OCSController
                 "shorttext-1" => $data['reachability'][0]["day"] ?? "",
                 "time-2" => [
                     "timeInput" => $data['reachability'][0]["start"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][0]["start"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][1]["start"]?? "")[0],
+                    "hourSelect" => explode(":", $data['reachability'][0]["start"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][1]["start"] ?? "")[0],
                 ],
                 "time-3" => [
                     "timeInput" => $data['reachability'][0]["end"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][0]["end"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][0]["end"]?? "")[1],
+                    "hourSelect" => explode(":", $data['reachability'][0]["end"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][0]["end"] ?? "")[1],
                 ],
                 "shorttext-4" => $data['reachability'][1]["day"] ?? "",
                 "time-5" => [
                     "timeInput" => $data['reachability'][1]["start"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][1]["start"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][1]["start"]?? "")[1],
+                    "hourSelect" => explode(":", $data['reachability'][1]["start"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][1]["start"] ?? "")[1],
                 ],
                 "time-6" => [
                     "timeInput" => $data['reachability'][1]["end"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][1]["end"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][1]["end"]?? "")[1],
+                    "hourSelect" => explode(":", $data['reachability'][1]["end"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][1]["end"] ?? "")[1],
                 ],
                 "shorttext-7" => $data['reachability'][2]["day"] ?? "",
                 "time-8" => [
                     "timeInput" => $data['reachability'][2]["start"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][2]["start"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][2]["start"]?? "")[1],
+                    "hourSelect" => explode(":", $data['reachability'][2]["start"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][2]["start"] ?? "")[1],
                 ],
                 "time-9" => [
                     "timeInput" => $data['reachability'][2]["end"] ?? "",
-                    "hourSelect" => explode(":",$data['reachability'][2]["end"]?? "")[0],
-                    "minuteSelect" => explode(":",$data['reachability'][2]["end"]?? "")[1],
+                    "hourSelect" => explode(":", $data['reachability'][2]["end"] ?? "")[0],
+                    "minuteSelect" => explode(":", $data['reachability'][2]["end"] ?? "")[1],
                 ]
             ],
             "q50_customer_question" => "",
@@ -363,6 +363,40 @@ class ApiController extends OCSController
             return new DataResponse(Http::STATUS_OK);
         }
 
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/logKBCall')]
+    public function logKBCall(): DataResponse {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $selection = array(
+            "upsell" => [$data["upsell"]["pitched"], $data["upsell"]["sold"]],
+            "testimonial" => [$data["testimonial"]["pitched"], $data["testimonial"]["sold"]],
+            "recommendation" => [$data["recommendation"]["pitched"], $data["recommendation"]["sold"]],
+            "crossSell" => [$data["crossSell"]["pitched"], $data["crossSell"]["sold"]],
+        );
+        if($this->dbService->logNewKBCall($job, $selection)){
+            return new DataResponse(Http::STATUS_OK);
+        } 
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/changeManagerNotification')]
+    public function changeManagerNotification(): DataResponse {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $manager = $data["manager"];
+        $mode = $data["mode"];
+        if($this->dbService->changeJobNotification($job, $manager, $mode)){
+            return new DataResponse([],Http::STATUS_OK);
+        } 
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 }

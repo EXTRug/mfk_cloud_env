@@ -113,7 +113,7 @@ function loadEbayJob(){
 function loadBenefits() {
     let benefits = JSON.parse(document.querySelector("#benefit_list").value);
     content = "";
-    if (benefits != '') {
+    if (benefits != null) {
         benefits.forEach(benefit => {
             content += '<div class="benifit-item"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png"></button></div>';
         });

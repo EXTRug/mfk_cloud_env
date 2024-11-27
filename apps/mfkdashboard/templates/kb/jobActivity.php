@@ -9,6 +9,7 @@ if ($job["duration"] != null) {
 }
 ?>
 <!-- Main Content -->
+<input type="hidden" value="<?php echo($job["company"]);?>" id="company_id">
 <div class="container-fluid p-5 main-content-area">
     <div class="spacer-header">
         <div class="d-flex align-items-center mb-3">
@@ -29,7 +30,7 @@ if ($job["duration"] != null) {
         </div>
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle header-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Zufriedenheit: <span><?php if ($company["satisfaction"] == 2) {
+                Zufriedenheit: <span id="customer_satisfaction_display"><?php if ($company["satisfaction"] == 2) {
                                             echo ("Sehr zufrieden");
                                         } elseif ($company["satisfaction"] == 1) {
                                             echo ("zufrieden");
@@ -39,17 +40,17 @@ if ($job["duration"] != null) {
                                             echo ("Handlungsbedarf");
                                         } ?></span>
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 2) {
+            <ul class="dropdown-menu" id="customer_relation">
+                <li><a class="dropdown-item" data-satifaction="2"<?php if ($company["satisfaction"] == 2) {
                                                     echo ("selected");
                                                 } ?>>Sehr zufrieden</a></li>
-                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 1) {
+                <li><a class="dropdown-item" data-satifaction="1"<?php if ($company["satisfaction"] == 1) {
                                                     echo ("selected");
                                                 } ?>>zufrieden</a></li>
-                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == 0) {
+                <li><a class="dropdown-item" data-satifaction="0"<?php if ($company["satisfaction"] == 0) {
                                                     echo ("selected");
                                                 } ?>>neutral</a></li>
-                <li><a class="dropdown-item" <?php if ($company["satisfaction"] == -1) {
+                <li><a class="dropdown-item" data-satifaction="-1"<?php if ($company["satisfaction"] == -1) {
                                                     echo ("selected");
                                                 } ?>>Handlungsbedarf</a></li>
             </ul>
@@ -81,7 +82,7 @@ if ($job["duration"] != null) {
                         <div class="card-heading-small">weitere Felder</div>
                         <div class="form-group mb-3 mt-3 pt-3">
                             <label>Vor Ort Termin</label>
-                            <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="Datum">
+                            <input class="form-control rounded-0 border-secondary outline-0 text-input" type="date" placeholder="Datum">
                         </div>
                     </div>
                 </div>
@@ -92,27 +93,27 @@ if ($job["duration"] != null) {
                 <div class="card-heading-small">Neuer Call</div>
                 <div class="row pt-3 mt-3">
                     <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Upsell</div>
+                        <div class="condition-title" id="log-upsell">Upsell</div>
                         <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>&nbsp;&nbsp;&nbsp;
                             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>
                     </div>
                     <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Testimonial</div>
+                        <div class="condition-title" id="log-testimonial">Testimonial</div>
                         <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>&nbsp;&nbsp;&nbsp;
                             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>
                     </div>
                     <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Emphfehlung</div>
+                        <div class="condition-title" id="log-recommendation">Empfehlung</div>
                         <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>&nbsp;&nbsp;&nbsp;
-                            <lable class="d-flex align-items-center condition-label">gekauft:t&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>
+                            <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>
                     </div>
                     <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
-                        <div class="condition-title">Cross Sell</div>
+                        <div class="condition-title" id="log-crossSell">Cross Sell</div>
                         <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>&nbsp;&nbsp;&nbsp;
                             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>
                     </div>
                     <div class="col-2" style="">
-                        <button class="condition-btn">Save</button>
+                        <button class="condition-btn" id="logCall">Save</button>
                     </div>
                 </div>
             </div>
@@ -120,24 +121,19 @@ if ($job["duration"] != null) {
         <div class="col-md-12 mt-3">
             <div class="card-box">
                 <div class="card-heading-small">Angebots - Historie</div>
-                <?php 
-                // var_dump($calls);
+                <?php
                 foreach ($calls as $key => $call) {
                     $timestamp = strtotime($call["timestamp"]);
                     $time = date('d.m.Y',$timestamp);
-                    $upsell = json_decode($call["upsell"]);
-                    $testimonial = json_decode($call["testimonial"]);
-                    $recommendation = json_decode($call["recommendation"]);
-                    $crossSell = json_decode($call["crossSell"]);
-                    if($upsell->pitched){$upsell_pitched = "yes";}else{$upsell_pitched = "no";};
-                    if($upsell->sold){$upsell_sold = "yes";}else{$upsell_sold = "no";};
-                    if($testimonial->pitched){$testimonial_pitched = "yes";}else{$testimonial_pitched = "no";};
-                    if($testimonial->sold){$testimonial_sold = "yes";}else{$testimonial_sold = "no";};
-                    if($recommendation->pitched){$recommendation_pitched = "yes";}else{$recommendation_pitched = "no";};
-                    if($recommendation->sold){$recommendation_sold = "yes";}else{$recommendation_sold = "no";};
-                    if($crossSell->pitched){$crossSell_pitched = "yes";}else{$crossSell_pitched = "no";};
-                    if($crossSell->sold){$crossSell_sold = "yes";}else{$crossSell_sold = "no";};
-                    echo('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">('.$time.')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Emphfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_sold.'.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_sold.'.png"></label> </div> </div>');
+                    if($call["upsellPitched"]){$upsell_pitched = "yes";}else{$upsell_pitched = "no";};
+                    if($call["upsellSold"]){$upsell_sold = "yes";}else{$upsell_sold = "no";};
+                    if($call["testimonialPitched"]){$testimonial_pitched = "yes";}else{$testimonial_pitched = "no";};
+                    if($call["testimonialSold"]){$testimonial_sold = "yes";}else{$testimonial_sold = "no";};
+                    if($call["recommendationPitched"]){$recommendation_pitched = "yes";}else{$recommendation_pitched = "no";};
+                    if($call["recommendationSold"]){$recommendation_sold = "yes";}else{$recommendation_sold = "no";};
+                    if($call["crossSellPitched"]){$crossSell_pitched = "yes";}else{$crossSell_pitched = "no";};
+                    if($call["crossSellSold"]){$crossSell_sold = "yes";}else{$crossSell_sold = "no";};
+                    echo('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">('.$time.')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Empfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_sold.'.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_sold.'.png"></label> </div> </div>');
                 }
                 ?>
             </div>
@@ -201,9 +197,9 @@ if ($job["duration"] != null) {
                     $company_manager = json_decode($company["manager"]);
                     foreach ($company_manager as $key => $manager) {
                         if (in_array($manager, $active_manager)) {
-                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="on" src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
                         } else {
-                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="off" src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
                         }
                     }
                     ?>
