@@ -2,7 +2,7 @@ filterSettings = {
     "onlyActiveCompanies": true
 }
 
-searchTerm = "";
+var lastsearchTerm = "";
 
 window.onload = function () { 
     document.querySelector("#searchbar").onkeyup = queryCompanies; 
@@ -38,6 +38,7 @@ function queryCompanies() {
     if (element.value.length > 2 || element.value.length == 0) {
         searchTimeout = setTimeout(() => {
             searchTerm = element.value;
+            lastsearchTerm = searchTerm;
             updateCompaniesList(searchTerm);
         }, 1000);
     }
@@ -77,5 +78,5 @@ function updateFilterActiveCompanies(){
         document.getElementById("filterActiveCompanies").querySelector("svg").classList.remove("hidden");
         filterSettings["onlyActiveCompanies"] = true;
     }
-    updateCompaniesList(searchterm);
+    updateCompaniesList(lastsearchTerm);
 }

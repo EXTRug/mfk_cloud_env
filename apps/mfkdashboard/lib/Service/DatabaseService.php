@@ -109,7 +109,7 @@ class DatabaseService
 
     public function getCallHistory($id)
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM companies.kbCalls WHERE job = ' . $id);
+        $stmt = $this->pdo->prepare('SELECT * FROM companies.kbCalls WHERE job = ' . $id." ORDER BY timestamp DESC");
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -263,6 +263,7 @@ class DatabaseService
                 }
             }
             unset($managerDB->manager[$match]);
+            $managerDB->manager = array_values($managerDB->manager);
         }
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET manager = ? WHERE id = ?");
         if ($stmt->execute(array(json_encode($managerDB), $job))) {

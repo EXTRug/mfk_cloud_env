@@ -91,7 +91,7 @@ if ($job["duration"] != null) {
         <div class="col-md-12 mt-3">
             <div class="card-box">
                 <div class="card-heading-small">Neuer Call</div>
-                <div class="row pt-3 mt-3">
+                <div class="row pt-3 mt-3" id="logCallContainer">
                     <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
                         <div class="condition-title" id="log-upsell">Upsell</div>
                         <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <input type="checkbox" class="custom-checkbox"></label>&nbsp;&nbsp;&nbsp;
@@ -119,7 +119,7 @@ if ($job["duration"] != null) {
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <div class="card-box">
+            <div class="card-box" id="kbCallsContainer">
                 <div class="card-heading-small">Angebots - Historie</div>
                 <?php
                 foreach ($calls as $key => $call) {
