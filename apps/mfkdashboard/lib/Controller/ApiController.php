@@ -33,12 +33,18 @@ class ApiController extends OCSController
     public function queryCompanies(): DataResponse
     {
         $searchTerm = $_GET['searchTerm'] ?? '';
+        $filterOnlyActive = $_GET['filterActive'] ?? '';
 
         $filters = array(
             "searchTerm" => $searchTerm,
+            "onlyActive" => null
         );
 
-        $companies = $this->dbService->getCompanies(["companyID", "name"], $filters);
+        if($filterOnlyActive == "true"){
+            $filters["onlyActive"] = true;
+        }
+
+        $companies = $this->dbService->getCompanies(["companyID", "name", "satisfaction"], $filters);
 
         return new DataResponse(
             ["data" => json_encode($companies)],

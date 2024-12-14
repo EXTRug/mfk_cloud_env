@@ -47,7 +47,7 @@ class PageController extends Controller
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'companies' => $this->dbService->getCompanies(["companyID","name"]),
+            'companies' => $this->dbService->getCompanies(["companyID","name","satisfaction"]),
 			'mode' => $mode,
         ];
 		return new TemplateResponse(
