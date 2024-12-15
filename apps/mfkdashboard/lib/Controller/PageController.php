@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\MFKDashboard\Controller;
 use OCA\MFKDashboard\Service\DatabaseService;
+use OCA\MFKDashboard\Utils\DesignHelper;
 
 use OCA\MFKDashboard\AppInfo\Application;
 use OCP\AppFramework\Controller;
@@ -99,7 +100,7 @@ class PageController extends Controller
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'company' => $this->dbService->getCompany(["name"],$id),
-			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status"], $id),
+			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status","assignedColor"], $id,[],true),
 			'followingLink' => $link,
         ];
 		// Return the template response
@@ -130,10 +131,11 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobEdit');
 
-
+		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput"],$id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'job' => $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput"],$id),
+            'job' => $job,
+			'statusColor' => DesignHelper::getStatusColor($job["status"]),
         ]; 
 		// Return the template response
 		return new TemplateResponse(
@@ -168,8 +170,9 @@ class PageController extends Controller
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $job,
 			'company' => $this->dbService->getCompany(["satisfaction","manager"],intval($job["company"])),
-			'topApplicants' => $this->dbService->getTopBewerber(['firstname', 'lastname', 'progress.score', 'cv', 'joined'], $job["funnel_name"]),
+			'topApplicants' => $this->dbService->getTopBewerber(['firstname', 'lastname', 'progress.score', 'cv', 'joined','email'], $job["funnel_name"]),
 			'calls' => $this->dbService->getCallHistory($id),
+			'statusColor' => DesignHelper::getStatusColor($job["status"]) 
         ];
 		// Return the template response
 		return new TemplateResponse(

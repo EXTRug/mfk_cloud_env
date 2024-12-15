@@ -52,7 +52,7 @@ if($job["customerInput"] != null){
         </div>
         <div class="col-md-6 mt-3">
             <div class="card-box">
-                <div class="title mb-1 d-flex align-items-center"><div class="status-dot info"></div> <?php echo($job["status"])?></div>
+                <div class="title mb-1 d-flex align-items-center"><div class="status-dot" style="background-color: <?php echo($statusColor);?>;"></div> <?php echo($job["status"])?></div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?=$configurations['assets_path'] ?>/images/iconamoon_link-light.png">    
                     Status des Jobs

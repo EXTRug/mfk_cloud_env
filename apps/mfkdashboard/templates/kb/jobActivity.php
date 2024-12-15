@@ -17,13 +17,7 @@ if ($job["duration"] != null) {
             <div>
                 <h2 class="main-content-heading mb-0 pb-0"><?php echo ($job["title"]); ?></h2>
                 <div class="heading-tagline d-flex align-items-center"><?php echo ('(ID: ' . $job["funnel_name"] . ' | ' . $job["id"] . ')'); ?> &nbsp;&nbsp;&nbsp;<div class="d-flex align-items-center">
-                        <div class="status-dot <?php
-                                                if ($job["status"] == "active") {
-                                                    echo ("active");
-                                                } elseif ($job["status"] == "In preperation") {
-                                                    echo ("info");
-                                                }
-                                                ?>"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
+                        <div class="status-dot" style="background-color: <?php echo($statusColor);?>;"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
                     </div>
                 </div>
             </div>
@@ -176,7 +170,7 @@ if ($job["duration"] != null) {
                         }else{
                             $bg_color = "text-bg-success";
                         }
-                        echo('<tr><td>'.$applicant["firstname"].' '.$applicant["lastname"].'</td> <td><span class="badge rounded-pill '.$bg_color.'">'.$score.'%</span></td> <td> <lable class="d-flex align-items-center condition-label">'.$cv.'&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$cv_img.'.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">'.$applicant["joined"].':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
+                        echo('<tr><td>'.$applicant["firstname"].' '.$applicant["lastname"].'</td> <td><span class="badge rounded-pill '.$bg_color.'">'.$score.'%</span></td> <td> <lable class="d-flex align-items-center condition-label">'.$cv.'&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$cv_img.'.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">'.$applicant["joined"].':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a href="https://app.ki-recruiter.com/index.php/applicant/'.urlencode($applicant["email"]).'?job='.$job["id"].'" target="_blank"><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
                     }
                     ?>
                 </tbody>

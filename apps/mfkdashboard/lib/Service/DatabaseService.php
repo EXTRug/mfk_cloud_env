@@ -2,6 +2,8 @@
 
 namespace OCA\MFKDashboard\Service;
 
+use OCA\MFKDashboard\Utils\DesignHelper;
+
 use Psr\Log\LoggerInterface;
 
 class DatabaseService
@@ -93,7 +95,7 @@ class DatabaseService
 
     public function getTopBewerber(array $fields, $funnel, $count = 3)
     {
-        $allowedFields = ['firstname', 'lastname', 'progress.score', 'cv', 'joined'];
+        $allowedFields = ['firstname', 'lastname', 'progress.score', 'cv', 'joined','email'];
 
         $filteredFields = array_intersect($fields, $allowedFields);
 
@@ -131,10 +133,9 @@ class DatabaseService
         return $stmt->fetchAll()[0];
     }
 
-    public function getCompanyJobs(array $fields, int $companyID, array $filters = [])
+    public function getCompanyJobs(array $fields, int $companyID, array $filters = [], bool $assignColor = false)
     {
         $allowedFields = ['title', 'id', 'status'];
-
         $filteredFields = array_intersect($fields, $allowedFields);
 
         if (empty($filteredFields)) {
@@ -154,7 +155,15 @@ class DatabaseService
         }
 
         $stmt->execute(array($companyID));
-        return $stmt->fetchAll();
+        if ($assignColor) {
+            $result = $stmt->fetchAll();
+            foreach ($result as $key => &$job) {
+                $job["color"] = DesignHelper::getStatusColor($job["status"]);
+            }
+            return $result;
+        }else{
+            return $stmt->fetchAll();
+        }
     }
 
     public function getJob(array $fields, int $id)

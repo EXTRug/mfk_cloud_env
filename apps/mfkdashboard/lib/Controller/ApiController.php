@@ -61,7 +61,7 @@ class ApiController extends OCSController
         $id = $_GET['id'] ?? '';
 
         $url = 'https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax';
-        $data = ['test1' => $email, 'test2' => $id];
+        $data = ['email' => $email, 'job' => $id];
 
         $options = [
             'http' => [
