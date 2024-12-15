@@ -60,8 +60,8 @@ class DatabaseService
             $useFilter = true;
         }
         if ($useFilter) {
-            for ($i=0; $i < count($filteredFields); $i++) { 
-                $filteredFields[$i] = "c.".$filteredFields[$i];
+            for ($i = 0; $i < count($filteredFields); $i++) {
+                $filteredFields[$i] = "c." . $filteredFields[$i];
             }
             $fieldsList = implode(", ", $filteredFields);
             $stmt = $this->pdo->prepare("SELECT DISTINCT $fieldsList FROM companies.company c INNER JOIN companies.jobs j ON c.companyID = j.company WHERE " . substr($filterSQL, 0, -4));
@@ -95,7 +95,7 @@ class DatabaseService
 
     public function getTopBewerber(array $fields, $funnel, $count = 3)
     {
-        $allowedFields = ['firstname', 'lastname', 'progress.score', 'cv', 'joined','email'];
+        $allowedFields = ['firstname', 'lastname', 'progress.score', 'cv', 'joined', 'email'];
 
         $filteredFields = array_intersect($fields, $allowedFields);
 
@@ -111,7 +111,7 @@ class DatabaseService
 
     public function getCallHistory($id)
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM companies.kbCalls WHERE job = ' . $id." ORDER BY timestamp DESC");
+        $stmt = $this->pdo->prepare('SELECT * FROM companies.kbCalls WHERE job = ' . $id . " ORDER BY timestamp DESC");
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -161,14 +161,29 @@ class DatabaseService
                 $job["color"] = DesignHelper::getStatusColor($job["status"]);
             }
             return $result;
-        }else{
+        } else {
             return $stmt->fetchAll();
         }
     }
 
     public function getJob(array $fields, int $id)
     {
-        $allowedFields = ["title", "id", "funnel_name", "company", "status", "location", "campaign", "duration", "funnel_url", "salary_range", "customerInput", "manager"];
+        $allowedFields = [
+            "title",
+            "id",
+            "funnel_name",
+            "company",
+            "status",
+            "location",
+            "campaign",
+            "duration",
+            "funnel_url",
+            "salary_range",
+            "customerInput",
+            "manager",
+            "internalNote",
+            "scheduledCustomerVisit"
+        ];
 
         $filteredFields = array_intersect($fields, $allowedFields);
 
@@ -276,6 +291,34 @@ class DatabaseService
         }
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET manager = ? WHERE id = ?");
         if ($stmt->execute(array(json_encode($managerDB), $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function updateJobNote(int $job, string $note)
+    {
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET internalNote = ? WHERE id = ?");
+        if ($stmt->execute(array($note, $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function updateJobCustomerVisit(int $job, string $date)
+    {
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET scheduledCustomerVisit = ? WHERE id = ?");
+        if ($stmt->execute(array($date, $job))) {
             if ($stmt->rowCount() > 0) {
                 return true;
             } else {

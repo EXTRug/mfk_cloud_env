@@ -10,6 +10,9 @@ window.onload = function () {
             changeNotificationSetting(element);
         })
     });
+    document.getElementById("customerVisitField").addEventListener("change", customerVisitChanged);
+    quill.on('text-change', jobNotesChanged);
+    loadNotes();
 }
 
 function updateSatisfaction(element) {
@@ -73,7 +76,6 @@ function changeNotificationSetting(element) {
     } else {
         newMode = "on";
     }
-    console.log(manager + ": " + currentMode);
     fetch('/ocs/v2.php/apps/mfkdashboard/api/changeManagerNotification', {
         method: 'POST',
         headers: {
@@ -95,6 +97,57 @@ function changeNotificationSetting(element) {
             }
         })
         .catch(error => console.log("error"));
+}
+
+let inputTimeout;
+function customerVisitChanged() {
+    let inputField = document.getElementById("customerVisitField");
+    if (inputTimeout) {
+        clearTimeout(inputTimeout);
+    }
+    inputTimeout = setTimeout(() => {
+        newDate = new Date(inputField.value).toISOString().slice(0, 19).replace("T", " ");
+        fetch('/ocs/v2.php/apps/mfkdashboard/api/updateJobCustomerVisit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "date": newDate,
+                "job": window.location.pathname.split("/")[5]
+            })
+        }).then(data => {
+        })
+            .catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
+            );
+    }, 1000);
+}
+
+let typeTimeout;
+function jobNotesChanged() {
+    if (typeTimeout) {
+        clearTimeout(typeTimeout);
+    }
+    typeTimeout = setTimeout(() => {
+        fetch('/ocs/v2.php/apps/mfkdashboard/api/updateJobNotes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "note": quill.root.innerHTML,
+                "job": window.location.pathname.split("/")[5]
+            })
+        }).then(data => {
+        })
+            .catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
+            );
+    }, 2000);
+}
+
+function loadNotes() {
+    const delta = quill.clipboard.convert(document.querySelector("#internal_note").value);
+    quill.setContents(delta, 'silent');
 }
 
 function insertNewlyCreatedLog(data) {

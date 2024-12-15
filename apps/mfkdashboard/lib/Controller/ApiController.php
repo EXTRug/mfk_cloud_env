@@ -405,4 +405,32 @@ class ApiController extends OCSController
         } 
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/updateJobNotes')]
+    public function changeJobNotes(): DataResponse {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $note = $data["note"];
+        if($this->dbService->updateJobNote($job, $note)){
+            return new DataResponse([],Http::STATUS_OK);
+        } 
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/updateJobCustomerVisit')]
+    public function updateJobCustomerVisit(): DataResponse {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $date = strval($data["date"]);
+        if($this->dbService->updateJobCustomerVisit($job, $date)){
+            return new DataResponse([],Http::STATUS_OK);
+        } 
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
 }

@@ -9,7 +9,8 @@ if ($job["duration"] != null) {
 }
 ?>
 <!-- Main Content -->
-<input type="hidden" value="<?php echo($job["company"]);?>" id="company_id">
+<input type="hidden" value="<?php echo ($job["company"]); ?>" id="company_id">
+<input type="hidden" value="<?php echo ($job["internalNote"]); ?>" id="internal_note">
 <div class="container-fluid p-5 main-content-area">
     <div class="spacer-header">
         <div class="d-flex align-items-center mb-3">
@@ -17,7 +18,7 @@ if ($job["duration"] != null) {
             <div>
                 <h2 class="main-content-heading mb-0 pb-0"><?php echo ($job["title"]); ?></h2>
                 <div class="heading-tagline d-flex align-items-center"><?php echo ('(ID: ' . $job["funnel_name"] . ' | ' . $job["id"] . ')'); ?> &nbsp;&nbsp;&nbsp;<div class="d-flex align-items-center">
-                        <div class="status-dot" style="background-color: <?php echo($statusColor);?>;"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
+                        <div class="status-dot" style="background-color: <?php echo ($statusColor); ?>;"></div> <span style="color:var(--primary) !important; font-weight:600 !important;"><?php echo ($job["status"]); ?></span>&nbsp;&nbsp;&nbsp; (<?php echo ($daysRemaining); ?> Tage verbleibend)
                     </div>
                 </div>
             </div>
@@ -25,28 +26,28 @@ if ($job["duration"] != null) {
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle header-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Zufriedenheit: <span id="customer_satisfaction_display"><?php if ($company["satisfaction"] == 2) {
-                                            echo ("Sehr zufrieden");
-                                        } elseif ($company["satisfaction"] == 1) {
-                                            echo ("zufrieden");
-                                        } elseif ($company["satisfaction"] == 0) {
-                                            echo ("neutral");
-                                        } elseif ($company["satisfaction"] == -1) {
-                                            echo ("Handlungsbedarf");
-                                        } ?></span>
+                                                                            echo ("Sehr zufrieden");
+                                                                        } elseif ($company["satisfaction"] == 1) {
+                                                                            echo ("zufrieden");
+                                                                        } elseif ($company["satisfaction"] == 0) {
+                                                                            echo ("neutral");
+                                                                        } elseif ($company["satisfaction"] == -1) {
+                                                                            echo ("Handlungsbedarf");
+                                                                        } ?></span>
             </button>
             <ul class="dropdown-menu" id="customer_relation">
-                <li><a class="dropdown-item" data-satifaction="2"<?php if ($company["satisfaction"] == 2) {
-                                                    echo ("selected");
-                                                } ?>>Sehr zufrieden</a></li>
-                <li><a class="dropdown-item" data-satifaction="1"<?php if ($company["satisfaction"] == 1) {
-                                                    echo ("selected");
-                                                } ?>>zufrieden</a></li>
-                <li><a class="dropdown-item" data-satifaction="0"<?php if ($company["satisfaction"] == 0) {
-                                                    echo ("selected");
-                                                } ?>>neutral</a></li>
-                <li><a class="dropdown-item" data-satifaction="-1"<?php if ($company["satisfaction"] == -1) {
-                                                    echo ("selected");
-                                                } ?>>Handlungsbedarf</a></li>
+                <li><a class="dropdown-item" data-satifaction="2" <?php if ($company["satisfaction"] == 2) {
+                                                                        echo ("selected");
+                                                                    } ?>>Sehr zufrieden</a></li>
+                <li><a class="dropdown-item" data-satifaction="1" <?php if ($company["satisfaction"] == 1) {
+                                                                        echo ("selected");
+                                                                    } ?>>zufrieden</a></li>
+                <li><a class="dropdown-item" data-satifaction="0" <?php if ($company["satisfaction"] == 0) {
+                                                                        echo ("selected");
+                                                                    } ?>>neutral</a></li>
+                <li><a class="dropdown-item" data-satifaction="-1" <?php if ($company["satisfaction"] == -1) {
+                                                                        echo ("selected");
+                                                                    } ?>>Handlungsbedarf</a></li>
             </ul>
         </div>
     </div>
@@ -73,10 +74,31 @@ if ($job["duration"] != null) {
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card-heading-small">weitere Felder</div>
+                        <div class="card-heading-small">Weitere Felder</div>
                         <div class="form-group mb-3 mt-3 pt-3">
                             <label>Vor Ort Termin</label>
-                            <input class="form-control rounded-0 border-secondary outline-0 text-input" type="date" placeholder="Datum">
+                            <input class="form-control rounded-0 border-secondary outline-0 text-input" type="date" placeholder="Datum" id="customerVisitField" value="<?php echo ($job["scheduledCustomerVisit"]); ?>">
+                        </div>
+                        <label>interne Notizen</label>
+                        <div id="editor_area" class="text-editor-area"></div>
+                        <div id="toolbar1">
+                            <select class="ql-size">
+                                <option value="small"></option>
+                                <option selected></option>
+                                <option value="large"></option>
+                                <option value="huge"></option>
+                            </select>
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <select class="ql-align">
+                                <option selected></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
                         </div>
                     </div>
                 </div>
@@ -118,16 +140,48 @@ if ($job["duration"] != null) {
                 <?php
                 foreach ($calls as $key => $call) {
                     $timestamp = strtotime($call["timestamp"]);
-                    $time = date('d.m.Y',$timestamp);
-                    if($call["upsellPitched"]){$upsell_pitched = "yes";}else{$upsell_pitched = "no";};
-                    if($call["upsellSold"]){$upsell_sold = "yes";}else{$upsell_sold = "no";};
-                    if($call["testimonialPitched"]){$testimonial_pitched = "yes";}else{$testimonial_pitched = "no";};
-                    if($call["testimonialSold"]){$testimonial_sold = "yes";}else{$testimonial_sold = "no";};
-                    if($call["recommendationPitched"]){$recommendation_pitched = "yes";}else{$recommendation_pitched = "no";};
-                    if($call["recommendationSold"]){$recommendation_sold = "yes";}else{$recommendation_sold = "no";};
-                    if($call["crossSellPitched"]){$crossSell_pitched = "yes";}else{$crossSell_pitched = "no";};
-                    if($call["crossSellSold"]){$crossSell_sold = "yes";}else{$crossSell_sold = "no";};
-                    echo('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">('.$time.')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$upsell_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$testimonial_sold.'.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Empfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$recommendation_sold.'.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_pitched.'.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$crossSell_sold.'.png"></label> </div> </div>');
+                    $time = date('d.m.Y', $timestamp);
+                    if ($call["upsellPitched"]) {
+                        $upsell_pitched = "yes";
+                    } else {
+                        $upsell_pitched = "no";
+                    };
+                    if ($call["upsellSold"]) {
+                        $upsell_sold = "yes";
+                    } else {
+                        $upsell_sold = "no";
+                    };
+                    if ($call["testimonialPitched"]) {
+                        $testimonial_pitched = "yes";
+                    } else {
+                        $testimonial_pitched = "no";
+                    };
+                    if ($call["testimonialSold"]) {
+                        $testimonial_sold = "yes";
+                    } else {
+                        $testimonial_sold = "no";
+                    };
+                    if ($call["recommendationPitched"]) {
+                        $recommendation_pitched = "yes";
+                    } else {
+                        $recommendation_pitched = "no";
+                    };
+                    if ($call["recommendationSold"]) {
+                        $recommendation_sold = "yes";
+                    } else {
+                        $recommendation_sold = "no";
+                    };
+                    if ($call["crossSellPitched"]) {
+                        $crossSell_pitched = "yes";
+                    } else {
+                        $crossSell_pitched = "no";
+                    };
+                    if ($call["crossSellSold"]) {
+                        $crossSell_sold = "yes";
+                    } else {
+                        $crossSell_sold = "no";
+                    };
+                    echo ('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">(' . $time . ')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $upsell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $upsell_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $testimonial_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $testimonial_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Empfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $recommendation_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $recommendation_sold . '.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $crossSell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $crossSell_sold . '.png"></label> </div> </div>');
                 }
                 ?>
             </div>
@@ -145,32 +199,32 @@ if ($job["duration"] != null) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
+                    <?php
                     foreach ($topApplicants as $key => $applicant) {
-                        if($applicant["score"] == null){
+                        if ($applicant["score"] == null) {
                             $score = 0;
-                        }else{
+                        } else {
                             $score = intval($applicant["score"]);
                         }
-                        if(str_contains($applicant["cv"], "mfkgen_")){
+                        if (str_contains($applicant["cv"], "mfkgen_")) {
                             $cv = "generiert";
                             $cv_img = "yes";
-                        }else{
+                        } else {
                             $cv = "eigener";
                             $cv_img = "yes";
                         }
-                        if($applicant["cv"] == null){
+                        if ($applicant["cv"] == null) {
                             $cv = "fehlt";
                             $cv_img = "no";
                         }
-                        if($score < 25){
+                        if ($score < 25) {
                             $bg_color = "text-bg-danger";
-                        }elseif($score < 76){
+                        } elseif ($score < 76) {
                             $bg_color = "text-bg-warning";
-                        }else{
+                        } else {
                             $bg_color = "text-bg-success";
                         }
-                        echo('<tr><td>'.$applicant["firstname"].' '.$applicant["lastname"].'</td> <td><span class="badge rounded-pill '.$bg_color.'">'.$score.'%</span></td> <td> <lable class="d-flex align-items-center condition-label">'.$cv.'&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/'.$cv_img.'.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">'.$applicant["joined"].':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a href="https://app.ki-recruiter.com/index.php/applicant/'.urlencode($applicant["email"]).'?job='.$job["id"].'" target="_blank"><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
+                        echo ('<tr><td>' . $applicant["firstname"] . ' ' . $applicant["lastname"] . '</td> <td><span class="badge rounded-pill ' . $bg_color . '">' . $score . '%</span></td> <td> <lable class="d-flex align-items-center condition-label">' . $cv . '&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $cv_img . '.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">' . $applicant["joined"] . ':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a href="https://app.ki-recruiter.com/index.php/applicant/' . urlencode($applicant["email"]) . '?job=' . $job["id"] . '" target="_blank"><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
                     }
                     ?>
                 </tbody>
@@ -191,9 +245,9 @@ if ($job["duration"] != null) {
                     $company_manager = json_decode($company["manager"]);
                     foreach ($company_manager as $key => $manager) {
                         if (in_array($manager, $active_manager)) {
-                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="on" src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="on" src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
                         } else {
-                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">'.$manager.'</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="off" src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
+                            echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="off" src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
                         }
                     }
                     ?>
