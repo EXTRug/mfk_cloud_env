@@ -214,11 +214,12 @@ class PageController extends Controller
 			$data
 		);
 	}
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/candidate-call/{id}/{email}')]
-	public function candidateCall(int $id, string $email): TemplateResponse
+	public function candidateCallView(int $id, string $email): TemplateResponse
 	{
 		if(!$this->simpleAccessControl("candidateCall")){
 			return new TemplateResponse(
@@ -250,6 +251,40 @@ class PageController extends Controller
 			$data
 		);
 	}
+
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/candidate-call')]
+	public function candidateOverview(): TemplateResponse
+	{
+		if(!$this->simpleAccessControl("candidateCall")){
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
+		\OCP\Util::addStyle('mfkdashboard', 'quill');
+		\OCP\Util::addStyle('mfkdashboard', 'tom-select');
+
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+		\OCP\Util::addScript('mfkdashboard', 'quill');
+		\OCP\Util::addScript('mfkdashboard', 'tom-select');
+		\OCP\Util::addScript('mfkdashboard', 'main');
+		\OCP\Util::addScript('mfkdashboard', 'pages/candidateCall');
+
+		
+		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
+        ];
+
+		return new TemplateResponse(
+			Application::APP_ID,
+			'caller/candidatesOverview',
+			$data
+		);
+	}
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
