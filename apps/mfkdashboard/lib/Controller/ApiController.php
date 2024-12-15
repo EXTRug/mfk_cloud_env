@@ -40,7 +40,7 @@ class ApiController extends OCSController
             "onlyActive" => null
         );
 
-        if($filterOnlyActive == "true"){
+        if ($filterOnlyActive == "true") {
             $filters["onlyActive"] = true;
         }
 
@@ -375,7 +375,8 @@ class ApiController extends OCSController
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'POST', url: 'api/logKBCall')]
-    public function logKBCall(): DataResponse {
+    public function logKBCall(): DataResponse
+    {
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
@@ -385,52 +386,81 @@ class ApiController extends OCSController
             "recommendation" => [$data["recommendation"]["pitched"], $data["recommendation"]["sold"]],
             "crossSell" => [$data["crossSell"]["pitched"], $data["crossSell"]["sold"]],
         );
-        if($this->dbService->logNewKBCall($job, $selection)){
+        if ($this->dbService->logNewKBCall($job, $selection)) {
             return new DataResponse(Http::STATUS_OK);
-        } 
+        }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'POST', url: 'api/changeManagerNotification')]
-    public function changeManagerNotification(): DataResponse {
+    public function changeManagerNotification(): DataResponse
+    {
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
         $manager = $data["manager"];
         $mode = $data["mode"];
-        if($this->dbService->changeJobNotification($job, $manager, $mode)){
-            return new DataResponse([],Http::STATUS_OK);
-        } 
+        if ($this->dbService->changeJobNotification($job, $manager, $mode)) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'POST', url: 'api/updateJobNotes')]
-    public function changeJobNotes(): DataResponse {
+    public function changeJobNotes(): DataResponse
+    {
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
         $note = $data["note"];
-        if($this->dbService->updateJobNote($job, $note)){
-            return new DataResponse([],Http::STATUS_OK);
-        } 
+        if ($this->dbService->updateJobNote($job, $note)) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     #[ApiRoute(verb: 'POST', url: 'api/updateJobCustomerVisit')]
-    public function updateJobCustomerVisit(): DataResponse {
+    public function updateJobCustomerVisit(): DataResponse
+    {
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
         $date = strval($data["date"]);
-        if($this->dbService->updateJobCustomerVisit($job, $date)){
-            return new DataResponse([],Http::STATUS_OK);
-        } 
+        if ($this->dbService->updateJobCustomerVisit($job, $date)) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/updateJobPosting')]
+    public function updateJobPostingData(): DataResponse
+    {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $updateJobData = array();
+        $job = intval($data["job"]);
+        $updateJobData["title"] = htmlspecialchars(strip_tags($data["title"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["descProf"] = htmlspecialchars($data["descProf"]);
+        $updateJobData["descSoc"] = htmlspecialchars($data["descSoc"]);
+        $updateJobData["link"] = htmlspecialchars(strip_tags($data["link"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["plz"] = htmlspecialchars(strip_tags($data["plz"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["salaryMin"] = htmlspecialchars(strip_tags($data["salaryMin"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["salaryMax"] = htmlspecialchars(strip_tags($data["salaryMax"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["ebay1"] = htmlspecialchars(strip_tags($data["ebay1"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["ebay2"] = htmlspecialchars(strip_tags($data["ebay2"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["asp"] = htmlspecialchars(strip_tags($data["asp"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["benefits"] = $data["benefits"];
+        if ($this->dbService->updateJobData($job, $updateJobData)) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
 }

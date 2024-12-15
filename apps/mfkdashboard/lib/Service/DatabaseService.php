@@ -4,7 +4,7 @@ namespace OCA\MFKDashboard\Service;
 
 use OCA\MFKDashboard\Utils\DesignHelper;
 
-use Psr\Log\LoggerInterface;
+use OCP\ILogger;
 
 class DatabaseService
 {
@@ -17,7 +17,6 @@ class DatabaseService
         $user = 'admin';
         $pass = 'uqO4x{[p5qnlbr|khy8D)2b$L5vr';
         $charset = 'utf8mb4';
-
         $dsn = "mysql:host=$host;charset=$charset";
         $options = [
             \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
@@ -182,7 +181,11 @@ class DatabaseService
             "customerInput",
             "manager",
             "internalNote",
-            "scheduledCustomerVisit"
+            "scheduledCustomerVisit",
+            "campaign",
+            "salary_range",
+            "asp",
+            "jobFolder"
         ];
 
         $filteredFields = array_intersect($fields, $allowedFields);
@@ -327,6 +330,50 @@ class DatabaseService
         } else {
             return false;
         }
+    }
+
+    public function updateJobData(int $job, array $data): bool
+    {
+        $jobData = $this->getJob(["campaign", "salary_range", "location"], $job);
+        // update Job campaign field
+        if ($jobData["campaign"] != null && $jobData["campaign"] != "{}") {
+            $campaign = json_decode($jobData["campaign"], true);
+        } else {
+            $campaign = array();
+        }
+        $campaign["title"] = $data["title"];
+        $campaign["ebay"] = array(
+            "job" => $data["ebay1"],
+            "sub_category" => $data["ebay2"]
+        );
+        // campaign media
+        $campaign["benefits"] = $data["benefits"];
+        $campaign["desc_job"] = $data["descProf"];
+        $campaign["display_text"] = $data["descSoc"];
+
+        // update salary_range
+        if ($jobData["salary_range"] != null && $jobData["salary_range"] != "{}") {
+            $salaryRange = json_decode($jobData["salary_range"], true);
+        } else {
+            $salaryRange = array();
+        }
+        $salaryRange["stop"] = $data["salaryMax"];
+        $salaryRange["start"] = $data["salaryMin"];
+
+        // update location  //TODO: location query
+        if ($jobData["location"] != null && $jobData["location"] != "[]") {
+            $location = json_decode($jobData["location"], true);
+        } else {
+            $location = array(array());
+        }
+        $location[0]["plz"] = $data["plz"];
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ? WHERE id = ?;");
+        if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function getJobHistory(int $job)

@@ -6,8 +6,14 @@ window.onload = function () {
 }
 
 function loadDescriptions() {
-    quill.setText(document.querySelector("#desc_prof").value);
-    quill2.setText(document.querySelector("#desc_social").value);
+    let descProf = document.querySelector("#desc_prof").value;
+    let descSocial = document.querySelector("#desc_social").value;
+    if (descProf != "null" && descProf != '"\\n"') {
+        quill.setText(descProf.substr(1, descProf.length - 2));
+    }
+    if (descSocial != "null" && descSocial != '"\\n"') {
+        quill2.setText(descSocial.substr(1, descSocial.length - 2));
+    }
 }
 
 function updateEbayFilter() {
@@ -59,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Neues Benefit-Element erstellen
         const benefitItem = document.createElement('div');
+        benefitInput.style = "margin-top: 5px;"
         benefitItem.classList.add('benifit-item');
 
         const benefitTitle = document.createElement('div');
@@ -89,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function loadEbayJob(){
+function loadEbayJob() {
     let category = document.querySelector("#ebay_data").value.split("#")[0];
     let sub_category = document.querySelector("#ebay_data").value.split("#")[1];
 
@@ -115,26 +122,43 @@ function loadBenefits() {
     content = "";
     if (benefits != null) {
         benefits.forEach(benefit => {
-            content += '<div class="benifit-item"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png"></button></div>';
+            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png" class="benefit-remove-button"></button></div>';
         });
         document.getElementById('benefits').innerHTML = content;
     }
+    document.getElementById('benefits').addEventListener('click', function (event) {
+        if (event.target.classList.contains('benefit-remove-button')) {
+            event.target.parentElement.parentElement.remove();
+        }
+    });
 }
 
-function loadFormData() {
-    let title = document.querySelector("#title").value;
-    let desc_prof = quill.getText();
-    let desc_social = quill2.getText();
-    let link = document.querySelector("#posting_link").value;
-    let plz = "";
-    let salaryMin = document.querySelector("#salaryMin").value;
-    let salaryMax = document.querySelector("#salaryMax").value;
-    let ebay1 = document.querySelector("#ebay1").value;
-    let ebay2 = document.querySelector("#ebay2").value;
+function getFormData() {
+    let data = {};
+    data["job"] = window.location.pathname.split("/")[5];
+    data["title"] = document.querySelector("#title").value;
+    data["descProf"] = quill.getText();
+    data["descSoc"] = quill2.getText();
+    data["link"] = document.querySelector("#posting_link").value;
+    data["plz"] = document.querySelector("#plz").value;
+    data["salaryMin"] = document.querySelector("#salaryMin").value;
+    data["salaryMax"] = document.querySelector("#salaryMax").value;
+    data["ebay1"] = document.querySelector("#ebay1").value;
+    data["ebay2"] = document.querySelector("#ebay2").value;
+    data["asp"] = document.querySelector("#asp").value;
     let benefits = [];
-    let asp = document.querySelector("#asp").value;
-
     Array.from(document.getElementById('benefits').children).forEach(benefit => {
         benefits.push(benefit.querySelector(".benifit-title").innerHTML);
     });
+    data["benefits"] = benefits;
+    fetch('/ocs/v2.php/apps/mfkdashboard/api/updateJobPosting', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(data => { }
+    ).catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
+    );
+    return data;
 }

@@ -131,10 +131,11 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobEdit');
 
-		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput"],$id);
+		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput","asp","jobFolder"],$id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
             'job' => $job,
+			'company' => $this->dbService->getCompany(["name"],intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
         ]; 
 		// Return the template response
