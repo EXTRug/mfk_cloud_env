@@ -366,7 +366,25 @@ class DatabaseService
         } else {
             $location = array(array());
         }
-        $location[0]["plz"] = $data["plz"];
+        if($data["plz"] != ""){
+            try {} catch (\Throwable $th) {}
+            $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=".$data["plz"], false),true);
+            $chosen = null;
+            if(count($locationRequest) > 1){
+                foreach ($locationRequest as $key => $l) {
+                    if(!str_contains("unbewohnt",$l["municipality"]["type"])){
+                        $chosen = $l;
+                    }
+                }
+            }else{
+                $chosen = $locationRequest[0];
+            }
+            $location[0]["plz"] = $chosen["postalCode"];
+            $location[0]["city"] = $chosen["name"];
+            $location[0]["region"] = $chosen["district"]["name"];
+            $location[0]["country"] = "DE";
+        
+        }
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ? WHERE id = ?;");
         if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $job))) {
             if ($stmt->rowCount() > 0) {
