@@ -366,24 +366,25 @@ class DatabaseService
         } else {
             $location = array(array());
         }
-        if($data["plz"] != ""){
-            try {} catch (\Throwable $th) {}
-            $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=".$data["plz"], false),true);
+        if ($data["plz"] != "") {
+            try {
+            } catch (\Throwable $th) {
+            }
+            $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=" . $data["plz"], false), true);
             $chosen = null;
-            if(count($locationRequest) > 1){
+            if (count($locationRequest) > 1) {
                 foreach ($locationRequest as $key => $l) {
-                    if(!str_contains("unbewohnt",$l["municipality"]["type"])){
+                    if (!str_contains("unbewohnt", $l["municipality"]["type"])) {
                         $chosen = $l;
                     }
                 }
-            }else{
+            } else {
                 $chosen = $locationRequest[0];
             }
             $location[0]["plz"] = $chosen["postalCode"];
             $location[0]["city"] = $chosen["name"];
             $location[0]["region"] = $chosen["district"]["name"];
             $location[0]["country"] = "DE";
-        
         }
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ? WHERE id = ?;");
         if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $job))) {
@@ -399,5 +400,24 @@ class DatabaseService
         $stmt = $this->pdo->prepare("SELECT * FROM companies.history WHERE job = ? ORDER BY timestamp DESC");
         $stmt->execute(array($job));
         return $stmt->fetchAll();
+    }
+
+    public function toggleJobStatus(int $job, bool $active): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ? WHERE id = ?");
+        if ($active) {
+            $resp = $stmt->execute(array("active", $job));
+        } else {
+            $resp = $stmt->execute(array("archieved", $job));
+        }
+        if ($resp) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

@@ -19,12 +19,14 @@ class ApiController extends OCSController
 {
 
     private DatabaseService $dbService;
+    private $makeEndpoint;
 
     public function __construct(DatabaseService $dbService, IRequest $request)
     {
         // Richtiges Aufrufen des Elternkonstruktors mit beiden Parametern
         parent::__construct('mfkdashboard', $request);
         $this->dbService = $dbService;
+        $this->makeEndpoint = "https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax";
     }
 
     #[NoAdminRequired]
@@ -60,8 +62,7 @@ class ApiController extends OCSController
         $email = $_GET['email'] ?? '';
         $id = $_GET['id'] ?? '';
 
-        $url = 'https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax';
-        $data = ['email' => $email, 'job' => $id];
+        $data = ['email' => $email, 'job' => $id, 'action' => 'sendJobData'];
 
         $options = [
             'http' => [
@@ -72,10 +73,10 @@ class ApiController extends OCSController
         ];
 
         $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
+        $result = file_get_contents($this->makeEndpoint, false, $context);
         if ($result === false) {
             return new DataResponse(
-                ["data" => "coulnd't process request"],
+                ["data" => "couldn't process request"],
                 Http::STATUS_INTERNAL_SERVER_ERROR,
             );
         }
@@ -460,6 +461,43 @@ class ApiController extends OCSController
         $updateJobData["benefits"] = $data["benefits"];
         if ($this->dbService->updateJobData($job, $updateJobData)) {
             return new DataResponse([], Http::STATUS_OK);
+        }
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/jobActivityActions')]
+    public function updatejobActivityActions(): DataResponse
+    {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $action = htmlspecialchars(strip_tags($data["action"]), ENT_QUOTES, 'UTF-8');
+        $context = htmlspecialchars(strip_tags($data["context"]), ENT_QUOTES, 'UTF-8');
+        if ($action != "visibility") {
+            $data = ['button' => $action, 'job' => $job, 'action' => 'jobActivityButtons'];
+            $options = [
+                'http' => [
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method' => 'POST',
+                    'content' => http_build_query($data),
+                ],
+            ];
+            $context = stream_context_create($options);
+            $result = file_get_contents($this->makeEndpoint, false, $context);
+            if (!$result === false) {
+                return new DataResponse(Http::STATUS_OK);
+            }
+        }
+        if ($action == "visibility") {
+            // toggle job visibility
+            if ($context == "setOnline") {
+                $this->dbService->toggleJobStatus($job, true);
+            } elseif ($context == "setOffline") {
+                $this->dbService->toggleJobStatus($job, false);
+            }
+            return new DataResponse(Http::STATUS_OK);
         }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }

@@ -1,8 +1,19 @@
 window.onload = function () {
+    // register event handlers
     document.getElementById("logCall").addEventListener("click", logNewCall);
     document.querySelector("#customer_relation").querySelectorAll(".dropdown-item").forEach(element => {
         element.addEventListener("click", () => {
             updateSatisfaction(element);
+        })
+    });
+    document.querySelector("#optimization_menu").querySelectorAll(".dropdown-item").forEach(element => {
+        element.addEventListener("click", () => {
+            triggerJobAction(element);
+        })
+    });
+    document.querySelector("#jobActionContainer").querySelectorAll(".submit-btn").forEach(element => {
+        element.addEventListener("click", () => {
+            triggerJobAction(element);
         })
     });
     document.querySelectorAll(".notification-mode").forEach(element => {
@@ -12,7 +23,13 @@ window.onload = function () {
     });
     document.getElementById("customerVisitField").addEventListener("change", customerVisitChanged);
     quill.on('text-change', jobNotesChanged);
+    // update Interface
     loadNotes();
+    if(document.querySelector("#jobStatusField").innerText == "active"){
+        document.querySelector("#visibilityBtn").innerHTML = "Offline nehmen";
+    }else{
+        document.querySelector("#visibilityBtn").innerHTML = "Go Live";
+    }
 }
 
 function updateSatisfaction(element) {
@@ -211,4 +228,50 @@ function insertNewlyCreatedLog(data) {
 
 function getStatus(value) {
     return value ? "yes" : "no";
+}
+
+function triggerJobAction(element){
+    let action = null;
+    let context = "";
+    if(element.dataset.context != undefined){
+        // handle buttons
+        action = element.dataset.context;
+        if(element.dataset.context == "visibility"){
+            if(document.getElementById("jobStatusField").innerText != "active"){
+                context = "setOnline";
+            }else{
+                context = "setOffline";
+            }
+        }
+    }else{
+        // handle dropdown
+        action = element.innerHTML
+    }
+    if(action != null){
+        fetch('/ocs/v2.php/apps/mfkdashboard/api/jobActivityActions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "action": action,
+                "context": context,
+                "job": window.location.pathname.split("/")[5]
+            })
+        }).then(data => {
+            if(context == "setOffline"){
+                element.innerHTML = "Go Live";
+                document.getElementById("jobStatusField").innerHTML = "archieved";
+                document.querySelector(".status-dot").style = "background-color: #8C9499;";
+            }else if(context == "setOnline"){
+                element.innerHTML = "Offline nehmen";
+                document.getElementById("jobStatusField").innerHTML = "active";
+                document.querySelector(".status-dot").style = "background-color: #1dbd1d;";
+            }else{
+                alert("Die Aktion wurde erfolgreich ausgeführt.");
+            }
+        }
+    ).catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
+            );
+    }
 }
