@@ -3,6 +3,7 @@ window.onload = function () {
     loadBenefits();
     loadEbayJob();
     document.querySelector("#ebay1").addEventListener("change", updateEbayFilter);
+    document.getElementById("formSubmitBtn").addEventListener("click", submitForm);
 }
 
 function loadDescriptions() {
@@ -151,14 +152,28 @@ function getFormData() {
         benefits.push(benefit.querySelector(".benifit-title").innerHTML);
     });
     data["benefits"] = benefits;
-    fetch('/ocs/v2.php/apps/mfkdashboard/api/updateJobPosting', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(data => { }
-    ).catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
-    );
     return data;
+}
+
+function submitForm() {
+    let action = document.getElementById("formSubmitBtn").innerHTML;
+    data = getFormData();
+    if (!document.getElementById("formSubmitBtn").disabled) {
+        data["action"] = action;
+        fetch('/ocs/v2.php/apps/mfkdashboard/api/updateJobPosting', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(data => {
+            if (action == "Freigabe anfordern") {
+                document.getElementById("formSubmitBtn").innerHTML = "Zur Kundenrevision freigeben";
+                document.getElementById("jobStatus").innerHTML = "In revision";
+            } else if (action == "Angaben aktualisieren" || action == "Zur Kundenrevision freigeben") {
+                alert("Aktion erfolgreich.")
+            }
+        }
+        ).catch(error => { alert("Es ist ein Fehler aufgetreten. ⚠️"); });
+    }
 }

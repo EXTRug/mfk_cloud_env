@@ -9,7 +9,7 @@ class DesignHelper {
         if($status == "archieved"){
             return "#8C9499";
         }
-        if($status == "In preparation"){
+        if($status == "In preparation" || $status == "In revision"){
             return "#2d73e1";
         }
         return "#FFF";

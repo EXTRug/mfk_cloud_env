@@ -61,7 +61,7 @@ if ($job["customerInput"] != null) {
         <div class="col-md-6 mt-3">
             <div class="card-box">
                 <div class="title mb-1 d-flex align-items-center">
-                    <div class="status-dot" style="background-color: <?php echo ($statusColor); ?>;"></div> <?php echo ($job["status"]) ?>
+                    <div class="status-dot" style="background-color: <?php echo ($statusColor); ?>;"></div> <div id="jobStatus"><?php echo ($job["status"]) ?></div>
                 </div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-light.png">
@@ -245,7 +245,23 @@ if ($job["customerInput"] != null) {
                     <label>Ansprechpartner</label>
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" id="asp" type="text" value="<?php echo ($job["asp"]); ?>">
                 </div>
-                <button type="button" class="submit-btn">Zur Kundenrevision freigeben</button>
+                <?php 
+                    $btnText = "unbekannter Status";
+                    $disabled = "";
+                    if($job["status"] == "In preparation"){
+                        $btnText = "Freigabe anfordern";
+                    }elseif($job["status"] == "active"){
+                        $btnText = "Angaben aktualisieren";
+                    }elseif($job["status"] == "archieved"){
+                        $btnText = "Dieser Job ist archiviert.";
+                        $disabled = "disabled";
+                    }elseif($job["status"] == "In revision"){
+                        $btnText = "Zur Kundenrevision freigeben";
+                    }else{
+                        $disabled = "disabled";
+                    }
+                ?>
+                <button type="button" class="submit-btn" id="formSubmitBtn" <?php echo($disabled);?>><?php echo($btnText);?></button>
             </div>
         </div>
     </div>

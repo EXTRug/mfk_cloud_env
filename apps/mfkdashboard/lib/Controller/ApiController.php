@@ -448,6 +448,7 @@ class ApiController extends OCSController
         $data = json_decode($jsonData, true);
         $updateJobData = array();
         $job = intval($data["job"]);
+        $action = htmlspecialchars(strip_tags($data["action"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["title"] = htmlspecialchars(strip_tags($data["title"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["descProf"] = htmlspecialchars($data["descProf"]);
         $updateJobData["descSoc"] = htmlspecialchars($data["descSoc"]);
@@ -460,6 +461,21 @@ class ApiController extends OCSController
         $updateJobData["asp"] = htmlspecialchars(strip_tags($data["asp"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["benefits"] = $data["benefits"];
         if ($this->dbService->updateJobData($job, $updateJobData)) {
+            if($action == "Freigabe anfordern"){
+                $this->dbService->updateJobStatus($job, "In revision");
+            }elseif($action == "Zur Kundenrevision freigeben"){
+                // handle sharing revision in Make
+                $data = ['data' => $updateJobData, 'job' => $job, 'action' => 'shareForRevision'];
+                $options = [
+                    'http' => [
+                        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                        'method' => 'POST',
+                        'content' => http_build_query($data),
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $result = file_get_contents($this->makeEndpoint, false, $context);
+            }
             return new DataResponse([], Http::STATUS_OK);
         }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
@@ -493,9 +509,9 @@ class ApiController extends OCSController
         if ($action == "visibility") {
             // toggle job visibility
             if ($context == "setOnline") {
-                $this->dbService->toggleJobStatus($job, true);
+                $this->dbService->updateJobStatus($job, "active");
             } elseif ($context == "setOffline") {
-                $this->dbService->toggleJobStatus($job, false);
+                $this->dbService->updateJobStatus($job, "archieved");
             }
             return new DataResponse(Http::STATUS_OK);
         }

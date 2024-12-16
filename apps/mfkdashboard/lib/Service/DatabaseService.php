@@ -402,15 +402,13 @@ class DatabaseService
         return $stmt->fetchAll();
     }
 
-    public function toggleJobStatus(int $job, bool $active): bool
+    public function updateJobStatus(int $job, string $status): bool
     {
+        $stati = ['active', 'archieved', 'In preperation', 'In revision'];
+        if(!in_array($status, $stati)){return false;}
+    
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ? WHERE id = ?");
-        if ($active) {
-            $resp = $stmt->execute(array("active", $job));
-        } else {
-            $resp = $stmt->execute(array("archieved", $job));
-        }
-        if ($resp) {
+        if ($stmt->execute(array($status, $job))) {
             if ($stmt->rowCount() > 0) {
                 return true;
             } else {
