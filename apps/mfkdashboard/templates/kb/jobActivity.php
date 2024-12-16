@@ -61,7 +61,9 @@ if ($job["duration"] != null) {
                             Optimieren
                         </button>
                         <ul class="dropdown-menu neutral" id="optimization_menu" data-context="optimization">
-                            <li><a class="dropdown-item">Anzahl Bewerber</a></li>
+                            <li><a class="dropdown-item">Quantität</a></li>
+                            <li><a class="dropdown-item">Qualität</a></li>
+                            <li><a class="dropdown-item">Bewerbererreichbarkeit</a></li>
                         </ul>
                     </div>
                     <button class="submit-btn neutral" type="button" data-context="visibility" id="visibilityBtn">Go Live</button>
