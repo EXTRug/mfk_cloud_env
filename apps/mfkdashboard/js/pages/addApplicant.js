@@ -1,6 +1,16 @@
 var selectedFunnel = "";
+var mediaPath = "";
+
+function getMediaPath(){
+    if(window.location.host == "cloud.ki-recruiter.com"){
+        mediaPath = "/extra-apps/mfkdashboard/assets"
+    }else{
+        mediaPath = "/apps/mfkdashboard/assets"
+    }
+}
 
 window.onload = function () {
+    getMediaPath();
     setupFunnelSelection();
     document.querySelector(".submit-btn").addEventListener("click", submit);
     // document.querySelector("#job-dropdown-search").onkeyup = queryJobs;
@@ -108,11 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             fileItem.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <img src="/apps/mfkdashboard/assets/images/pencil.png" alt="File">
+                    <img src="`+mediaPath+`/images/pencil.png" alt="File">
                     <div class="image-title">${file.name} 
                         <span class="image-size">(${(file.size / 1024).toFixed(1)} KB)</span>
                     </div>
-                <button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png"></button></div>
+                <button class="img-remove-button"><img src="`+mediaPath+`/images/delete-btn.png"></button></div>
             `;
 
             fileItem.querySelector(".img-remove-button").addEventListener("click", () => {

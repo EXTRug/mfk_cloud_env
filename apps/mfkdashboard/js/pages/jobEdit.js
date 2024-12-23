@@ -1,4 +1,15 @@
+var mediaPath = "";
+
+function getMediaPath(){
+    if(window.location.host == "cloud.ki-recruiter.com"){
+        mediaPath = "/extra-apps/mfkdashboard/assets"
+    }else{
+        mediaPath = "/apps/mfkdashboard/assets"
+    }
+}
+
 window.onload = function () {
+    getMediaPath();
     loadDescriptions();
     loadBenefits();
     loadEbayJob();
@@ -77,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeButton.classList.add('img-remove-button');
 
         const removeIcon = document.createElement('img');
-        removeIcon.src = '/apps/mfkdashboard/assets/images/delete-btn.png';
+        removeIcon.src = mediaPath+'/images/delete-btn.png';
         removeButton.appendChild(removeIcon);
 
         // Entfernen-Funktion hinzufügen
@@ -123,7 +134,7 @@ function loadBenefits() {
     content = "";
     if (benefits != null) {
         benefits.forEach(benefit => {
-            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="/apps/mfkdashboard/assets/images/delete-btn.png" class="benefit-remove-button"></button></div>';
+            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="'+mediaPath+'/images/delete-btn.png" class="benefit-remove-button"></button></div>';
         });
         document.getElementById('benefits').innerHTML = content;
     }

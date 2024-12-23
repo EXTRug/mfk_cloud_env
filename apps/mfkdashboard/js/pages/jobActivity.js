@@ -1,4 +1,15 @@
+var mediaPath = "";
+
+function getMediaPath(){
+    if(window.location.host == "cloud.ki-recruiter.com"){
+        mediaPath = "/extra-apps/mfkdashboard/assets"
+    }else{
+        mediaPath = "/apps/mfkdashboard/assets"
+    }
+}
+
 window.onload = function () {
+    getMediaPath();
     // register event handlers
     document.getElementById("logCall").addEventListener("click", logNewCall);
     document.querySelector("#customer_relation").querySelectorAll(".dropdown-item").forEach(element => {
@@ -106,10 +117,10 @@ function changeNotificationSetting(element) {
     })
         .then(data => {
             if (newMode == "on") {
-                element.src = "http://127.0.0.1/apps/mfkdashboard/assets/images/yes.png";
+                element.src = mediaPath+"/images/yes.png";
                 element.dataset.mode = "on";
             } else {
-                element.src = "http://127.0.0.1/apps/mfkdashboard/assets/images/no.png";
+                element.src = mediaPath+"/images/no.png";
                 element.dataset.mode = "off";
             }
         })
@@ -184,37 +195,37 @@ function insertNewlyCreatedLog(data) {
         <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
             <div class="condition-title">Upsell</div>
             <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["upsell"]["pitched"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["upsell"]["pitched"])}.png">
             </label>&nbsp;&nbsp;&nbsp;
             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["upsell"]["sold"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["upsell"]["sold"])}.png">
             </label>
         </div>
         <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
             <div class="condition-title">Testimonial</div>
             <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["testimonial"]["pitched"])}.png">
+                <img src="`+mediaPath+`/${getStatus(data["testimonial"]["pitched"])}.png">
             </label>&nbsp;&nbsp;&nbsp;
             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["testimonial"]["sold"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["testimonial"]["sold"])}.png">
             </label>
         </div>
         <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px">
             <div class="condition-title">Empfehlung</div>
             <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["recommendation"]["pitched"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["recommendation"]["pitched"])}.png">
             </label>&nbsp;&nbsp;&nbsp;
             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["recommendation"]["sold"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["recommendation"]["sold"])}.png">
             </label>
         </div>
         <div class="col" style="padding-left:24px">
             <div class="condition-title">Cross Sell</div>
             <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["crossSell"]["pitched"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["crossSell"]["pitched"])}.png">
             </label>&nbsp;&nbsp;&nbsp;
             <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp;
-                <img src="/apps/mfkdashboard/assets/images/${getStatus(data["crossSell"]["sold"])}.png">
+                <img src="`+mediaPath+`/images/${getStatus(data["crossSell"]["sold"])}.png">
             </label>
         </div>
     </div>`;

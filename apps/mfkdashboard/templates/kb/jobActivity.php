@@ -7,6 +7,15 @@ if ($job["duration"] != null) {
     $today = new DateTime();
     $daysRemaining = $today->diff($date)->days;
 }
+$mediaPath = "";
+
+function getMediaPath(){
+    if($_SERVER["REMOTE_HOST"] == "cloud.ki-recruiter.com"){
+        $mediaPath = "/extra-apps/mfkdashboard/assets";
+    }else{
+        $mediaPath = "/apps/mfkdashboard/assets";
+    }
+}
 ?>
 <!-- Main Content -->
 <input type="hidden" value="<?php echo ($job["company"]); ?>" id="company_id">
@@ -203,7 +212,7 @@ if ($job["duration"] != null) {
                 } else {
                     $crossSell_sold = "no";
                 };
-                echo ('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">(' . $time . ')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $upsell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $upsell_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $testimonial_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $testimonial_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Empfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $recommendation_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $recommendation_sold . '.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $crossSell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $crossSell_sold . '.png"></label> </div> </div>');
+                echo ('<hr class="divider" align="center"> <div class="condition-divider-heading mt-3">(' . $time . ')</div> <div class="row"> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Upsell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $upsell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $upsell_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Testimonial</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $testimonial_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $testimonial_sold . '.png"></label> </div> <div class="col" style="border-right:1px solid var(--seventh) !important;padding-left:24px"> <div class="condition-title">Empfehlung</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $recommendation_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $recommendation_sold . '.png"></label> </div> <div class="col" style="padding-left:24px"> <div class="condition-title">Cross Sell</div> <lable class="d-flex align-items-center condition-label">gepitcht:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $crossSell_pitched . '.png"></label>&nbsp;&nbsp;&nbsp; <lable class="d-flex align-items-center condition-label">gekauft:&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $crossSell_sold . '.png"></label> </div> </div>');
             }
             ?>
         </div>
@@ -246,7 +255,7 @@ if ($job["duration"] != null) {
                     } else {
                         $bg_color = "text-bg-success";
                     }
-                    echo ('<tr><td>' . $applicant["firstname"] . ' ' . $applicant["lastname"] . '</td> <td><span class="badge rounded-pill ' . $bg_color . '">' . $score . '%</span></td> <td> <lable class="d-flex align-items-center condition-label">' . $cv . '&nbsp;&nbsp;&nbsp; <img src="/apps/mfkdashboard/assets/images/' . $cv_img . '.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">' . $applicant["joined"] . ':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a href="https://app.ki-recruiter.com/index.php/applicant/' . urlencode($applicant["email"]) . '?job=' . $job["id"] . '" target="_blank"><img height="19px" class="ms-2" src="/apps/mfkdashboard/assets/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
+                    echo ('<tr><td>' . $applicant["firstname"] . ' ' . $applicant["lastname"] . '</td> <td><span class="badge rounded-pill ' . $bg_color . '">' . $score . '%</span></td> <td> <lable class="d-flex align-items-center condition-label">' . $cv . '&nbsp;&nbsp;&nbsp; <img src="'.$configurations['assets_path'].'/images/' . $cv_img . '.png"></label> </td> <td> <lable class="d-flex align-items-center condition-label">' . $applicant["joined"] . ':</label> </td> <td> <div class="title mb-1 d-flex align-items-center">Zum Portal <a href="https://app.ki-recruiter.com/index.php/applicant/' . urlencode($applicant["email"]) . '?job=' . $job["id"] . '" target="_blank"><img height="19px" class="ms-2" src="'.$configurations['assets_path'].'/images/iconamoon_link-external-light.png"></a></div> </td></tr>');
                 }
                 ?>
             </tbody>
@@ -267,9 +276,9 @@ if ($job["duration"] != null) {
                 $company_manager = json_decode($company["manager"]);
                 foreach ($company_manager as $key => $manager) {
                     if (in_array($manager, $active_manager)) {
-                        echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="on" src="/apps/mfkdashboard/assets/images/yes.png"></td> </tr>');
+                        echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="on" src="'.$configurations['assets_path'].'/images/yes.png"></td> </tr>');
                     } else {
-                        echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="off" src="/apps/mfkdashboard/assets/images/no.png"></td> </tr>');
+                        echo ('<tr> <td style="padding: 10px; border-right: 1px solid var(--seventh); text-align: left;" class="notification-manager">' . $manager . '</td> <td style="padding: 10px; text-align: center;" data-manager="" class="notification-toggle"><img class="notification-mode" data-mode="off" src="'.$configurations['assets_path'].'/images/no.png"></td> </tr>');
                     }
                 }
                 ?>
