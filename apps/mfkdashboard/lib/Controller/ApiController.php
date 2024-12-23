@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\MFKDashboard\Controller;
 
 use OCA\MFKDashboard\Service\DatabaseService;
+use OCA\MFKDashboard\Service\FilesService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -12,6 +13,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\IUserSession;
 use OCP\IGroupManager;
+use OCP\Util;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
@@ -19,13 +21,15 @@ class ApiController extends OCSController
 {
 
     private DatabaseService $dbService;
+    private FilesService $fileService;
     private $makeEndpoint;
 
-    public function __construct(DatabaseService $dbService, IRequest $request)
+    public function __construct(DatabaseService $dbService, IRequest $request, FilesService $fileService)
     {
         // Richtiges Aufrufen des Elternkonstruktors mit beiden Parametern
         parent::__construct('mfkdashboard', $request);
         $this->dbService = $dbService;
+        $this->fileService = $fileService;
         $this->makeEndpoint = "https://hook.eu1.make.com/gi5eaftusy05b2dd2b8xph9rf5k2m9ax";
     }
 
@@ -444,6 +448,8 @@ class ApiController extends OCSController
     #[ApiRoute(verb: 'POST', url: 'api/updateJobPosting')]
     public function updateJobPostingData(): DataResponse
     {
+        $resp = $this->fileService->createPublicLinkForFolder("/MyNewFolder");
+        return new DataResponse([$resp], Http::STATUS_OK);
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $updateJobData = array();

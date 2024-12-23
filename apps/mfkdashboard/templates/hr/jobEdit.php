@@ -10,8 +10,8 @@ if ($job["customerInput"] != null) {
 }
 ?>
 <!-- Main Content -->
-<input type="text" name="" id="desc_prof" style="display: none;" value='<?php echo (json_encode($campaign->desc_job)); ?>'>
-<input type="text" name="" id="desc_social" style="display: none;" value='<?php echo (json_encode($campaign->display_text)); ?>'>
+<input id="desc_prof" style="display: none;" value='<?php echo $campaign->desc_job; ?>'>
+<input id="desc_social" style="display: none;" value='<?php echo $campaign->display_text; ?>'>
 <input type="text" name="" id="benefit_list" style="display: none;" value='<?php echo (json_encode($campaign->benefits)); ?>'>
 <input type="text" name="" id="ebay_data" style="display: none;" value='<?php echo ($campaign->ebay->sub_category . "#" . $campaign->ebay->job); ?>'>
 <div class="container-fluid p-5 main-content-area">
@@ -112,7 +112,7 @@ if ($job["customerInput"] != null) {
                 <div class="form-group mb-3">
                     <label>Stellenbeschreibung Text (professionell):</label>
                     <div id="editor_area" class="text-editor-area"></div>
-                    <div id="toolbar1">
+                    <div id="toolbar1" style="display: none;">
                         <select class="ql-size">
                             <option value="small"></option>
                             <option selected></option>
@@ -136,7 +136,7 @@ if ($job["customerInput"] != null) {
                 <div class="form-group mb-3">
                     <label>Stellenbeschreibung Text (persönlicher):</label>
                     <div id="editor_area_2" class="text-editor-area"></div>
-                    <div id="toolbar2">
+                    <div id="toolbar2" style="display: none;">
                         <select class="ql-size">
                             <option value="small"></option>
                             <option selected></option>

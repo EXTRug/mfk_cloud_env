@@ -7,13 +7,13 @@ window.onload = function () {
 }
 
 function loadDescriptions() {
-    let descProf = document.querySelector("#desc_prof").value;
-    let descSocial = document.querySelector("#desc_social").value;
+    let descProf = decodeBase64(document.querySelector("#desc_prof").value);
+    let descSocial = decodeBase64(document.querySelector("#desc_social").value);
     if (descProf != "null" && descProf != '"\\n"') {
-        quill.setText(descProf.substr(1, descProf.length - 2));
+        quill.setText(descProf);
     }
     if (descSocial != "null" && descSocial != '"\\n"') {
-        quill2.setText(descSocial.substr(1, descSocial.length - 2));
+        quill2.setText(descSocial);
     }
 }
 
@@ -138,8 +138,8 @@ function getFormData() {
     let data = {};
     data["job"] = window.location.pathname.split("/")[5];
     data["title"] = document.querySelector("#title").value;
-    data["descProf"] = quill.getText();
-    data["descSoc"] = quill2.getText();
+    data["descProf"] = encodeBase64(quill.getText());
+    data["descSoc"] = encodeBase64(quill2.getText());
     data["link"] = document.querySelector("#posting_link").value;
     data["plz"] = document.querySelector("#plz").value;
     data["salaryMin"] = document.querySelector("#salaryMin").value;
@@ -176,4 +176,12 @@ function submitForm() {
         }
         ).catch(error => { alert("Es ist ein Fehler aufgetreten. ⚠️"); });
     }
+}
+
+function encodeBase64(input) {
+    return btoa(unescape(encodeURIComponent(input)));
+}
+
+function decodeBase64(encoded) {
+    return decodeURIComponent(escape(atob(encoded)));
 }
