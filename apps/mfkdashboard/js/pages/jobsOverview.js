@@ -1,4 +1,9 @@
-window.onload = function() { document.querySelector("#searchbar").onkeyup = queryJobs; }
+window.onload = function() { document.querySelector("#searchbar").onkeyup = queryJobs;
+    document.querySelector("#newJob").addEventListener("click",function(){
+        let path = window.location.pathname.split("/");
+        window.location.href="createjob/"+path[path.length-1];
+    })
+ }
 var currentFilters = {
 
 }
@@ -16,7 +21,7 @@ function updateJobsList(searchterm){
         
         if (dataElement) {
         updateTable(JSON.parse(dataElement.textContent));
-        } else {
+        } else {F
         console.log('No data element found inside ocs.');
         }
     })

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace OCA\MFKDashboard\Controller;
+
 use OCA\MFKDashboard\Service\DatabaseService;
 use OCA\MFKDashboard\Utils\DesignHelper;
 
@@ -23,20 +24,21 @@ class PageController extends Controller
 {
 	private $dbService;
 	private $userSession;
-    private $groupManager;
-	public function __construct(IUserSession $userSession, IGroupManager $groupManager) {
-        $this->dbService = new DatabaseService();
+	private $groupManager;
+	public function __construct(IUserSession $userSession, IGroupManager $groupManager)
+	{
+		$this->dbService = new DatabaseService();
 		$this->userSession = $userSession;
-        $this->groupManager = $groupManager;
-    }
+		$this->groupManager = $groupManager;
+	}
 
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/company-overview')]
-	public function companiesOverview($mode="hr"): TemplateResponse
+	public function companiesOverview($mode = "hr"): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("companyOverview")){
+		if (!$this->simpleAccessControl("companyOverview")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -48,15 +50,41 @@ class PageController extends Controller
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'companies' => $this->dbService->getCompanies(["companyID","name","satisfaction"],["onlyActive"=>true]),
+			'companies' => $this->dbService->getCompanies(["companyID", "name", "satisfaction"], ["onlyActive" => true]),
 			'mode' => $mode,
-        ];
+		];
 		return new TemplateResponse(
 			Application::APP_ID,
 			'/hr/companiesList',
 			$data,
 		);
 	}
+
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
+	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/hr/createjob/{id}')]
+	public function createNewJob(int $id): TemplateResponse
+	{
+		if (!$this->simpleAccessControl("companyOverview")) {
+			return new TemplateResponse(
+				Application::APP_ID,
+				'misc/notAllowed'
+			);
+		}
+		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
+
+		$data = [
+			'navLinks' => $this->getAllowedNavbarLinks(),
+			'company' => $this->dbService->getCompany(["name", "companyID"], $id)
+		];
+		return new TemplateResponse(
+			Application::APP_ID,
+			'/hr/createJob',
+			$data,
+		);
+	}
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
@@ -77,9 +105,9 @@ class PageController extends Controller
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
 	#[FrontpageRoute(verb: 'GET', url: '/company-jobs/{mode}/{id}')]
-	public function companyJobs(string $mode="hr",int $id): TemplateResponse
+	public function companyJobs(string $mode = "hr", int $id): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("companyJobs")){
+		if (!$this->simpleAccessControl("companyJobs")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -91,18 +119,19 @@ class PageController extends Controller
 
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobsOverview');
-		if($mode == "hr"){
+		if ($mode == "hr") {
 			$link = "edit-job";
-		}else{
+		} else {
 			$link = "job-activity";
 		}
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'company' => $this->dbService->getCompany(["name"],$id),
-			'jobs' => $this->dbService->getCompanyJobs(["title","status","id", "status","assignedColor"], $id,[],true),
+			'company' => $this->dbService->getCompany(["name"], $id),
+			'id' => $id,
+			'jobs' => $this->dbService->getCompanyJobs(["title", "status", "id", "status", "assignedColor"], $id, [], true),
 			'followingLink' => $link,
-        ];
+		];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -116,7 +145,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/edit-job/{id}')]
 	public function jobSetup(int $id): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("editJob")){
+		if (!$this->simpleAccessControl("editJob")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -131,13 +160,13 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobEdit');
 
-		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "campaign", "funnel_url", "salary_range", "customerInput","asp","jobFolder"],$id);
+		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "campaign", "funnel_url", "salary_range", "customerInput", "asp", "jobFolder"], $id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'job' => $job,
-			'company' => $this->dbService->getCompany(["name"],intval($job["company"])),
+			'job' => $job,
+			'company' => $this->dbService->getCompany(["name"], intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
-        ]; 
+		];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -151,7 +180,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/job-activity/{id}')]
 	public function jobActivity(int $id): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("jobActivity")){
+		if (!$this->simpleAccessControl("jobActivity")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -166,15 +195,15 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobActivity');
 
-		$job = $this->dbService->getJob(["title","id", "funnel_name", "company","location", "status", "history", "duration", "manager","internalNote","scheduledCustomerVisit"],$id);
+		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "history", "duration", "manager", "internalNote", "scheduledCustomerVisit"], $id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'job' => $job,
-			'company' => $this->dbService->getCompany(["satisfaction","manager"],intval($job["company"])),
-			'topApplicants' => $this->dbService->getTopBewerber(['firstname', 'lastname', 'progress.score', 'cv', 'joined','email'], $job["funnel_name"]),
+			'job' => $job,
+			'company' => $this->dbService->getCompany(["satisfaction", "manager"], intval($job["company"])),
+			'topApplicants' => $this->dbService->getTopBewerber(['firstname', 'lastname', 'progress.score', 'cv', 'joined', 'email'], $job["funnel_name"]),
 			'calls' => $this->dbService->getCallHistory($id),
-			'statusColor' => DesignHelper::getStatusColor($job["status"]) 
-        ];
+			'statusColor' => DesignHelper::getStatusColor($job["status"])
+		];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -188,7 +217,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/add-applicant')]
 	public function applicant(): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("addApplicant")){
+		if (!$this->simpleAccessControl("addApplicant")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -206,7 +235,7 @@ class PageController extends Controller
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'jobs' => $this->dbService->getJobsList(["id", "funnel_name"])
-        ];
+		];
 
 		// Return the template response
 		return new TemplateResponse(
@@ -222,7 +251,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/candidate-call/{id}/{email}')]
 	public function candidateCallView(int $id, string $email): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("candidateCall")){
+		if (!$this->simpleAccessControl("candidateCall")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -237,14 +266,14 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/candidateCall');
 
-		$job = $this->dbService->getJob(["title","location", "company", "funnel_name", "campaign"],$id);
+		$job = $this->dbService->getJob(["title", "location", "company", "funnel_name", "campaign"], $id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-            'job' => $job,
-			'company' => $this->dbService->getCompany(["name","website"],$job["company"]),
-			'applicant' => $this->dbService->getApplicant(["firstname","lastname", "cv", "joined", "interviewQS"],$email, $job["funnel_name"]),
+			'job' => $job,
+			'company' => $this->dbService->getCompany(["name", "website"], $job["company"]),
+			'applicant' => $this->dbService->getApplicant(["firstname", "lastname", "cv", "joined", "interviewQS"], $email, $job["funnel_name"]),
 			'recruiter' => "Karl Deutschmann"
-        ];
+		];
 		// Return the template response
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -259,7 +288,7 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/candidate-call')]
 	public function candidateOverview(): TemplateResponse
 	{
-		if(!$this->simpleAccessControl("candidateCall")){
+		if (!$this->simpleAccessControl("candidateCall")) {
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -274,10 +303,10 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/candidateCall');
 
-		
+
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-        ];
+		];
 
 		return new TemplateResponse(
 			Application::APP_ID,
@@ -298,52 +327,54 @@ class PageController extends Controller
 		);
 	}
 
-	 /**
-     * @NoAdminRequired
-     */
-    private function simpleAccessControl($page) {
-        $user = $this->userSession->getUser();
-        $groups = $this->groupManager->getUserGroups($user);
+	/**
+	 * @NoAdminRequired
+	 */
+	private function simpleAccessControl($page)
+	{
+		$user = $this->userSession->getUser();
+		$groups = $this->groupManager->getUserGroups($user);
 		switch ($page) {
 			case 'candidateCall':
-				return strpos(json_encode($groups),'Caller');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'addApplicant':
-				return strpos(json_encode($groups),'MFK intern');
+				return strpos(json_encode($groups), 'MFK intern');
 				break;
 			case 'jobActivity':
-				return strpos(json_encode($groups),'MFK intern');
+				return strpos(json_encode($groups), 'MFK intern');
 				break;
 			case 'editJob':
-				return strpos(json_encode($groups),'MFK intern');
+				return strpos(json_encode($groups), 'MFK intern');
 				break;
 			case 'companyJobs':
-				return strpos(json_encode($groups),'MFK intern');
+				return strpos(json_encode($groups), 'MFK intern');
 				break;
 			case 'companyOverview':
-				return strpos(json_encode($groups),'MFK intern');
+				return strpos(json_encode($groups), 'MFK intern');
 				break;
 			default:
 				return false;
 				break;
 		}
 		return false;
-    }
+	}
 
-	private function getAllowedNavbarLinks(){
+	private function getAllowedNavbarLinks()
+	{
 		$user = $this->userSession->getUser();
-        $groups = $this->groupManager->getUserGroups($user);
+		$groups = $this->groupManager->getUserGroups($user);
 		$links = array();
-		if(strpos(json_encode($groups),'Caller')){
+		if (strpos(json_encode($groups), 'Caller')) {
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 		}
-		if(strpos(json_encode($groups),'MFK intern')){
+		if (strpos(json_encode($groups), 'MFK intern')) {
 			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
 		}
-		if(strpos(json_encode($groups),'MFK intern')){
+		if (strpos(json_encode($groups), 'MFK intern')) {
 			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
 		}
-		if(strpos(json_encode($groups),'MFK intern')){
+		if (strpos(json_encode($groups), 'MFK intern')) {
 			array_push($links, array("title" => "neuer Bewerber", "path" => "add-applicant"));
 		}
 		return $links;

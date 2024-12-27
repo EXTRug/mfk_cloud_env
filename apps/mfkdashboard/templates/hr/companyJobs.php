@@ -13,6 +13,11 @@ include_once(__DIR__ . '/../includes/header.php');
             <img src="<?=$configurations['assets_path'] ?>/images/iconamoon_search-light.png">
             <input id="searchbar" type="search">
         </div>
+        <?php
+            if($followingLink == "edit-job"){
+                echo('<button type="button" class="submit-btn" id="newJob" style="max-width: 200px;font-weight: normal !important;">Job anlegen</button>');
+            }
+        ?>
         <!-- <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Filter
