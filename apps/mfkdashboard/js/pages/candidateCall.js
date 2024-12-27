@@ -97,7 +97,11 @@ function submit() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Fehler:', error));
+        .then(response => {
+            if (response.status === 200) {
+                alert("Aktion erfolgreich ✅");
+            } else {
+                alert("Es ist ein Fehler aufgetreten. ⚠️");
+            }
+        })
 }

@@ -243,7 +243,7 @@ class PageController extends Controller
             'job' => $job,
 			'company' => $this->dbService->getCompany(["name","website"],$job["company"]),
 			'applicant' => $this->dbService->getApplicant(["firstname","lastname", "cv", "joined", "interviewQS"],$email, $job["funnel_name"]),
-			'recruiter' => "TEST RECRUITER"
+			'recruiter' => "Karl Deutschmann"
         ];
 		// Return the template response
 		return new TemplateResponse(
