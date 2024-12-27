@@ -34,7 +34,7 @@ class ContentSecurityPolicy extends EmptyContentSecurityPolicy {
 	protected $strictDynamicAllowedOnScripts = true;
 	/** @var array Domains from which scripts can get loaded */
 	protected $allowedScriptDomains = [
-		'\'self\'','https://form.jotform.com'
+		'\'self\''
 	];
 	/**
 	 * @var bool Whether inline CSS is allowed
@@ -63,7 +63,7 @@ class ContentSecurityPolicy extends EmptyContentSecurityPolicy {
 	/** @var array Domains from which object elements can be loaded */
 	protected $allowedObjectDomains = [];
 	/** @var array Domains from which iframes can be loaded */
-	protected $allowedFrameDomains = ["https://form.jotform.com"];
+	protected $allowedFrameDomains = [];
 	/** @var array Domains from which fonts can be loaded */
 	protected $allowedFontDomains = [
 		'\'self\'',
