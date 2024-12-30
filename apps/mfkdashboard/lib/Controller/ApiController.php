@@ -448,12 +448,15 @@ class ApiController extends OCSController
     #[ApiRoute(verb: 'POST', url: 'api/updateJobPosting')]
     public function updateJobPostingData(): DataResponse
     {
-        $resp = $this->fileService->createPublicLinkForFolder("/MyNewFolder");
-        return new DataResponse([$resp], Http::STATUS_OK);
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
-        $updateJobData = array();
         $job = intval($data["job"]);
+        try {
+            $links = $this->fileService->getAllPostingLinks($this->dbService->getJob(["jobFolder"],$job)["jobFolder"]);
+        } catch (\Throwable $th) {
+            $links = [];
+        }
+        $updateJobData = array();
         $action = htmlspecialchars(strip_tags($data["action"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["title"] = htmlspecialchars(strip_tags($data["title"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["descProf"] = htmlspecialchars($data["descProf"]);
@@ -466,6 +469,8 @@ class ApiController extends OCSController
         $updateJobData["ebay2"] = htmlspecialchars(strip_tags($data["ebay2"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["asp"] = htmlspecialchars(strip_tags($data["asp"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["benefits"] = $data["benefits"];
+        // get media changes
+        $updateJobData["media"] = $links;
         if ($this->dbService->updateJobData($job, $updateJobData)) {
             if($action == "Freigabe anfordern"){
                 $this->dbService->updateJobStatus($job, "In revision");

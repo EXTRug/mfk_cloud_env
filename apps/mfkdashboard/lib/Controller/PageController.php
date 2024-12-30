@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\MFKDashboard\Controller;
 
 use OCA\MFKDashboard\Service\DatabaseService;
+use OCA\MFKDashboard\Service\FilesService;
 use OCA\MFKDashboard\Utils\DesignHelper;
 
 use OCA\MFKDashboard\AppInfo\Application;
@@ -25,10 +26,12 @@ class PageController extends Controller
 	private $dbService;
 	private $userSession;
 	private $groupManager;
-	public function __construct(IUserSession $userSession, IGroupManager $groupManager)
+	private FilesService $fileService;
+	public function __construct(IUserSession $userSession, IGroupManager $groupManager, FilesService $fileService)
 	{
 		$this->dbService = new DatabaseService();
 		$this->userSession = $userSession;
+		$this->fileService = $fileService;
 		$this->groupManager = $groupManager;
 	}
 
@@ -166,6 +169,7 @@ class PageController extends Controller
 			'job' => $job,
 			'company' => $this->dbService->getCompany(["name"], intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
+			'numberOfFiles' => intval($this->fileService->getNumberOfFiles($job["jobFolder"]."Werbematerial/Ausgewählte Bildmaterialien"))
 		];
 		// Return the template response
 		return new TemplateResponse(

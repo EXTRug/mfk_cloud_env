@@ -160,32 +160,19 @@ if ($job["customerInput"] != null) {
                     <label>Link zur Stellenauschreibung</label>
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" type="url" id="posting_link" value="<?php echo ($job["funnel_url"]) ?>">
                 </div>
-                <div class="form-group">
-                    <label>Bilderauswahl</label>
-                    <button class="drag-drop-button">
-                        <img src="<?= $configurations['assets_path'] ?>/images/img.png">
-                        Upload Image
-                    </button>
-                    <div class="selected-images p-2 mb-5">
-                        <div class="selected-image d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <img src="<?= $configurations['assets_path'] ?>/images/imgdark.png">
-                                <div class="image-title">Image1.png <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
-                            </div>
-                            <button class="img-remove-button">
-                                <img src="<?= $configurations['assets_path'] ?>/images/delete-btn.png">
-                            </button>
-                        </div>
-                        <div class="selected-image d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <img src="<?= $configurations['assets_path'] ?>/images/imgdark.png">
-                                <div class="image-title">Image1.png <span class="image-size">(56kb)</span> <span class="image-progress">30%</span></div>
-                            </div>
-                            <button class="img-remove-button">
-                                <img src="<?= $configurations['assets_path'] ?>/images/delete-btn.png">
-                            </button>
-                        </div>
-                    </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Bilderauswahl</label><br>
+                    <span>
+                        <?php 
+                            if($numberOfFiles == 0){
+                                echo("Aktuell sind <bold>keine</bold> Bilder ausgewählt.");
+                            }elseif($numberOfFiles == 1){
+                                echo("Aktuell ist <bold>ein</bold> Bild ausgewählt.");
+                            }else{
+                                echo("Aktuell sind <bold>".$numberOfFiles."</bold> Bilder ausgewählt.");
+                            }
+                        ?>
+                    </span><br>
                 </div>
                 <div class="row">
                     <div class="form-group col mb-3">

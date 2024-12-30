@@ -1,9 +1,9 @@
 var mediaPath = "";
 
-function getMediaPath(){
-    if(window.location.host == "cloud.ki-recruiter.com"){
+function getMediaPath() {
+    if (window.location.host == "cloud.ki-recruiter.com") {
         mediaPath = "/extra-apps/mfkdashboard/assets"
-    }else{
+    } else {
         mediaPath = "/apps/mfkdashboard/assets"
     }
 }
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeButton.classList.add('img-remove-button');
 
         const removeIcon = document.createElement('img');
-        removeIcon.src = mediaPath+'/images/delete-btn.png';
+        removeIcon.src = mediaPath + '/images/delete-btn.png';
         removeButton.appendChild(removeIcon);
 
         // Entfernen-Funktion hinzufügen
@@ -134,7 +134,7 @@ function loadBenefits() {
     content = "";
     if (benefits != null) {
         benefits.forEach(benefit => {
-            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="'+mediaPath+'/images/delete-btn.png" class="benefit-remove-button"></button></div>';
+            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="' + mediaPath + '/images/delete-btn.png" class="benefit-remove-button"></button></div>';
         });
         document.getElementById('benefits').innerHTML = content;
     }
@@ -177,15 +177,24 @@ function submitForm() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(data => {
-            if (action == "Freigabe anfordern") {
-                document.getElementById("formSubmitBtn").innerHTML = "Zur Kundenrevision freigeben";
-                document.getElementById("jobStatus").innerHTML = "In revision";
-            } else if (action == "Angaben aktualisieren" || action == "Zur Kundenrevision freigeben") {
-                alert("Aktion erfolgreich.")
+        }).then(response => {
+            if (response.status === 500) {
+                alert("Serverfehler: Statuscode 500 ⚠️");
+            } else if (response.ok) {
+                if (action === "Freigabe anfordern") {
+                    document.getElementById("formSubmitBtn").innerHTML = "Zur Kundenrevision freigeben";
+                    document.getElementById("jobStatus").innerHTML = "In revision";
+                } else if (action === "Angaben aktualisieren" || action === "Zur Kundenrevision freigeben") {
+                    alert("Aktion erfolgreich.");
+                }
+            } else {
+                alert("Ein Fehler ist aufgetreten: " + response.status + " " + response.statusText);
             }
-        }
-        ).catch(error => { alert("Es ist ein Fehler aufgetreten. ⚠️"); });
+        })
+            .catch(error => {
+                console.error("Es ist ein Fehler aufgetreten:", error);
+                alert("Es ist ein Netzwerkfehler aufgetreten. ⚠️");
+            });
     }
 }
 
