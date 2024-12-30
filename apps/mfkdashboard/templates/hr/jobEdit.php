@@ -47,6 +47,11 @@ if ($job["customerInput"] != null) {
                     <img class="me-1" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-light.png">
                     Link zum Job Ordner
                 </div>
+                <?php 
+                if($numberOfFiles == -1){
+                    echo("<br><div>⚠️ Der Job Ordner ist nicht korrekt!</div>");
+                }
+                ?>
             </div>
         </div>
         <div class="col-md-6 mt-3">

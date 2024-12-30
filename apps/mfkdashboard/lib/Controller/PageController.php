@@ -164,12 +164,17 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobEdit');
 
 		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "campaign", "funnel_url", "salary_range", "customerInput", "asp", "jobFolder"], $id);
+		try {
+			$numberOfFiles = intval($this->fileService->getNumberOfFiles($job["jobFolder"]."/Werbematerial/Ausgewählte Bildmaterialien"));
+		} catch (\Throwable $th) {
+			$numberOfFiles = -1;
+		}
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'job' => $job,
 			'company' => $this->dbService->getCompany(["name"], intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
-			'numberOfFiles' => intval($this->fileService->getNumberOfFiles($job["jobFolder"]."Werbematerial/Ausgewählte Bildmaterialien"))
+			'numberOfFiles' => $numberOfFiles
 		];
 		// Return the template response
 		return new TemplateResponse(
@@ -343,19 +348,19 @@ class PageController extends Controller
 				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'addApplicant':
-				return strpos(json_encode($groups), 'MFK intern');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'jobActivity':
-				return strpos(json_encode($groups), 'MFK intern');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'editJob':
-				return strpos(json_encode($groups), 'MFK intern');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'companyJobs':
-				return strpos(json_encode($groups), 'MFK intern');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			case 'companyOverview':
-				return strpos(json_encode($groups), 'MFK intern');
+				return strpos(json_encode($groups), 'Caller');
 				break;
 			default:
 				return false;
@@ -372,13 +377,13 @@ class PageController extends Controller
 		if (strpos(json_encode($groups), 'Caller')) {
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 		}
-		if (strpos(json_encode($groups), 'MFK intern')) {
+		if (strpos(json_encode($groups), 'Caller')) {
 			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
 		}
-		if (strpos(json_encode($groups), 'MFK intern')) {
+		if (strpos(json_encode($groups), 'Caller')) {
 			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
 		}
-		if (strpos(json_encode($groups), 'MFK intern')) {
+		if (strpos(json_encode($groups), 'Caller')) {
 			array_push($links, array("title" => "neuer Bewerber", "path" => "add-applicant"));
 		}
 		return $links;
