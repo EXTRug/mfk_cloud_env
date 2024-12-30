@@ -10,7 +10,7 @@ include_once(__DIR__ . '/../includes/header.php');
         title="Formular Stellenausschreibung"
         onload="window.parent.scrollTo(0,0)"
         allowtFransparency="true"
-        src="https://form.jotform.com/232044725930048?ihrFirmenname=<?php echo ($company["name"]);?>&companyid=<?php echo ($company["companyID"]);?>"
+        src="https://form.jotform.com/232044725930048?ihrFirmenname=<?php echo ($company["name"]);?>&companyid=<?php echo ($company["billing_id"]);?>"
         frameborder="0"
         style="min-width:100%;max-width:100%;height:700px;border:none;">
     </iframe>

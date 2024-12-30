@@ -76,7 +76,7 @@ class PageController extends Controller
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
-			'company' => $this->dbService->getCompany(["name", "companyID"], $id)
+			'company' => $this->dbService->getCompany(["name", "billing_id"], $id)
 		];
 		return new TemplateResponse(
 			Application::APP_ID,

@@ -21,6 +21,7 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$csp = new ContentSecurityPolicy();
         $csp->addAllowedFrameDomain('https://form.jotform.com');
+		$csp->addAllowedFrameDomain('https://eu-submit.jotform.com');
         \OC::$server->getContentSecurityPolicyManager()->addDefaultPolicy($csp);
 	}
 
