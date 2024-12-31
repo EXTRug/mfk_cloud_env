@@ -165,10 +165,11 @@ class PageController extends Controller
 
 		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "campaign", "funnel_url", "salary_range", "customerInput", "asp", "jobFolder"], $id);
 		try {
-			$numberOfFiles = intval($this->fileService->getNumberOfFiles($job["jobFolder"]."/Werbematerial/Ausgewählte Bildmaterialien"));
+			$numberOfFiles = intval($this->fileService->getNumberOfFiles("03 Marketing/01 Kunden Marketing/".$job["jobFolder"]."/Werbematerial/Ausgewählte Bildmaterialien"));
 		} catch (\Throwable $th) {
 			$numberOfFiles = -1;
 		}
+
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'job' => $job,
