@@ -42,10 +42,7 @@ class PageController extends Controller
 	public function companiesOverview($mode = "hr"): TemplateResponse
 	{
 		if (!$this->simpleAccessControl("companyOverview")) {
-			return new TemplateResponse(
-				Application::APP_ID,
-				'misc/notAllowed'
-			);
+			return $this->applicant();
 		}
 		\OCP\Util::addScript('mfkdashboard', 'bootstrap.bundle.min');
 		\OCP\Util::addScript('mfkdashboard', 'tom-select');
@@ -165,7 +162,7 @@ class PageController extends Controller
 
 		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "campaign", "funnel_url", "salary_range", "customerInput", "asp", "jobFolder"], $id);
 		try {
-			$numberOfFiles = intval($this->fileService->getNumberOfFiles("03 Marketing/01 Kunden Marketing/".$job["jobFolder"]."/Werbematerial/Ausgewählte Bildmaterialien"));
+			$numberOfFiles = intval($this->fileService->getNumberOfFiles("03 Marketing/01 Kunden Marketing/" . $job["jobFolder"] . "/Werbematerial/Ausgewählte Bildmaterialien"));
 		} catch (\Throwable $th) {
 			$numberOfFiles = -1;
 		}
@@ -343,26 +340,30 @@ class PageController extends Controller
 	private function simpleAccessControl($page)
 	{
 		$user = $this->userSession->getUser();
+		$this->circlesManager->startSession();
+		$circles = $this->circlesManager->getCircles();
 		$groups = $this->groupManager->getUserGroups($user);
+		$teams = [];
+		foreach ($circles as $circle) {
+			array_push($teams, $circle->getDisplayName());
+		}
+		if (in_array("Technology", $teams)) {
+			return true;
+		}
 		switch ($page) {
 			case 'candidateCall':
+				return in_array("Candidate Call", $teams);
 				return strpos(json_encode($groups), 'Caller');
-				break;
 			case 'addApplicant':
-				return strpos(json_encode($groups), 'Caller');
-				break;
+				return in_array("Alle Mitarbeiter", $teams);
 			case 'jobActivity':
-				return strpos(json_encode($groups), 'Caller');
-				break;
+				return  in_array("Vertrieb", $teams);
 			case 'editJob':
-				return strpos(json_encode($groups), 'Caller');
-				break;
+				return in_array("Marketing", $teams);
 			case 'companyJobs':
-				return strpos(json_encode($groups), 'Caller');
-				break;
+				return in_array("Marketing", $teams) || in_array("Vertrieb", $teams);
 			case 'companyOverview':
-				return strpos(json_encode($groups), 'Caller');
-				break;
+				return in_array("Marketing", $teams) || in_array("Vertrieb", $teams);
 			default:
 				return false;
 				break;
@@ -373,18 +374,25 @@ class PageController extends Controller
 	private function getAllowedNavbarLinks()
 	{
 		$user = $this->userSession->getUser();
+		$this->circlesManager->startSession();
+		$circles = $this->circlesManager->getCircles();
 		$groups = $this->groupManager->getUserGroups($user);
 		$links = array();
-		if (strpos(json_encode($groups), 'Caller')) {
+		$teams = [];
+		foreach ($circles as $circle) {
+			array_push($teams, $circle->getDisplayName());
+		}
+
+		if (in_array("Candidate Call", $teams) || in_array("Technology", $teams)) {
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 		}
-		if (strpos(json_encode($groups), 'Caller')) {
+		if (in_array("Vertrieb", $teams) || in_array("Technology", $teams)) {
 			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
 		}
-		if (strpos(json_encode($groups), 'Caller')) {
+		if (in_array("Marketing", $teams) || in_array("Technology", $teams)) {
 			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
 		}
-		if (strpos(json_encode($groups), 'Caller')) {
+		if (in_array("Alle Mitarbeiter", $teams) || in_array("Technology", $teams)) {
 			array_push($links, array("title" => "neuer Bewerber", "path" => "add-applicant"));
 		}
 		return $links;
