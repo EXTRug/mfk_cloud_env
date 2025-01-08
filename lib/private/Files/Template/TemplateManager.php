@@ -118,11 +118,11 @@ class TemplateManager implements ITemplateManager {
 	}
 
 	public function listTemplates(): array {
-		return array_map(function (TemplateFileCreator $entry) {
+		return array_values(array_map(function (TemplateFileCreator $entry) {
 			return array_merge($entry->jsonSerialize(), [
 				'templates' => $this->getTemplateFiles($entry)
 			]);
-		}, $this->listCreators());
+		}, $this->listCreators()));
 	}
 
 	/**
@@ -173,13 +173,20 @@ class TemplateManager implements ITemplateManager {
 	 * @throws \OCP\Files\NotPermittedException
 	 * @throws \OC\User\NoUserException
 	 */
-	private function getTemplateFolder(): Node {
+	private function getTemplateFolder(): Folder {
 		if ($this->getTemplatePath() !== '') {
-			return $this->rootFolder->getUserFolder($this->userId)->get($this->getTemplatePath());
+			$path = $this->rootFolder->getUserFolder($this->userId)->get($this->getTemplatePath());
+			if ($path instanceof Folder) {
+				return $path;
+			}
+			$this->logger->warning('Template folder ' . $path . ' not found or invalid', ['app' => 'files_templates']);
 		}
 		throw new NotFoundException();
 	}
 
+	/**
+	 * @return list<Template>
+	 */
 	private function getTemplateFiles(TemplateFileCreator $type): array {
 		$templates = [];
 		foreach ($this->getRegisteredProviders() as $provider) {

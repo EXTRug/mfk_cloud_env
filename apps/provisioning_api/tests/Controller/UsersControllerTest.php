@@ -219,6 +219,131 @@ class UsersControllerTest extends TestCase {
 		$this->assertEquals($expected, $this->api->getUsers('MyCustomSearch')->getData());
 	}
 
+	private function createUserMock(string $uid, bool $enabled): MockObject&IUser {
+		$mockUser = $this->getMockBuilder(IUser::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$mockUser
+			->method('getUID')
+			->willReturn($uid);
+		$mockUser
+			->method('isEnabled')
+			->willReturn($enabled);
+		return $mockUser;
+	}
+
+	public function testGetDisabledUsersAsAdmin(): void {
+		$loggedInUser = $this->getMockBuilder(IUser::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$loggedInUser
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('admin');
+		$this->userSession
+			->expects($this->atLeastOnce())
+			->method('getUser')
+			->willReturn($loggedInUser);
+		$this->groupManager
+			->expects($this->once())
+			->method('isAdmin')
+			->willReturn(true);
+		$this->userManager
+			->expects($this->once())
+			->method('getDisabledUsers')
+			->with(3, 0, 'MyCustomSearch')
+			->willReturn([
+				$this->createUserMock('admin', false),
+				$this->createUserMock('foo', false),
+				$this->createUserMock('bar', false),
+			]);
+
+		$expected = [
+			'users' => [
+				'admin' => ['id' => 'admin'],
+				'foo' => ['id' => 'foo'],
+				'bar' => ['id' => 'bar'],
+			],
+		];
+		$this->assertEquals($expected, $this->api->getDisabledUsersDetails('MyCustomSearch', 3)->getData());
+	}
+
+	public function testGetDisabledUsersAsSubAdmin(): void {
+		$loggedInUser = $this->getMockBuilder(IUser::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$loggedInUser
+			->expects($this->once())
+			->method('getUID')
+			->willReturn('subadmin');
+		$this->userSession
+			->expects($this->atLeastOnce())
+			->method('getUser')
+			->willReturn($loggedInUser);
+		$this->groupManager
+			->expects($this->once())
+			->method('isAdmin')
+			->willReturn(false);
+		$firstGroup = $this->getMockBuilder('OCP\IGroup')
+			->disableOriginalConstructor()
+			->getMock();
+		$secondGroup = $this->getMockBuilder('OCP\IGroup')
+			->disableOriginalConstructor()
+			->getMock();
+		$subAdminManager = $this->getMockBuilder('OC\SubAdmin')
+			->disableOriginalConstructor()->getMock();
+		$subAdminManager
+			->expects($this->once())
+			->method('isSubAdmin')
+			->with($loggedInUser)
+			->willReturn(true);
+		$subAdminManager
+			->expects($this->once())
+			->method('getSubAdminsGroups')
+			->with($loggedInUser)
+			->willReturn([$firstGroup, $secondGroup]);
+		$this->groupManager
+			->expects($this->once())
+			->method('getSubAdmin')
+			->willReturn($subAdminManager);
+		$this->groupManager
+			->expects($this->never())
+			->method('displayNamesInGroup');
+
+		$firstGroup
+			->expects($this->once())
+			->method('searchUsers')
+			->with('MyCustomSearch')
+			->willReturn([
+				$this->createUserMock('user1', false),
+				$this->createUserMock('bob', true),
+				$this->createUserMock('user2', false),
+				$this->createUserMock('alice', true),
+			]);
+
+		$secondGroup
+			->expects($this->once())
+			->method('searchUsers')
+			->with('MyCustomSearch')
+			->willReturn([
+				$this->createUserMock('user2', false),
+				$this->createUserMock('joe', true),
+				$this->createUserMock('user3', false),
+				$this->createUserMock('jim', true),
+				$this->createUserMock('john', true),
+			]);
+
+
+		$expected = [
+			'users' => [
+				'user1' => ['id' => 'user1'],
+				'user2' => ['id' => 'user2'],
+				'user3' => ['id' => 'user3'],
+			],
+		];
+		$this->assertEquals($expected, $this->api->getDisabledUsersDetails('MyCustomSearch', 3)->getData());
+	}
+
 
 	public function testAddUserAlreadyExisting(): void {
 		$this->expectException(OCSException::class);
@@ -1019,9 +1144,13 @@ class UsersControllerTest extends TestCase {
 			->method('getHome')
 			->willReturn('/var/www/newtcloud/data/UID');
 		$targetUser
-			->expects($this->once())
+			->expects($this->exactly(2))
 			->method('getLastLogin')
 			->willReturn(1521191471);
+		$targetUser
+			->expects($this->once())
+			->method('getFirstLogin')
+			->willReturn(1511191471);
 		$targetUser
 			->expects($this->once())
 			->method('getBackendClassName')
@@ -1044,6 +1173,8 @@ class UsersControllerTest extends TestCase {
 			'id' => 'UID',
 			'enabled' => true,
 			'storageLocation' => '/var/www/newtcloud/data/UID',
+			'firstLoginTimestamp' => 1511191471,
+			'lastLoginTimestamp' => 1521191471,
 			'lastLogin' => 1521191471000,
 			'backend' => 'Database',
 			'subadmin' => ['group3'],
@@ -1145,9 +1276,13 @@ class UsersControllerTest extends TestCase {
 			->expects($this->never())
 			->method('getHome');
 		$targetUser
-			->expects($this->once())
+			->expects($this->exactly(2))
 			->method('getLastLogin')
 			->willReturn(1521191471);
+		$targetUser
+			->expects($this->once())
+			->method('getFirstLogin')
+			->willReturn(1511191471);
 		$targetUser
 			->expects($this->once())
 			->method('getBackendClassName')
@@ -1183,6 +1318,8 @@ class UsersControllerTest extends TestCase {
 		$expected = [
 			'id' => 'UID',
 			'enabled' => true,
+			'firstLoginTimestamp' => 1511191471,
+			'lastLoginTimestamp' => 1521191471,
 			'lastLogin' => 1521191471000,
 			'backend' => 'Database',
 			'subadmin' => [],
@@ -1327,9 +1464,13 @@ class UsersControllerTest extends TestCase {
 			->expects($this->never())
 			->method('getHome');
 		$targetUser
-			->expects($this->once())
+			->expects($this->exactly(2))
 			->method('getLastLogin')
 			->willReturn(1521191471);
+		$targetUser
+			->expects($this->once())
+			->method('getFirstLogin')
+			->willReturn(1511191471);
 		$targetUser
 			->expects($this->once())
 			->method('getBackendClassName')
@@ -1360,6 +1501,8 @@ class UsersControllerTest extends TestCase {
 
 		$expected = [
 			'id' => 'UID',
+			'firstLoginTimestamp' => 1511191471,
+			'lastLoginTimestamp' => 1521191471,
 			'lastLogin' => 1521191471000,
 			'backend' => 'Database',
 			'subadmin' => [],

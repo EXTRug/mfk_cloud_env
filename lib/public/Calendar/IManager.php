@@ -138,6 +138,13 @@ interface IManager {
 	public function newQuery(string $principalUri) : ICalendarQuery;
 
 	/**
+	 * Handle a iMip REQUEST message
+	 *
+	 * @since 31.0.0
+	 */
+	public function handleIMipRequest(string $principalUri, string $sender, string $recipient, string $calendarData): bool;
+
+	/**
 	 * Handle a iMip REPLY message
 	 *
 	 * @since 25.0.0
@@ -150,4 +157,12 @@ interface IManager {
 	 * @since 25.0.0
 	 */
 	public function handleIMipCancel(string $principalUri, string $sender, ?string $replyTo, string $recipient, string $calendarData): bool;
+
+	/**
+	 * Create a new event builder instance. Please have a look at its documentation and the
+	 * \OCP\Calendar\ICreateFromString interface on how to use it.
+	 *
+	 * @since 31.0.0
+	 */
+	public function createEventBuilder(): ICalendarEventBuilder;
 }
