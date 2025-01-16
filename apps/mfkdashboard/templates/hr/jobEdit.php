@@ -42,14 +42,14 @@ if ($job["customerInput"] != null) {
                     $path = urlencode($company["name"] . " - " . $job["company"] . "/" . $job["funnel_name"]);
                 }
                 ?>
-                <div class="title mb-1 d-flex align-items-center">Ordner<a href="https://cloud.ki-recruiter.com/index.php/apps/files/?dir=/03%20Marketing/01%20Kunden%20Marketing/<?php echo ($path); ?>" target="_blank"><img height="19px" class="ms-2" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
+                <div class="title mb-1 d-flex align-items-center">Ordner<a href="https://cloud.ki-recruiter.com/index.php/apps/files/?dir=/03%20Marketing/01%20Kunden%20Marketing/<?php echo (urlencode($path)); ?>" target="_blank"><img height="19px" class="ms-2" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-external-light.png"></a></div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-light.png">
                     Link zum Job Ordner
                 </div>
-                <?php 
-                if($numberOfFiles == -1){
-                    echo("<br><div>⚠️ Der Job Ordner ist nicht korrekt!</div>");
+                <?php
+                if ($numberOfFiles == -1) {
+                    echo ("<br><div>⚠️ Der Job Ordner ist nicht korrekt!</div>");
                 }
                 ?>
             </div>
@@ -66,7 +66,8 @@ if ($job["customerInput"] != null) {
         <div class="col-md-6 mt-3">
             <div class="card-box">
                 <div class="title mb-1 d-flex align-items-center">
-                    <div class="status-dot" style="background-color: <?php echo ($statusColor); ?>;"></div> <div id="jobStatus"><?php echo ($job["status"]) ?></div>
+                    <div class="status-dot" style="background-color: <?php echo ($statusColor); ?>;"></div>
+                    <div id="jobStatus"><?php echo ($job["status"]) ?></div>
                 </div>
                 <div class="mini-taglines d-flex align-items-center">
                     <img class="me-1" src="<?= $configurations['assets_path'] ?>/images/iconamoon_link-light.png">
@@ -83,7 +84,7 @@ if ($job["customerInput"] != null) {
                 </div>
                 <div class="paragraph">
                     <?php if (isset($customerInput)) {
-                        echo ($customerInput->requirements);
+                        echo (str_replace("\n", "<br>", $customerInput->requirements));
                     } ?>
                 </div>
                 <hr class="divider" align="center">
@@ -92,7 +93,7 @@ if ($job["customerInput"] != null) {
                 </div>
                 <div class="paragraph">
                     <?php if (isset($customerInput)) {
-                        echo ($customerInput->tasks);
+                        echo (str_replace("\n", "<br>", $customerInput->tasks));
                     } ?>
                 </div>
                 <hr class="divider" align="center">
@@ -101,8 +102,15 @@ if ($job["customerInput"] != null) {
                 </div>
                 <div class="paragraph">
                     <?php if (isset($customerInput)) {
-                        echo ($customerInput->benefits);
+                        echo (str_replace("\n", "<br>", $customerInput->benefits));
                     } ?>
+                </div>
+                <hr class="divider" align="center">
+                <div class="sub-heading mb-2">
+                    Unternehmensbeschreibung:
+                </div>
+                <div class="paragraph">
+                    <?php echo (str_replace("\n", "<br>", $company["description"])); ?>
                 </div>
             </div>
         </div>
@@ -168,14 +176,14 @@ if ($job["customerInput"] != null) {
                 <div class="form-group" style="margin-bottom: 10px;">
                     <label>Bilderauswahl</label><br>
                     <span>
-                        <?php 
-                            if($numberOfFiles == 0){
-                                echo("Aktuell sind <bold>keine</bold> Bilder ausgewählt.");
-                            }elseif($numberOfFiles == 1){
-                                echo("Aktuell ist <bold>ein</bold> Bild ausgewählt.");
-                            }else{
-                                echo("Aktuell sind <bold>".$numberOfFiles."</bold> Bilder ausgewählt.");
-                            }
+                        <?php
+                        if ($numberOfFiles == 0) {
+                            echo ("Aktuell sind <bold>keine</bold> Bilder ausgewählt.");
+                        } elseif ($numberOfFiles == 1) {
+                            echo ("Aktuell ist <bold>ein</bold> Bild ausgewählt.");
+                        } else {
+                            echo ("Aktuell sind <bold>" . $numberOfFiles . "</bold> Bilder ausgewählt.");
+                        }
                         ?>
                     </span><br>
                 </div>
@@ -237,23 +245,23 @@ if ($job["customerInput"] != null) {
                     <label>Ansprechpartner</label>
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" id="asp" type="text" value="<?php echo ($job["asp"]); ?>">
                 </div>
-                <?php 
-                    $btnText = "unbekannter Status";
-                    $disabled = "";
-                    if($job["status"] == "In preparation"){
-                        $btnText = "Freigabe anfordern";
-                    }elseif($job["status"] == "active"){
-                        $btnText = "Angaben aktualisieren";
-                    }elseif($job["status"] == "archieved"){
-                        $btnText = "Dieser Job ist archiviert.";
-                        $disabled = "disabled";
-                    }elseif($job["status"] == "In revision"){
-                        $btnText = "Zur Kundenrevision freigeben";
-                    }else{
-                        $disabled = "disabled";
-                    }
+                <?php
+                $btnText = "unbekannter Status";
+                $disabled = "";
+                if ($job["status"] == "In preparation") {
+                    $btnText = "Freigabe anfordern";
+                } elseif ($job["status"] == "active") {
+                    $btnText = "Angaben aktualisieren";
+                } elseif ($job["status"] == "archieved") {
+                    $btnText = "Dieser Job ist archiviert.";
+                    $disabled = "disabled";
+                } elseif ($job["status"] == "In revision") {
+                    $btnText = "Zur Kundenrevision freigeben";
+                } else {
+                    $disabled = "disabled";
+                }
                 ?>
-                <button type="button" class="submit-btn" id="formSubmitBtn" <?php echo($disabled);?>><?php echo($btnText);?></button>
+                <button type="button" class="submit-btn" id="formSubmitBtn" <?php echo ($disabled); ?>><?php echo ($btnText); ?></button>
             </div>
         </div>
     </div>

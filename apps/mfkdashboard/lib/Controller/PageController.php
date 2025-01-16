@@ -23,6 +23,7 @@ use OCP\IGroupManager;
  */
 class PageController extends Controller
 {
+	private $ISDEV = True;
 	private $dbService;
 	private $userSession;
 	private $groupManager;
@@ -170,7 +171,7 @@ class PageController extends Controller
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'job' => $job,
-			'company' => $this->dbService->getCompany(["name"], intval($job["company"])),
+			'company' => $this->dbService->getCompany(["name", "description"], intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
 			'numberOfFiles' => $numberOfFiles
 		];
@@ -339,6 +340,7 @@ class PageController extends Controller
 	 */
 	private function simpleAccessControl($page)
 	{
+		if($this->ISDEV){return True;}
 		$user = $this->userSession->getUser();
 		$this->circlesManager->startSession();
 		$circles = $this->circlesManager->getCircles();
@@ -373,11 +375,18 @@ class PageController extends Controller
 
 	private function getAllowedNavbarLinks()
 	{
+		$links = array();
+		if($this->ISDEV){
+			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
+			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
+			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
+			array_push($links, array("title" => "neuer Bewerber", "path" => "add-applicant"));
+			return $links;
+		}
 		$user = $this->userSession->getUser();
 		$this->circlesManager->startSession();
 		$circles = $this->circlesManager->getCircles();
 		$groups = $this->groupManager->getUserGroups($user);
-		$links = array();
 		$teams = [];
 		foreach ($circles as $circle) {
 			array_push($teams, $circle->getDisplayName());
