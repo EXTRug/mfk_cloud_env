@@ -123,7 +123,8 @@ if ($job["customerInput"] != null) {
                     <input class="form-control rounded-0 border-secondary outline-0 text-input" id="title" type="text" value="<?php echo ($job["title"]); ?>">
                 </div>
                 <div class="form-group mb-3">
-                    <label>Stellenbeschreibung Text (professionell):</label>
+                    <label>Stellenbeschreibung Text (professionell):</label><br>
+                    <a href="https://cloud.ki-recruiter.com/index.php/f/38172" target="_blank" style="color: blue !important;">professionelle Vorlage ↗️</a>
                     <div id="editor_area" class="text-editor-area"></div>
                     <div id="toolbar1" style="display: none;">
                         <select class="ql-size">
@@ -147,7 +148,8 @@ if ($job["customerInput"] != null) {
                 </div>
 
                 <div class="form-group mb-3">
-                    <label>Stellenbeschreibung Text (persönlicher):</label>
+                    <label>Stellenbeschreibung Text (persönlicher):</label><br>
+                    <a href="https://cloud.ki-recruiter.com/index.php/f/38212" target="_blank" style="color: blue !important;">kreative Vorlage ↗️</a>
                     <div id="editor_area_2" class="text-editor-area"></div>
                     <div id="toolbar2" style="display: none;">
                         <select class="ql-size">
