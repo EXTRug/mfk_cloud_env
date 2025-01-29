@@ -10,3 +10,5 @@
 /node_modules/
 
 /lib/Service/.env
+
+/templates/config.php

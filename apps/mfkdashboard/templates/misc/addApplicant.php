@@ -18,8 +18,8 @@ include_once(__DIR__ . '/../includes/header.php');
                         <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" id="firstname">
                     </div>
                     <div class="form-group col mb-4">
-                        <label>Nachname</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" id="lastname">
+                        <label>Nachname*</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" id="lastname" required>
                     </div>
                 </div>
                 <div class="row">
@@ -39,8 +39,8 @@ include_once(__DIR__ . '/../includes/header.php');
                 </div>
                 <div class="row">
                     <div class="form-group col mb-4">
-                        <label>Email</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="email" id="email">
+                        <label>Email*</label>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="email" id="email" required>
                     </div>
                     <div class="form-group col mb-4">
                         <label>Telefonnummer</label>

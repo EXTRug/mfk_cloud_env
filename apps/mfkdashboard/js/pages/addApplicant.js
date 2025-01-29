@@ -1,10 +1,10 @@
 var selectedFunnel = "";
 var mediaPath = "";
 
-function getMediaPath(){
-    if(window.location.host == "cloud.ki-recruiter.com"){
+function getMediaPath() {
+    if (window.location.host == "cloud.ki-recruiter.com") {
         mediaPath = "/extra-apps/mfkdashboard/assets"
-    }else{
+    } else {
         mediaPath = "/apps/mfkdashboard/assets"
     }
 }
@@ -26,45 +26,54 @@ function submit() {
     let lastname = document.getElementById("lastname").value;
     let email = document.getElementById("email").value;
     let phone = document.getElementById("phone").value;
-
     const fileInput = document.querySelector("#fileInput");
 
-    // create Applicant
-    if (firstname != "" && lastname != "" && selectFunnel != "" && email != "" && phone != "") {
+    if (lastname !== "" && selectFunnel !== "" && email !== "") {
         fetch(window.location.origin + "/ocs/v2.php/apps/mfkdashboard/api/createApplicant?firstname=" + firstname +
             "&lastname=" + lastname + "&email=" + email + "&phone=" + phone + "&funnel=" + selectedFunnel)
-            .then(response => response.text())
-            .then(data => { console.log(data); })
-            .catch(error => window.alert("Es ist ein Fehler beim Anlegen des Bewerberprofils aufgetreten."));
+            .then(response => {
+                if (!response.ok) throw new Error(`Fehler: ${response.status}`);
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+                window.alert("Bewerber wurde erfolgreich angelegt ✅");
+            })
+            .catch(error => {
+                window.alert("Es ist ein Fehler beim Anlegen des Bewerberprofils aufgetreten: " + error.message);
+            });
     } else {
-        if (!fileInput && fileInput.files.length != 1) {
+        if (!fileInput || fileInput.files.length !== 1) {
             window.alert("Bitte geben Sie alle notwendigen Informationen ein.");
+            return;
         }
     }
- 
-    if (fileInput && fileInput.files.length == 1 && email != "") {
-        const file = fileInput.files[0]; // Die hochgeladene Datei
+
+    if (fileInput && fileInput.files.length === 1 && email !== "") {
+        const file = fileInput.files[0];
         const formData = new FormData();
         formData.append("cv", file);
         formData.append("email", email);
 
-        // Datei mit Fetch an den Server senden
         fetch(window.location.origin + "/ocs/v2.php/apps/mfkdashboard/api/uploadCV", {
             method: "POST",
             body: formData
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error(`Fehler: ${response.status}`);
+                return response.text();
+            })
             .then(data => {
-                console.log("Erfolgreich hochgeladen:", data);
+                window.alert("Lebenslauf wurde erfolgreich hochgeladen ✅");
             })
             .catch(error => {
-                window.alert("Es ist ein Fehler beim Hohcladen des Lebenslaufs aufgetreten.");
+                window.alert("Fehler beim Hochladen des Lebenslaufs: " + error.message);
             });
     } else {
         console.log("Keine Datei ausgewählt.");
     }
-    window.alert("erfolg.");
 }
+
 
 function setupFunnelSelection() {
     let selection = document.getElementById("myDropdown");
@@ -75,7 +84,7 @@ function setupFunnelSelection() {
 }
 
 function selectFunnel() {
-    console.log(this);
+    document.querySelector("#job-dropdown").innerHTML = "Funnel: " + this.innerText;
     selectedFunnel = this.innerText;
 }
 
@@ -118,11 +127,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             fileItem.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <img src="`+mediaPath+`/images/pencil.png" alt="File">
+                    <img src="`+ mediaPath + `/images/pencil.png" alt="File">
                     <div class="image-title">${file.name} 
                         <span class="image-size">(${(file.size / 1024).toFixed(1)} KB)</span>
                     </div>
-                <button class="img-remove-button"><img src="`+mediaPath+`/images/delete-btn.png"></button></div>
+                <button class="img-remove-button"><img src="`+ mediaPath + `/images/delete-btn.png"></button></div>
             `;
 
             fileItem.querySelector(".img-remove-button").addEventListener("click", () => {
