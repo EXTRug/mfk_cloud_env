@@ -8,6 +8,11 @@ use OCA\MFKDashboard\Service\DatabaseService;
 use OCA\MFKDashboard\Service\FilesService;
 use OCA\MFKDashboard\Utils\DesignHelper;
 
+use OCA\Circles\CirclesManager;
+use OCA\Circles\Model\FederatedUser;
+use OCA\Circles\Model\Member;
+
+
 use OCA\MFKDashboard\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -17,6 +22,7 @@ use OCP\AppFramework\Http\Attribute\OpenAPI;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IUserSession;
 use OCP\IGroupManager;
+use OCP\Server;
 
 /**
  * @psalm-suppress UnusedClass
@@ -329,9 +335,12 @@ class PageController extends Controller
 	#[FrontpageRoute(verb: 'GET', url: '/')]
 	public function index(): TemplateResponse
 	{
+		$pages = $this->getAllowedNavbarLinks();
+		$navigateTo = $pages[0]["path"];
 		return new TemplateResponse(
 			Application::APP_ID,
 			'index',
+			["navigateTo" => $navigateTo]
 		);
 	}
 
@@ -340,32 +349,36 @@ class PageController extends Controller
 	 */
 	private function simpleAccessControl($page)
 	{
-		if($this->ISDEV){return True;}
+		if ($this->ISDEV) {
+			return True;
+		}
 		$user = $this->userSession->getUser();
-		$this->circlesManager->startSession();
-		$circles = $this->circlesManager->getCircles();
+		$circlesManager = Server::get(CirclesManager::class);
+		$federatedUser = $circlesManager->getFederatedUser($user->getUID(), Member::TYPE_USER);
+		$circles = $federatedUser->getMemberships();
+
 		$groups = $this->groupManager->getUserGroups($user);
 		$teams = [];
 		foreach ($circles as $circle) {
-			array_push($teams, $circle->getDisplayName());
+			array_push($teams, $circle->getCircleId());
 		}
-		if (in_array("Technology", $teams)) {
+		if (in_array("wvAZurJehKOYrUpChJYDI7lYPBwDGBV", $teams)) {
 			return true;
 		}
 		switch ($page) {
 			case 'candidateCall':
-				return in_array("Candidate Call", $teams);
+				return in_array("L8dSXHMmEUq3Z2AoEozpvQkpajuOjOX", $teams);
 				return strpos(json_encode($groups), 'Caller');
 			case 'addApplicant':
-				return in_array("Alle Mitarbeiter", $teams);
+				return in_array("8NGHTVsMWFeHybaQDWgJX1sfYKbqcRo", $teams) || in_array("L8dSXHMmEUq3Z2AoEozpvQkpajuOjOX", $teams);
 			case 'jobActivity':
-				return  in_array("Vertrieb", $teams);
+				return  in_array("wpOHsPeXhnsFW5iNX8aMh6j7nMen7sV", $teams);
 			case 'editJob':
-				return in_array("Marketing", $teams);
+				return in_array("xRLh38Myv745MTO3ZCOW6owA3SOhKIt", $teams);
 			case 'companyJobs':
-				return in_array("Marketing", $teams) || in_array("Vertrieb", $teams);
+				return in_array("xRLh38Myv745MTO3ZCOW6owA3SOhKIt", $teams) || in_array("wpOHsPeXhnsFW5iNX8aMh6j7nMen7sV", $teams);
 			case 'companyOverview':
-				return in_array("Marketing", $teams) || in_array("Vertrieb", $teams);
+				return in_array("xRLh38Myv745MTO3ZCOW6owA3SOhKIt", $teams) || in_array("wpOHsPeXhnsFW5iNX8aMh6j7nMen7sV", $teams);
 			default:
 				return false;
 				break;
@@ -376,7 +389,7 @@ class PageController extends Controller
 	private function getAllowedNavbarLinks()
 	{
 		$links = array();
-		if($this->ISDEV){
+		if ($this->ISDEV) {
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
 			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
@@ -384,24 +397,25 @@ class PageController extends Controller
 			return $links;
 		}
 		$user = $this->userSession->getUser();
-		$this->circlesManager->startSession();
-		$circles = $this->circlesManager->getCircles();
+		$circlesManager = Server::get(CirclesManager::class);
+		$federatedUser = $circlesManager->getFederatedUser($user->getUID(), Member::TYPE_USER);
+		$circles = $federatedUser->getMemberships();
 		$groups = $this->groupManager->getUserGroups($user);
 		$teams = [];
 		foreach ($circles as $circle) {
-			array_push($teams, $circle->getDisplayName());
+			array_push($teams, $circle->getCircleId());
 		}
 
-		if (in_array("Candidate Call", $teams) || in_array("Technology", $teams)) {
+		if (in_array("L8dSXHMmEUq3Z2AoEozpvQkpajuOjOX", $teams) || in_array("wvAZurJehKOYrUpChJYDI7lYPBwDGBV", $teams)) {
 			array_push($links, array("title" => "CC Call", "path" => "candidate-call"));
 		}
-		if (in_array("Vertrieb", $teams) || in_array("Technology", $teams)) {
+		if (in_array("wpOHsPeXhnsFW5iNX8aMh6j7nMen7sV", $teams) || in_array("wvAZurJehKOYrUpChJYDI7lYPBwDGBV", $teams)) {
 			array_push($links, array("title" => "KB Dashboard", "path" => "company-overview/kb"));
 		}
-		if (in_array("Marketing", $teams) || in_array("Technology", $teams)) {
+		if (in_array("xRLh38Myv745MTO3ZCOW6owA3SOhKIt", $teams) || in_array("wvAZurJehKOYrUpChJYDI7lYPBwDGBV", $teams)) {
 			array_push($links, array("title" => "HR Dashboard", "path" => "company-overview/hr"));
 		}
-		if (in_array("Alle Mitarbeiter", $teams) || in_array("Technology", $teams)) {
+		if (in_array("8NGHTVsMWFeHybaQDWgJX1sfYKbqcRo", $teams) || in_array("wvAZurJehKOYrUpChJYDI7lYPBwDGBV", $teams) || in_array("L8dSXHMmEUq3Z2AoEozpvQkpajuOjOX", $teams)) {
 			array_push($links, array("title" => "neuer Bewerber", "path" => "add-applicant"));
 		}
 		return $links;
