@@ -11,9 +11,6 @@ use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\IUserSession;
-use OCP\IGroupManager;
-use OCP\Util;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 
@@ -438,6 +435,21 @@ class ApiController extends OCSController
         $job = intval($data["job"]);
         $date = strval($data["date"]);
         if ($this->dbService->updateJobCustomerVisit($job, $date)) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
+        return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+    }
+
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
+    #[ApiRoute(verb: 'POST', url: 'api/setManualStartDate')]
+    public function manuallySetStartDate(): DataResponse
+    {
+        $jsonData = file_get_contents('php://input');
+        $data = json_decode($jsonData, true);
+        $job = intval($data["job"]);
+        $date = strval($data["date"]);
+        if ($this->dbService->setJobStartDate($job, $date)) {
             return new DataResponse([], Http::STATUS_OK);
         }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);

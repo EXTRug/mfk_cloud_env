@@ -175,7 +175,8 @@ class DatabaseService
             "status",
             "location",
             "campaign",
-            "duration",
+            "startDate",
+            "stopDate",
             "funnel_url",
             "salary_range",
             "customerInput",
@@ -408,9 +409,30 @@ class DatabaseService
     {
         $stati = ['active', 'archieved', 'In preperation', 'In revision'];
         if(!in_array($status, $stati)){return false;}
-    
-        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ? WHERE id = ?");
+        
+        if($status == "active"){
+            $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ?, startDate = NOW() WHERE id = ?");
+        }else if($status == "archieved"){
+            $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ?, stopDate = NOW() WHERE id = ?");
+        }else{
+            $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ? WHERE id = ?");
+        }
+        
         if ($stmt->execute(array($status, $job))) {
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function setJobStartDate(int $job, String $date):bool{
+        $date = date("Y-m-d", strtotime($date));
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET startDate = ? WHERE id = ?");
+        if ($stmt->execute(array($date, $job))) {
             if ($stmt->rowCount() > 0) {
                 return true;
             } else {

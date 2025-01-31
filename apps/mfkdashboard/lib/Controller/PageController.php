@@ -209,7 +209,7 @@ class PageController extends Controller
 		\OCP\Util::addScript('mfkdashboard', 'main');
 		\OCP\Util::addScript('mfkdashboard', 'pages/jobActivity');
 
-		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "history", "duration", "manager", "internalNote", "scheduledCustomerVisit"], $id);
+		$job = $this->dbService->getJob(["title", "id", "funnel_name", "company", "location", "status", "history", "startDate","stopDate", "manager", "internalNote", "scheduledCustomerVisit"], $id);
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'job' => $job,

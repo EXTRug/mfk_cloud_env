@@ -32,6 +32,9 @@ window.onload = function () {
             changeNotificationSetting(element);
         })
     });
+    try{
+        document.getElementById("saveManualStartDate").addEventListener("click", saveManualStartDateToDB);
+    }catch(error){}
     document.getElementById("customerVisitField").addEventListener("change", customerVisitChanged);
     quill.on('text-change', jobNotesChanged);
     // update Interface
@@ -270,11 +273,15 @@ function triggerJobAction(element){
                 "job": window.location.pathname.split("/")[5]
             })
         }).then(data => {
+            const currentDate = new Date();
+            const date = currentDate.getDate()+"."+(parseInt(currentDate.getMonth())+1)+"."+currentDate.getFullYear();
             if(context == "setOffline"){
+                document.getElementById("dateOverview").innerHTML="Offline seit "+date;
                 element.innerHTML = "Go Live";
                 document.getElementById("jobStatusField").innerHTML = "archieved";
                 document.querySelector(".status-dot").style = "background-color: #8C9499;";
             }else if(context == "setOnline"){
+                document.getElementById("dateOverview").innerHTML="0 Tage online seit "+date;
                 element.innerHTML = "Offline nehmen";
                 document.getElementById("jobStatusField").innerHTML = "active";
                 document.querySelector(".status-dot").style = "background-color: #1dbd1d;";
@@ -285,4 +292,23 @@ function triggerJobAction(element){
     ).catch(error => console.log("Es ist ein Fehler beim speichern aufgetreten.")
             );
     }
+}
+
+function saveManualStartDateToDB(){
+    const userInput = document.getElementById("manuallySetStartDate").value;
+    if(userInput == ""){return;}
+    const date = new Date(userInput);
+    const formatedUserInput = date.getDate()+"."+(parseInt(date.getMonth())+1)+"."+date.getFullYear();
+    fetch('/ocs/v2.php/apps/mfkdashboard/api/setManualStartDate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "date": formatedUserInput,
+            "job": window.location.pathname.split("/")[5]
+        })
+    }).then(data => {
+        document.getElementById("dateOverview").innerHTML="online seit "+formatedUserInput;
+    });
 }
