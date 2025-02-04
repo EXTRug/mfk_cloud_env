@@ -86,7 +86,7 @@ class DatabaseService
         if ($filters["searchTerm"] != "") {
             $stmt = $this->pdo->prepare('SELECT ' . $fieldsList . ' FROM companies.jobs WHERE funnel_name LIKE "%' . $filters["searchTerm"] . '%" AND status="active"');
         } else {
-            $stmt = $this->pdo->prepare('SELECT ' . $fieldsList . ' FROM companies.jobs WHERE status="archieved"');
+            $stmt = $this->pdo->prepare('SELECT ' . $fieldsList . ' FROM companies.jobs WHERE status="active"');
         }
         $stmt->execute();
         return $stmt->fetchAll();
@@ -117,7 +117,7 @@ class DatabaseService
 
     public function getCompany(array $fields, int $id)
     {
-        $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction', 'manager','billing_id', 'description'];
+        $allowedFields = ['companyID', 'name', 'jobs', 'website', 'satisfaction', 'manager', 'billing_id', 'description'];
 
         $filteredFields = array_intersect($fields, $allowedFields);
 
@@ -408,16 +408,18 @@ class DatabaseService
     public function updateJobStatus(int $job, string $status): bool
     {
         $stati = ['active', 'archieved', 'In preperation', 'In revision'];
-        if(!in_array($status, $stati)){return false;}
-        
-        if($status == "active"){
+        if (!in_array($status, $stati)) {
+            return false;
+        }
+
+        if ($status == "active") {
             $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ?, startDate = NOW() WHERE id = ?");
-        }else if($status == "archieved"){
+        } else if ($status == "archieved") {
             $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ?, stopDate = NOW() WHERE id = ?");
-        }else{
+        } else {
             $stmt = $this->pdo->prepare("UPDATE companies.jobs SET status = ? WHERE id = ?");
         }
-        
+
         if ($stmt->execute(array($status, $job))) {
             if ($stmt->rowCount() > 0) {
                 return true;
@@ -429,7 +431,8 @@ class DatabaseService
         }
     }
 
-    public function setJobStartDate(int $job, String $date):bool{
+    public function setJobStartDate(int $job, String $date): bool
+    {
         $date = date("Y-m-d", strtotime($date));
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET startDate = ? WHERE id = ?");
         if ($stmt->execute(array($date, $job))) {
