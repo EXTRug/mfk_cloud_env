@@ -466,7 +466,11 @@ class ApiController extends OCSController
         $jobResult = $this->dbService->getJob(["jobFolder", "company"], $job);
         $jobFolderPath = $jobResult["jobFolder"];
         $company = intval($jobResult["company"]);
-        $companyLogoLink = $this->fileService->getCompanyLogoLink($jobFolderPath);
+        $companyLogoLink = $this->fileService->getCompanyLogoLink("03 Marketing/01 Kunden Marketing/" . $jobFolderPath);
+        // update company Logo
+        if ($companyLogoLink != "" && $company != null && $this->dbService->updateCompanyLogo($company, $companyLogoLink . "/download")) {
+            return new DataResponse([], Http::STATUS_OK);
+        }
         try {
             $links = $this->fileService->getAllPostingLinks($jobFolderPath);
         } catch (\Throwable $th) {
@@ -502,10 +506,6 @@ class ApiController extends OCSController
                 ];
                 $context = stream_context_create($options);
                 $result = file_get_contents($this->makeEndpoint, false, $context);
-            }
-            // on success update company Logo
-            if ($companyLogoLink != "" && $company != null && $this->dbService->updateCompanyLogo($company, $companyLogoLink)) {
-                return new DataResponse([], Http::STATUS_OK);
             }
             return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
         }

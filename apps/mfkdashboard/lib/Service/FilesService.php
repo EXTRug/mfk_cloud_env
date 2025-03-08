@@ -152,33 +152,34 @@ class FilesService
                     $logoFile = $file;
                     break;
                 }
-                if ($logoFile == null) {
-                    return "";
-                }
-                // check if file is already shared
-                $shareLink = "";
-                $shares = $this->getSharesInFolder($companyFolder);
-                foreach ($shares as $fileId => $share) {
-                    // Datei-Knoten basierend auf der Datei-ID abrufen
-                    $fileNodes = $this->rootFolder->getById($fileId);
-                    if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
-                        $fileNode = $fileNodes[0];
-                        if ($logoFile["path"] == $fileNode->getPath()) {
-                            $s = $this->shareManager->updateShare($share[0]);
-                            $expirationDate = new \DateTime();
-                            $expirationDate->modify("+180 days");
-                            $s->setExpirationDate($expirationDate);
-                            $shareLink = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $s->getToken()]);
-                        }
+            }
+            if ($logoFile == null) {
+                return "";
+            }
+            // check if file is already shared
+            $shareLink = "";
+            $shares = $this->getSharesInFolder($companyFolder);
+            foreach ($shares as $fileId => $share) {
+                // Datei-Knoten basierend auf der Datei-ID abrufen
+                $fileNodes = $this->rootFolder->getById($fileId);
+                if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
+                    $fileNode = $fileNodes[0];
+                    if ($logoFile["path"] == $fileNode->getPath()) {
+                        $s = $this->shareManager->updateShare($share[0]);
+                        $expirationDate = new \DateTime();
+                        $expirationDate->modify("+180 days");
+                        $s->setExpirationDate($expirationDate);
+                        $this->shareManager->updateShare($s);
+                        $shareLink = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $s->getToken()]);
                     }
                 }
-                if ($shareLink != "") {
-                    // extend and get share link
-                    return $shareLink;
-                } else {
-                    // extend and get share link
-                    return $this->createPublicLinkForFile($logoFile["path"], 180);
-                }
+            }
+            if ($shareLink != "") {
+                // extend and get share link
+                return $shareLink;
+            } else {
+                // extend and get share link
+                return $this->createPublicLinkForFile($logoFile["path"], 180);
             }
             return "";
         } catch (\Throwable $th) {
