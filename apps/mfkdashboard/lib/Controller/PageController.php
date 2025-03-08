@@ -173,13 +173,15 @@ class PageController extends Controller
 		} catch (\Throwable $th) {
 			$numberOfFiles = -1;
 		}
+		$companyLogoExists = $this->fileService->verifyCompanyLogo("03 Marketing/01 Kunden Marketing/" . $job["jobFolder"]);
 
 		$data = [
 			'navLinks' => $this->getAllowedNavbarLinks(),
 			'job' => $job,
 			'company' => $this->dbService->getCompany(["name", "description"], intval($job["company"])),
 			'statusColor' => DesignHelper::getStatusColor($job["status"]),
-			'numberOfFiles' => $numberOfFiles
+			'numberOfFiles' => $numberOfFiles,
+			'companyLogo' => $companyLogoExists
 		];
 		// Return the template response
 		return new TemplateResponse(

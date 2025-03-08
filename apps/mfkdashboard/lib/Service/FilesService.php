@@ -96,7 +96,7 @@ class FilesService
         // get all file paths
         $paths = [];
         foreach ($files as $key => $file) {
-            array_push($paths,$file["path"]);
+            array_push($paths, $file["path"]);
         }
         // match files with existing shares
         foreach ($shares as $fileId => $share) {
@@ -107,21 +107,87 @@ class FilesService
                 $path = $fileNode->getPath();
                 // Überprüfen, ob der Pfad in der Liste der Dateien vorhanden ist
                 if (in_array($path, array_column($files, 'path'))) {
-                    array_push($links, $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share[0]->getToken()])."/download");
+                    array_push($links, $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share[0]->getToken()]) . "/download");
                     unset($paths[array_search($path, $paths)]);
                 }
-            }else{
+            } else {
                 return "that shouldn't have happen";
             }
         }
         // create shares for new files
         foreach ($paths as $key => $p) {
-            array_push($links,$this->createPublicLinkForFile($p)."/download");
+            array_push($links, $this->createPublicLinkForFile($p) . "/download");
         }
         return $links;
     }
 
-    private function getSharesInFolder($path){
+    public function verifyCompanyLogo($jobFolder)
+    {
+        try {
+            $jobFolderParts = explode("/", rtrim($jobFolder, "/"));
+            array_pop($jobFolderParts);
+            $companyFolder = implode("/", $jobFolderParts);
+            $files = $this->listFilesInFolder($companyFolder);
+            foreach ($files as $key => $file) {
+                if (str_contains($file["name"], "logo")) {
+                    return True;
+                }
+            }
+            return False;
+        } catch (\Throwable $th) {
+            return False;
+        }
+    }
+
+    public function getCompanyLogoLink($jobFolder)
+    {
+        try {
+            $jobFolderParts = explode("/", rtrim($jobFolder, "/"));
+            array_pop($jobFolderParts);
+            $companyFolder = implode("/", $jobFolderParts);
+            $files = $this->listFilesInFolder($companyFolder);
+            $logoFile = null;
+            foreach ($files as $key => $file) {
+                if (str_contains($file["name"], "logo")) {
+                    $logoFile = $file;
+                    break;
+                }
+                if ($logoFile == null) {
+                    return "";
+                }
+                // check if file is already shared
+                $shareLink = "";
+                $shares = $this->getSharesInFolder($companyFolder);
+                foreach ($shares as $fileId => $share) {
+                    // Datei-Knoten basierend auf der Datei-ID abrufen
+                    $fileNodes = $this->rootFolder->getById($fileId);
+                    if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
+                        $fileNode = $fileNodes[0];
+                        if ($logoFile["path"] == $fileNode->getPath()) {
+                            $s = $this->shareManager->updateShare($share[0]);
+                            $expirationDate = new \DateTime();
+                            $expirationDate->modify("+180 days");
+                            $s->setExpirationDate($expirationDate);
+                            $shareLink = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $s->getToken()]);
+                        }
+                    }
+                }
+                if ($shareLink != "") {
+                    // extend and get share link
+                    return $shareLink;
+                } else {
+                    // extend and get share link
+                    return $this->createPublicLinkForFile($logoFile["path"], 180);
+                }
+            }
+            return "";
+        } catch (\Throwable $th) {
+            return "";
+        }
+    }
+
+    private function getSharesInFolder($path)
+    {
         $userId = $this->getCurrentUserId();
         $userFolder = $this->rootFolder->getUserFolder($userId);
 
@@ -135,12 +201,12 @@ class FilesService
             throw new \Exception("$path ist kein Ordner!");
         }
 
-        $s = $this->shareManager->getSharesInFolder($userId,$folder);
-        
+        $s = $this->shareManager->getSharesInFolder($userId, $folder);
+
         return $s;
     }
 
-    private function createPublicLinkForFile($path)
+    private function createPublicLinkForFile($path, $duration = null)
     {
         $file = $this->rootFolder->get($path);
 
@@ -153,6 +219,11 @@ class FilesService
         $s->setPermissions(\OCP\Constants::PERMISSION_READ);
         $s->setSharedBy($this->getCurrentUserId());
         $s->setShareType(IShare::TYPE_LINK);
+        if ($duration != null) {
+            $expirationDate = new \DateTime();
+            $expirationDate->modify("+$duration days");
+            $s->setExpirationDate($expirationDate);
+        }
         $share = $this->shareManager->createShare($s);
 
         $shareUrl = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $share->getToken()]);

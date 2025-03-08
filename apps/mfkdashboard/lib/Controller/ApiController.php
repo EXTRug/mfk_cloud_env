@@ -463,8 +463,12 @@ class ApiController extends OCSController
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
+        $jobResult = $this->dbService->getJob(["jobFolder", "company"], $job);
+        $jobFolderPath = $jobResult["jobFolder"];
+        $company = intval($jobResult["company"]);
+        $companyLogoLink = $this->fileService->getCompanyLogoLink($jobFolderPath);
         try {
-            $links = $this->fileService->getAllPostingLinks($this->dbService->getJob(["jobFolder"],$job)["jobFolder"]);
+            $links = $this->fileService->getAllPostingLinks($jobFolderPath);
         } catch (\Throwable $th) {
             $links = [];
         }
@@ -484,9 +488,9 @@ class ApiController extends OCSController
         // get media changes
         $updateJobData["media"] = $links;
         if ($this->dbService->updateJobData($job, $updateJobData)) {
-            if($action == "Freigabe anfordern"){
+            if ($action == "Freigabe anfordern") {
                 $this->dbService->updateJobStatus($job, "In revision");
-            }elseif($action == "Zur Kundenrevision freigeben"){
+            } elseif ($action == "Zur Kundenrevision freigeben") {
                 // handle sharing revision in Make
                 $data = ['data' => $updateJobData, 'job' => $job, 'action' => 'shareForRevision'];
                 $options = [
@@ -499,7 +503,11 @@ class ApiController extends OCSController
                 $context = stream_context_create($options);
                 $result = file_get_contents($this->makeEndpoint, false, $context);
             }
-            return new DataResponse([], Http::STATUS_OK);
+            // on success update company Logo
+            if ($companyLogoLink != "" && $company != null && $this->dbService->updateCompanyLogo($company, $companyLogoLink)) {
+                return new DataResponse([], Http::STATUS_OK);
+            }
+            return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
         }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }

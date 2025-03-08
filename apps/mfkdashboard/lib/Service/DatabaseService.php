@@ -262,6 +262,16 @@ class DatabaseService
         }
     }
 
+    public function updateCompanyLogo(int $company, String $companyLogo): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE companies.company SET logo = ? WHERE companyID = ?");
+        if ($stmt->execute(array($companyLogo, $company))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function logNewKBCall(int $job, $selection)
     {
         $stmt = $this->pdo->prepare("INSERT INTO companies.kbCalls (job, upsellPitched, upsellSold, testimonialPitched, testimonialSold, recommendationPitched, recommendationSold, crossSellPitched, crossSellSold) VALUES (?,?,?,?,?,?,?,?,?)");

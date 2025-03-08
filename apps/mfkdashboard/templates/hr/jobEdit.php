@@ -117,6 +117,11 @@ if ($job["customerInput"] != null) {
         <div class="col-md-6 mt-3">
             <div class="card-box">
                 <div class="title heading mb-1 d-flex align-items-center">Posting Informationen</div>
+                <?php
+                if (!$companyLogo) {
+                    echo ("<br><div>⚠️ Diese Firma hat kein Logo!</div>");
+                }
+                ?>
                 <hr class="divider" align="center">
                 <div class="form-group mb-3">
                     <label>Stellenbezeichnung</label>
