@@ -496,6 +496,8 @@ class ApiController extends OCSController
                 $this->dbService->updateJobStatus($job, "In revision");
             } elseif ($action == "Zur Kundenrevision freigeben") {
                 // handle sharing revision in Make
+                $customerLink = $this->fileService->getCustomerPostingMaterialLink("03 Marketing/01 Kunden Marketing/" . $jobFolderPath."/Werbematerial/Ausgewählte Bildmaterialien");
+                $updateJobData["revisionLink"] = $customerLink;
                 $data = ['data' => $updateJobData, 'job' => $job, 'action' => 'shareForRevision'];
                 $options = [
                     'http' => [

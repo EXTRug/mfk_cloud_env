@@ -187,6 +187,52 @@ class FilesService
         }
     }
 
+    public function getCustomerPostingMaterialLink($mediaFolderPath)
+    {
+        try {
+            $jobFolderParts = explode("/", rtrim($mediaFolderPath, "/"));
+            array_pop($jobFolderParts);
+            $parentFolderPath = implode("/", $jobFolderParts);
+
+            $userId = $this->getCurrentUserId();
+            $userFolder = $this->rootFolder->getUserFolder($userId);
+
+            // check if folder exists
+            if (!$userFolder->nodeExists($parentFolderPath)) {
+                return "";
+            }
+
+            // check if folder is already shared
+            $shareLink = "";
+            $shares = $this->getSharesInFolder($parentFolderPath);
+            foreach ($shares as $fileId => $share) {
+                // Datei-Knoten basierend auf der Datei-ID abrufen
+                $fileNodes = $this->rootFolder->getById($fileId);
+                if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
+                    $fileNode = $fileNodes[0];
+                    if ($mediaFolderPath == $fileNode->getPath()) {
+                        $s = $this->shareManager->updateShare($share[0]);
+                        $expirationDate = new \DateTime();
+                        $expirationDate->modify("+180 days");
+                        $s->setExpirationDate($expirationDate);
+                        $this->shareManager->updateShare($s);
+                        $shareLink = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $s->getToken()]);
+                    }
+                }
+            }
+            if ($shareLink != "") {
+                // extend and get share link
+                return $shareLink;
+            } else {
+                // extend and get share link
+                return $this->createPublicLinkForFile($mediaFolderPath, 180);
+            }
+            return "";
+        } catch (\Throwable $th) {
+            return "";
+        }
+    }
+
     private function getSharesInFolder($path)
     {
         $userId = $this->getCurrentUserId();
