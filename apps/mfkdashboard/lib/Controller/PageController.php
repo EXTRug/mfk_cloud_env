@@ -200,6 +200,7 @@ class PageController extends Controller
 		if (!$this->simpleAccessControl("jobActivity")) {
 			if ($this->simpleAccessControl("editJob")) {
 				return $this->jobSetup($id);
+			}
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'
@@ -230,6 +231,7 @@ class PageController extends Controller
 			$data
 		);
 	}
+
 	#[NoCSRFRequired]
 	#[NoAdminRequired]
 	#[OpenAPI(OpenAPI::SCOPE_IGNORE)]
