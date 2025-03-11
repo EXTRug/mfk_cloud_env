@@ -109,8 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadEbayJob() {
-    let category = document.querySelector("#ebay_data").value.split("#")[0];
-    let sub_category = document.querySelector("#ebay_data").value.split("#")[1];
+    let category = document.querySelector("#ebay_data").value.split("#")[1];
+    let sub_category = document.querySelector("#ebay_data").value.split("#")[0];
+    console.log(category);
 
     const cat = document.getElementById("ebay1");
     for (let option of cat.options) {

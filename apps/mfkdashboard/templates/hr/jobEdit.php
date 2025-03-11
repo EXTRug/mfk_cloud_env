@@ -223,21 +223,45 @@ if ($job["customerInput"] != null) {
                 <div class="row">
                     <div class="form-group col mb-3">
                         <label>Ebay - Kategorie</label>
+                        <?php
+                        $cat1 = html_entity_decode($campaign->ebay->job, ENT_QUOTES, 'UTF-8'); ?>
                         <select class="form-control rounded-0 border-secondary outline-0 text-input" id="ebay1">
-                            <option>Ausbildung</option>
-                            <option>Bau, Handwerk & Produktion</option>
-                            <option>Büroarbeit & Verwaltung</option>
-                            <option>Gastronomie & Tourismus</option>
-                            <option>Kundenservice & Call Center</option>
-                            <option>Praktika</option>
-                            <option>Sozialer Sektor & Pflege</option>
-                            <option>Transport, Logistik & Verkehr</option>
-                            <option>Vertrieb, Einkauf & Verkauf</option>
+                            <option <?php if ($cat1 == "Ausbildung") {
+                                        echo ("selected");
+                                    } ?>>Ausbildung</option>
+                            <option <?php if ($cat1 == "Bau, Handwerk & Produktion") {
+                                        echo ("selected");
+                                    } ?>>Bau, Handwerk & Produktion</option>
+                            <option <?php if ($cat1 == "Büroarbeit & Verwaltung") {
+                                        echo ("selected");
+                                    } ?>>Büroarbeit & Verwaltung</option>
+                            <option <?php if ($cat1 == "Gastronomie & Tourismus") {
+                                        echo ("selected");
+                                    } ?>>Gastronomie & Tourismus</option>
+                            <option <?php if ($cat1 == "Kundenservice & Call Center") {
+                                        echo ("selected");
+                                    } ?>>Kundenservice & Call Center</option>
+                            <option <?php if ($cat1 == "Praktika") {
+                                        echo ("selected");
+                                    } ?>>Praktika</option>
+                            <option <?php if ($cat1 == "Sozialer Sektor & Pflege") {
+                                        echo ("selected");
+                                    } ?>>Sozialer Sektor & Pflege</option>
+                            <option <?php if ($cat1 == "Transport, Logistik & Verkehr") {
+                                        echo ("selected");
+                                    } ?>>Transport, Logistik & Verkehr</option>
+                            <option <?php if ($cat1 == "Vertrieb, Einkauf & Verkauf") {
+                                        echo ("selected");
+                                    } ?>>Vertrieb, Einkauf & Verkauf</option>
                         </select>
                     </div>
                     <div class="form-group col mb-3">
                         <label>&nbsp;</label>
                         <select class="form-control rounded-0 border-secondary outline-0 text-input p-1" id="ebay2">
+                            <?php
+                            if ($campaign->ebay->sub_category != "") {
+                                echo ('<option selected>' . $campaign->ebay->sub_category . '</option>');
+                            } ?>
                         </select>
                     </div>
                 </div>

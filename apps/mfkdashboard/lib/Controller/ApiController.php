@@ -460,6 +460,7 @@ class ApiController extends OCSController
     #[ApiRoute(verb: 'POST', url: 'api/updateJobPosting')]
     public function updateJobPostingData(): DataResponse
     {
+        $response_text = "";
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         $job = intval($data["job"]);
@@ -469,7 +470,7 @@ class ApiController extends OCSController
         $companyLogoLink = $this->fileService->getCompanyLogoLink("03 Marketing/01 Kunden Marketing/" . $jobFolderPath);
         // update company Logo
         if ($companyLogoLink == "" || $company == null || !$this->dbService->updateCompanyLogo($company, $companyLogoLink . "/download")) {
-            return new DataResponse([], Http::STATUS_OK);
+            $response_text .= "| no company logo";
         }
         try {
             $links = $this->fileService->getAllPostingLinks($jobFolderPath);
@@ -509,7 +510,7 @@ class ApiController extends OCSController
                 $context = stream_context_create($options);
                 $result = file_get_contents($this->makeEndpoint, false, $context);
             }
-            return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
+            return new DataResponse($response_text,Http::STATUS_OK);
         }
         return new DataResponse(Http::STATUS_INTERNAL_SERVER_ERROR);
     }
