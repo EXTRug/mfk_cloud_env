@@ -19,6 +19,7 @@ use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 use OCP\AppFramework\Http\Attribute\OpenAPI;
+use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IUserSession;
 use OCP\IGroupManager;
@@ -197,6 +198,8 @@ class PageController extends Controller
 	public function jobActivity(int $id): TemplateResponse
 	{
 		if (!$this->simpleAccessControl("jobActivity")) {
+			if ($this->simpleAccessControl("editJob")) {
+				return $this->jobSetup($id);
 			return new TemplateResponse(
 				Application::APP_ID,
 				'misc/notAllowed'

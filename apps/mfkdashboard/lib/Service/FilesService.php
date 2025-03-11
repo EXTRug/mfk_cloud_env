@@ -208,9 +208,9 @@ class FilesService
             foreach ($shares as $fileId => $share) {
                 // Datei-Knoten basierend auf der Datei-ID abrufen
                 $fileNodes = $this->rootFolder->getById($fileId);
-                if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
+                if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Folder) {
                     $fileNode = $fileNodes[0];
-                    if ($mediaFolderPath == $fileNode->getPath()) {
+                    if (str_contains($fileNode->getPath(), $mediaFolderPath)) {
                         $s = $this->shareManager->updateShare($share[0]);
                         $expirationDate = new \DateTime();
                         $expirationDate->modify("+180 days");
@@ -255,11 +255,12 @@ class FilesService
 
     private function createPublicLinkForFile($path, $duration = null)
     {
-        $file = $this->rootFolder->get($path);
-
-        if (!($file instanceof \OCP\Files\File)) {
-            throw new \Exception("$path/$file ist keine Datei!");
+        $userId = $this->getCurrentUserId();
+        $userFolder = $this->rootFolder->getUserFolder($userId);
+        if (!$userFolder->nodeExists($path)) {
+            return "";
         }
+        $file = $userFolder->get($path);
 
         $s = $this->shareManager->newShare();
         $s->setNode($file);

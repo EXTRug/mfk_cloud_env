@@ -468,7 +468,7 @@ class ApiController extends OCSController
         $company = intval($jobResult["company"]);
         $companyLogoLink = $this->fileService->getCompanyLogoLink("03 Marketing/01 Kunden Marketing/" . $jobFolderPath);
         // update company Logo
-        if ($companyLogoLink != "" && $company != null && $this->dbService->updateCompanyLogo($company, $companyLogoLink . "/download")) {
+        if ($companyLogoLink == "" || $company == null || !$this->dbService->updateCompanyLogo($company, $companyLogoLink . "/download")) {
             return new DataResponse([], Http::STATUS_OK);
         }
         try {
