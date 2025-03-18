@@ -401,9 +401,7 @@ class DatabaseService
         }
         $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ? WHERE id = ?;");
         if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $job))) {
-            if ($stmt->rowCount() > 0) {
-                return true;
-            }
+            return true;
         }
         return false;
     }

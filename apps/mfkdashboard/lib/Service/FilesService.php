@@ -257,10 +257,15 @@ class FilesService
     {
         $userId = $this->getCurrentUserId();
         $userFolder = $this->rootFolder->getUserFolder($userId);
-        if (!$userFolder->nodeExists($path)) {
-            return "";
+        if ($userFolder->nodeExists($path)) {
+            $file = $userFolder->get($path);
+        }else{
+            $file = $this->rootFolder->get($path);
         }
-        $file = $userFolder->get($path);
+
+        if (!($file instanceof \OCP\Files\Node)) {
+            throw new \Exception("invalid element");
+        }
 
         $s = $this->shareManager->newShare();
         $s->setNode($file);

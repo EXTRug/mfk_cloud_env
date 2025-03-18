@@ -473,7 +473,7 @@ class ApiController extends OCSController
             $response_text .= "| no company logo";
         }
         try {
-            $links = $this->fileService->getAllPostingLinks($jobFolderPath);
+            $links = $this->fileService->getAllPostingLinks("03 Marketing/01 Kunden Marketing/" . $jobFolderPath);
         } catch (\Throwable $th) {
             $links = [];
         }
