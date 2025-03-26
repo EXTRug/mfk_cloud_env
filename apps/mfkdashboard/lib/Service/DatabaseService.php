@@ -358,6 +358,11 @@ class DatabaseService
             "sub_category" => $data["ebay2"]
         );
         // campaign media
+        foreach ($campaign["media"] as $key => $url) {
+            if(str_contains($url, "drive.google.com")){
+                array_push($data["media"], $url);
+            }
+        }
         $campaign["media"] = $data["media"];
         // campaign texts
         $campaign["benefits"] = $data["benefits"];

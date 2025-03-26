@@ -204,5 +204,9 @@ function encodeBase64(input) {
 }
 
 function decodeBase64(encoded) {
-    return decodeURIComponent(escape(atob(encoded)));
+    try {
+        return decodeURIComponent(escape(atob(encoded)));
+    } catch (error) {
+        return encoded;
+    }
 }
