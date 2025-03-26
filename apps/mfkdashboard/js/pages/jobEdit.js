@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function loadEbayJob() {
     let category = document.querySelector("#ebay_data").value.split("#")[1];
     let sub_category = document.querySelector("#ebay_data").value.split("#")[0];
-    console.log(category);
 
     const cat = document.getElementById("ebay1");
     for (let option of cat.options) {
@@ -134,9 +133,13 @@ function loadBenefits() {
     let benefits = JSON.parse(document.querySelector("#benefit_list").value);
     content = "";
     if (benefits != null) {
-        benefits.forEach(benefit => {
-            content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="' + mediaPath + '/images/delete-btn.png" class="benefit-remove-button"></button></div>';
-        });
+        try {
+            benefits.forEach(benefit => {
+                content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="' + mediaPath + '/images/delete-btn.png" class="benefit-remove-button"></button></div>';
+            });
+        } catch (error) {
+            
+        }
         document.getElementById('benefits').innerHTML = content;
     }
     document.getElementById('benefits').addEventListener('click', function (event) {
