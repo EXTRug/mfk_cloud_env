@@ -164,7 +164,7 @@ class FilesService
                 $fileNodes = $this->rootFolder->getById($fileId);
                 if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Node) {
                     $fileNode = $fileNodes[0];
-                    if ($logoFile["path"] == $fileNode->getPath()) {
+                    if ($logoFile["path"] == $fileNode->getPath() && $share != []) {
                         $s = $this->shareManager->updateShare($share[0]);
                         $expirationDate = new \DateTime();
                         $expirationDate->modify("+180 days");
@@ -186,7 +186,6 @@ class FilesService
             return "";
         }
     }
-
     public function getCustomerPostingMaterialLink($mediaFolderPath)
     {
         try {
@@ -210,7 +209,7 @@ class FilesService
                 $fileNodes = $this->rootFolder->getById($fileId);
                 if (!empty($fileNodes) && $fileNodes[0] instanceof \OCP\Files\Folder) {
                     $fileNode = $fileNodes[0];
-                    if (str_contains($fileNode->getPath(), $mediaFolderPath)) {
+                    if (str_contains($fileNode->getPath(), $mediaFolderPath) && $share != []) {
                         $s = $this->shareManager->updateShare($share[0]);
                         $expirationDate = new \DateTime();
                         $expirationDate->modify("+180 days");

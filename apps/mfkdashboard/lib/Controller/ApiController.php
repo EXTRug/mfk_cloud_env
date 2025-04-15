@@ -495,6 +495,16 @@ class ApiController extends OCSController
         if ($this->dbService->updateJobData($job, $updateJobData)) {
             if ($action == "Freigabe anfordern") {
                 $this->dbService->updateJobStatus($job, "In revision");
+                $data = ['job' => $job, 'action' => 'internalRevision'];
+                $options = [
+                    'http' => [
+                        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                        'method' => 'POST',
+                        'content' => http_build_query($data),
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $result = file_get_contents($this->makeEndpoint, false, $context);
             } elseif ($action == "Zur Kundenrevision freigeben") {
                 // handle sharing revision in Make
                 $customerLink = $this->fileService->getCustomerPostingMaterialLink("03 Marketing/01 Kunden Marketing/" . $jobFolderPath."/Werbematerial/Ausgewählte Bildmaterialien");
