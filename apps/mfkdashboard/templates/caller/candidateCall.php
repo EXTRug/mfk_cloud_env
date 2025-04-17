@@ -116,6 +116,7 @@ if ($applicant["applicant"] != null && $applicant["progress"] != null && $job !=
                             <option>keine</option>
                             <option>falsche Nummer</option>
                             <option>wünscht Rückruf</option>
+                            <option>kein Interesse mehr</option>
                             <option>Mailbox</option>
                             <option>Anruf abgelehnt</option>
                         </select>
