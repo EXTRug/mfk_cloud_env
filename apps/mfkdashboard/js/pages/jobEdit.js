@@ -21,10 +21,10 @@ function loadDescriptions() {
     let descProf = decodeBase64(document.querySelector("#desc_prof").value);
     let descSocial = decodeBase64(document.querySelector("#desc_social").value);
     if (descProf != "null" && descProf != '"\\n"') {
-        quill.setText(descProf);
+        quill.container.children[0].innerHTML = descProf
     }
     if (descSocial != "null" && descSocial != '"\\n"') {
-        quill2.setText(descSocial);
+        quill2.container.children[0].innerHTML = descSocial
     }
 }
 
@@ -153,8 +153,8 @@ function getFormData() {
     let data = {};
     data["job"] = window.location.pathname.split("/")[5];
     data["title"] = document.querySelector("#title").value;
-    data["descProf"] = encodeBase64(quill.getText());
-    data["descSoc"] = encodeBase64(quill2.getText());
+    data["descProf"] = encodeBase64(quill.container.children[0].innerHTML);
+    data["descSoc"] = encodeBase64(quill2.container.children[0].innerHTML);
     data["link"] = document.querySelector("#posting_link").value;
     data["plz"] = document.querySelector("#plz").value;
     data["salaryMin"] = document.querySelector("#salaryMin").value;

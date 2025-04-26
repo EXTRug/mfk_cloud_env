@@ -131,22 +131,10 @@ if ($job["customerInput"] != null) {
                     <label>Stellenbeschreibung Text (professionell):</label><br>
                     <a href="https://cloud.ki-recruiter.com/index.php/f/38172" target="_blank" style="color: blue !important;">professionelle Vorlage ↗️</a>
                     <div id="editor_area" class="text-editor-area"></div>
-                    <div id="toolbar1" style="display: none;">
-                        <select class="ql-size">
-                            <option value="small"></option>
-                            <option selected></option>
-                            <option value="large"></option>
-                            <option value="huge"></option>
-                        </select>
+                    <div id="toolbar1">
                         <button class="ql-bold"></button>
                         <button class="ql-italic"></button>
                         <button class="ql-underline"></button>
-                        <select class="ql-align">
-                            <option selected></option>
-                            <option value="center"></option>
-                            <option value="right"></option>
-                            <option value="justify"></option>
-                        </select>
                         <button class="ql-list" value="ordered"></button>
                         <button class="ql-list" value="bullet"></button>
                     </div>
@@ -156,22 +144,10 @@ if ($job["customerInput"] != null) {
                     <label>Stellenbeschreibung Text (persönlicher):</label><br>
                     <a href="https://cloud.ki-recruiter.com/index.php/f/38212" target="_blank" style="color: blue !important;">kreative Vorlage ↗️</a>
                     <div id="editor_area_2" class="text-editor-area"></div>
-                    <div id="toolbar2" style="display: none;">
-                        <select class="ql-size">
-                            <option value="small"></option>
-                            <option selected></option>
-                            <option value="large"></option>
-                            <option value="huge"></option>
-                        </select>
+                    <div id="toolbar2">
                         <button class="ql-bold"></button>
                         <button class="ql-italic"></button>
                         <button class="ql-underline"></button>
-                        <select class="ql-align">
-                            <option selected></option>
-                            <option value="center"></option>
-                            <option value="right"></option>
-                            <option value="justify"></option>
-                        </select>
                         <button class="ql-list" value="ordered"></button>
                         <button class="ql-list" value="bullet"></button>
                     </div>
