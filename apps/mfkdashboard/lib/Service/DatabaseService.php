@@ -379,21 +379,8 @@ class DatabaseService
         $salaryRange["start"] = $data["salaryMin"];
 
         // update location
-        if ($jobData["location"] != null && $jobData["location"] != "[]") {
-            $location = json_decode($jobData["location"], true);
-        } else {
-            $location = array(array());
-        }
+        $location = array();
         foreach ($data["plz"] as $key => $plz) {
-            $continue = false;
-            foreach ($location as $key => $postalCode) {
-                if($postalCode == $plz){
-                    $continue = true;
-                }
-            }
-            if($continue){
-                continue;
-            }
             $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=" . $plz, false), true);
             $chosen = null;
             if (count($locationRequest) > 1) {

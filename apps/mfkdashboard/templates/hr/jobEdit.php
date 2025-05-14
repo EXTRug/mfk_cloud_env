@@ -13,6 +13,7 @@ if ($job["customerInput"] != null) {
 <input id="desc_prof" style="display: none;" value='<?php echo $campaign->desc_job; ?>'>
 <input id="desc_social" style="display: none;" value='<?php echo $campaign->display_text; ?>'>
 <input type="text" name="" id="benefit_list" style="display: none;" value='<?php echo (json_encode($campaign->benefits)); ?>'>
+<input type="text" name="" id="plz_list" style="display: none;" value='<?php echo ($job["location"]); ?>'>
 <input type="text" name="" id="ebay_data" style="display: none;" value='<?php echo ($campaign->ebay->sub_category . "#" . $campaign->ebay->job); ?>'>
 <div class="container-fluid p-5 main-content-area">
     <div class="d-flex align-items-center mb-3">
@@ -173,7 +174,6 @@ if ($job["customerInput"] != null) {
                 <div class="row">
                     <div class="form-group col mb-3">
                         <label>PLZ</label>
-                        <!-- <input class="form-control rounded-0 border-secondary outline-0 text-input" type="number" value="<?php echo ($loc->plz); ?>" id="plz"> -->
                         <div class="benfit-section mb-3 mt-3" id="plzs">
                     </div>
                         <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="PLZ" id="plz">

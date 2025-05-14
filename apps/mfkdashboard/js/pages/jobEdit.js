@@ -12,6 +12,7 @@ window.onload = function () {
     getMediaPath();
     loadDescriptions();
     loadBenefits();
+    loadPLZs();
     loadEbayJob();
     document.querySelector("#ebay1").addEventListener("change", updateEbayFilter);
     document.getElementById("formSubmitBtn").addEventListener("click", submitForm);
@@ -183,11 +184,31 @@ function loadBenefits() {
                 content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + benefit + '</div><button class="img-remove-button"><img src="' + mediaPath + '/images/delete-btn.png" class="benefit-remove-button"></button></div>';
             });
         } catch (error) {
-            
+
         }
         document.getElementById('benefits').innerHTML = content;
     }
     document.getElementById('benefits').addEventListener('click', function (event) {
+        if (event.target.classList.contains('benefit-remove-button')) {
+            event.target.parentElement.parentElement.remove();
+        }
+    });
+}
+
+function loadPLZs() {
+    let plzs = JSON.parse(document.querySelector("#plz_list").value);
+    content = "";
+    if (plzs != null) {
+        try {
+            plzs.forEach(plz => {
+                content += '<div class="benifit-item" style="margin-top: 5px;"><div class="benifit-title">' + plz["plz"] + '</div><button class="img-remove-button"><img src="' + mediaPath + '/images/delete-btn.png" class="benefit-remove-button"></button></div>';
+            });
+        } catch (error) {
+
+        }
+        document.getElementById('plzs').innerHTML = content;
+    }
+    document.getElementById('plzs').addEventListener('click', function (event) {
         if (event.target.classList.contains('benefit-remove-button')) {
             event.target.parentElement.parentElement.remove();
         }
