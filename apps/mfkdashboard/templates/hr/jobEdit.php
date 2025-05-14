@@ -173,7 +173,11 @@ if ($job["customerInput"] != null) {
                 <div class="row">
                     <div class="form-group col mb-3">
                         <label>PLZ</label>
-                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="number" value="<?php echo ($loc->plz); ?>" id="plz">
+                        <!-- <input class="form-control rounded-0 border-secondary outline-0 text-input" type="number" value="<?php echo ($loc->plz); ?>" id="plz"> -->
+                        <div class="benfit-section mb-3 mt-3" id="plzs">
+                    </div>
+                        <input class="form-control rounded-0 border-secondary outline-0 text-input" type="text" placeholder="PLZ" id="plz">
+                        <button class="add-plz-button"><img src="<?= $configurations['assets_path'] ?>/images/formkit_add.png">&nbsp;&nbsp; Add</button>
                     </div>
                     <!-- <div class="form-group col mb-3">
                         <label>&nbsp;</label>

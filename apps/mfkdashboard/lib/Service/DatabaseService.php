@@ -359,7 +359,7 @@ class DatabaseService
         );
         // campaign media
         foreach ($campaign["media"]["creatives"] as $key => $url) {
-            if(str_contains($url, "drive.google.com")){
+            if (str_contains($url, "drive.google.com")) {
                 array_push($data["media"], $url);
             }
         }
@@ -384,11 +384,17 @@ class DatabaseService
         } else {
             $location = array(array());
         }
-        if ($data["plz"] != "") {
-            try {
-            } catch (\Throwable $th) {
+        foreach ($data["plz"] as $key => $plz) {
+            $continue = false;
+            foreach ($location as $key => $postalCode) {
+                if($postalCode == $plz){
+                    $continue = true;
+                }
             }
-            $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=" . $data["plz"], false), true);
+            if($continue){
+                continue;
+            }
+            $locationRequest = json_decode(file_get_contents("https://openplzapi.org/de/Localities?postalCode=" . $plz, false), true);
             $chosen = null;
             if (count($locationRequest) > 1) {
                 foreach ($locationRequest as $key => $l) {
@@ -399,13 +405,16 @@ class DatabaseService
             } else {
                 $chosen = $locationRequest[0];
             }
-            $location[0]["plz"] = $chosen["postalCode"];
-            $location[0]["city"] = $chosen["name"];
-            $location[0]["region"] = $chosen["district"]["name"];
-            $location[0]["country"] = "DE";
+            $loc = array(
+                "plz" => $chosen["postalCode"],
+                "city" => $chosen["name"],
+                "region" => $chosen["district"]["name"],
+                "country" => "DE",
+            );
+            array_push($location, $loc);
         }
-        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ? WHERE id = ?;");
-        if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $job))) {
+        $stmt = $this->pdo->prepare("UPDATE companies.jobs SET campaign = ?, location = ?, salary_range = ?, asp = ?, funnel_url = ?, title = ? WHERE id = ?;");
+        if ($stmt->execute(array(json_encode($campaign), json_encode($location), json_encode($salaryRange), $data["asp"], $data["link"], $data["title"], $job))) {
             return true;
         }
         return false;

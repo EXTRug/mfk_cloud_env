@@ -483,7 +483,7 @@ class ApiController extends OCSController
         $updateJobData["descProf"] = htmlspecialchars($data["descProf"]);
         $updateJobData["descSoc"] = htmlspecialchars($data["descSoc"]);
         $updateJobData["link"] = htmlspecialchars(strip_tags($data["link"]), ENT_QUOTES, 'UTF-8');
-        $updateJobData["plz"] = htmlspecialchars(strip_tags($data["plz"]), ENT_QUOTES, 'UTF-8');
+        $updateJobData["plz"] = $data["plz"];
         $updateJobData["salaryMin"] = htmlspecialchars(strip_tags($data["salaryMin"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["salaryMax"] = htmlspecialchars(strip_tags($data["salaryMax"]), ENT_QUOTES, 'UTF-8');
         $updateJobData["ebay1"] = htmlspecialchars(strip_tags($data["ebay1"]), ENT_QUOTES, 'UTF-8');

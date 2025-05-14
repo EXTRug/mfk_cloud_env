@@ -64,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const benefitsContainer = document.getElementById('benefits');
     const addBenefitButton = document.querySelector('.add-benifit-button');
     const benefitInput = document.querySelector('#newBenefit');
+    const plzContainer = document.getElementById('plzs');
+    const addPLZButton = document.querySelector('.add-plz-button');
+    const plzInput = document.querySelector('#plz');
 
     // Funktion zum Hinzufügen eines neuen Benefits
     addBenefitButton.addEventListener('click', () => {
@@ -105,6 +108,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Eingabefeld leeren
         benefitInput.value = '';
+    });
+
+    // Funktion zum Hinzufügen einer neuen PLZ
+    addPLZButton.addEventListener('click', () => {
+        const plz = plzInput.value.trim();
+
+        // Überprüfen, ob ein Text eingegeben wurde
+        if (plz === '') {
+            alert('Bitte geben Sie einen PLZ ein.');
+            return;
+        }
+
+        // Neues Benefit-Element erstellen
+        const plzItem = document.createElement('div');
+        plzInput.style = "margin-top: 5px;"
+        plzItem.classList.add('benifit-item');
+
+        const benefitTitle = document.createElement('div');
+        benefitTitle.classList.add('benifit-title');
+        benefitTitle.textContent = plz;
+
+        const removeButton = document.createElement('button');
+        removeButton.classList.add('img-remove-button');
+
+        const removeIcon = document.createElement('img');
+        removeIcon.src = mediaPath + '/images/delete-btn.png';
+        removeButton.appendChild(removeIcon);
+
+        // Entfernen-Funktion hinzufügen
+        removeButton.addEventListener('click', () => {
+            plzContainer.removeChild(plzItem);
+        });
+
+        // Zusammenfügen der Elemente
+        plzItem.appendChild(benefitTitle);
+        plzItem.appendChild(removeButton);
+
+        // Hinzufügen zum Container
+        plzContainer.appendChild(plzItem);
+
+        // Eingabefeld leeren
+        plzInput.value = '';
     });
 });
 
@@ -167,6 +212,12 @@ function getFormData() {
         benefits.push(benefit.querySelector(".benifit-title").innerHTML);
     });
     data["benefits"] = benefits;
+
+    let plzs = [];
+    Array.from(document.getElementById('plzs').children).forEach(benefit => {
+        plzs.push(benefit.querySelector(".benifit-title").innerHTML);
+    });
+    data["plz"] = plzs;
     return data;
 }
 
